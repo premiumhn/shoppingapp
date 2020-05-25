@@ -1,0 +1,62 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: rgb(255, 255, 255);
+}
+
+.col-md-12{
+  margin:0px!important;
+}
+
+.form-amount {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-amount .form-amount-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-amount .checkbox {
+  font-weight: normal;
+}
+.form-amount .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 14px;
+}
+.form-amount .form-control:focus {
+  z-index: 2;
+}
+.form-amount input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.loading {
+    text-align: center;
+    content: url('../img/ajax-loader.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+}
+
+.logo_content{
+    text-align: center;
+    content: url('../img/Logo_shoppingapp_pay.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+}
+
+.text-loading {
+  text-align: center;
+  width: 100%;
+  color: #E96A00;
+  font-weight: bold;
+}

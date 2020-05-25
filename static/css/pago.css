@@ -1,0 +1,80 @@
+.bordered{
+    /* border: 1px solid rgb(189, 189, 189);
+    height: 80px; */
+}
+
+.logo_content{
+    content: url('../img/Logo_shoppingapp_v2.png');
+    width: 100%;
+}
+
+.card{
+    padding: 20px;
+}
+
+.gray_back{
+    background-color: #F8F8F8;
+}
+
+.card_detail {
+    background-color: white;
+    z-index: 100;
+    padding: 10px!important;
+}
+
+.card_detail label {
+    font-weight: bold;
+}
+
+.btn-flat{
+    margin:0px!important;
+}
+
+@media (max-width: 600px) {
+
+    .card_detail {
+        bottom: 0;
+        position: fixed!important;
+        background-color: white;
+        z-index: 100;
+        width: 100%;
+        left: -1px;
+        margin: 0px;
+        border-top: 2px solid #E86713;
+        padding: 10px 0px 0px 0px !important;
+    }
+
+    .btn-flat{
+        width: 100%;
+        margin:0px!important;
+        padding: 20px!important;
+    }
+
+    #search-form{
+        display: none;
+    }
+
+    .row{
+        margin:0px!important;
+        padding: 0px!important;
+    }
+
+    .card{
+        /* padding: 0px; */
+    }
+
+    .card-body{
+        padding:0px!important;
+    }
+
+    .temp-border{
+        padding:0px!important;
+    }
+
+    label{
+        font-size: 1.2em;
+    }
+
+
+
+}

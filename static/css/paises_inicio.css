@@ -1,0 +1,9 @@
+.height-full{
+    height: 50vh;
+}
+
+.titulo{
+    background-color: rgb(243, 243, 243)!important;
+    color:#E86713;
+    padding: 2px;
+}

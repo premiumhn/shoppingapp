@@ -1,0 +1,40 @@
+body{
+    background-color: rgb(248, 248, 248)!important;
+}
+
+a{
+    text-decoration: none!important;
+}
+
+
+
+.card{
+    padding: 60px 60px;
+    border:0px;
+}
+
+.card:hover{
+    padding: 58px 58px;
+    border:0px;
+    background-color: rgb(238, 238, 238)!important;
+}
+
+.cont_menu{
+    background-color: white;
+    padding: 20px;
+}
+
+.text_menu{
+    color:rgb(63, 63, 63);
+    margin-top: 5px;
+}
+
+
+@media (max-width: 600px) {
+
+    .row{
+        margin:0px!important;
+    }
+
+
+}

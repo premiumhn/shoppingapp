@@ -1,0 +1,293 @@
+body{
+    background-color: #f8f8f8;
+}
+
+.alert-secondary{
+    border:none;
+}
+
+.bordered{
+    /* border: 1px solid rgb(214, 214, 214); */
+    padding: 10px;
+    background-color:rgb(255, 255, 255);
+}
+
+.nombre_producto{
+    text-align: left;
+}
+
+#btn-buy{
+    background-color: rgba(255, 0, 0, 0.801);
+    color:white;
+    padding: 15px;
+}
+
+#btn-add-to-cart{
+    background-color: rgba(255, 123, 0, 0.815);
+    color:white;
+    padding: 15px;
+}
+
+hr{
+    margin: 0px!important;
+}
+
+label{
+    font-size: 12px;
+}
+
+p{
+    font-size: 12px;
+}
+a{
+    font-size: 12px;
+}
+
+.text-left{
+    text-align: left;
+}
+
+.no_padding_left{
+    padding-left: 0px!important;
+}
+
+.no_padding_both{
+    padding-left: 0px!important;
+    padding-right: 0px!important;
+}
+
+.white-back{
+    background-color: white;
+}
+
+.right-border{
+    border-right: 1px solid rgb(201, 201, 201);
+    padding: 0px 10px 0px 10px;
+}
+
+.internal-padding{
+    padding: 40px 20px!important;
+    /* margin: 0px!important; */
+}
+
+.text-middle{
+    vertical-align: middle!important;
+}
+
+.card-shipment{
+    border:0px;
+    padding: 20px;
+    background-color: rgba(250, 233, 0, 0.459);
+}
+.card-shipment label{
+    font-size: 15px!important;
+}
+
+.text-bold{
+    font-weight: bold;
+}
+
+.product-image{
+    -webkit-box-shadow: 3px 4px 9px -1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 3px 4px 9px -1px rgba(0,0,0,0.75);
+    box-shadow: 3px 4px 9px -1px rgba(0,0,0,0.75); 
+
+}
+
+.form-check-label{
+    font-size: 1em;
+    color: #8b8b8b;
+}
+
+/* css para las estrellas de valoración */
+#form {
+    /* width: 250px; */
+  }
+  
+  #form p {
+    text-align: left;
+  }
+  
+  #form label {
+    font-size: 20px;
+    color: grey;
+    margin:0px!important;
+  }
+  
+  #form input[type="radio"] {
+    display: none;
+  }
+  
+  
+  .clasificacion {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    margin:0px!important;
+  }
+
+
+  .orange {
+    color: orange!important;
+  }
+  
+  /* #form input[type="radio"]:checked ~ label {
+    color: orange;
+  } */
+
+  .md-content{
+      padding: 20px;
+  }
+
+  button.close{
+    background-color: rgba(255, 123, 0, 0.849)!important;
+    color: white;
+    width: 100%;
+    padding: 15px;
+}
+
+  .close {
+    float: right;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 0px 0 #fff;
+    opacity: 1;
+}
+
+
+.btn-flat {
+    background-color: #E86713;
+    border: none;
+    padding: 10px 0px!important;
+    color: white;
+    margin-left: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.cont-descripcion{
+    padding: 30px;
+}
+
+.text-descripccion{
+    height: 100%!important;
+    border:0px!important;
+    height: 50vh!important;
+    width: 100% !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+  @media (max-width: 600px) {
+    
+    .bordered{
+        padding: 0px;
+    }
+
+    .row{
+        width: 100%!important;
+        padding: 0% 5% 0% 5%;
+        margin: 0px;
+    }
+
+    .nombre_producto{
+        margin-top:30px;
+        margin-bottom: 0px;
+    }
+
+    .col-md-12{
+        padding: 0px;
+    }
+
+    .valoracion{
+        font-size: 1em;
+    }
+
+    #form{
+        margin: 0px!important;
+    }
+
+    label, a{
+        font-size: 1em;
+        margin:0px;
+    }
+
+    body{
+        background-color: white;
+    }
+
+    .form-control{
+        font-size: 1.4em!important;
+    }
+
+    .link{
+        font-size: 0.8em;
+    }
+
+    .precio{
+        font-size: 3em;
+        font-weight: bold;
+    }
+
+    .form-check {
+        font-size: 1.4em;
+    }
+
+    .card-shipment {
+        padding: 20px!important;
+    }
+
+    .col-md-4{
+        padding: 0px;
+    }
+
+    .btn{
+        margin-bottom: 10px;
+    }
+
+    .btn-primary{
+        font-size: 1.2em;
+    }    
+
+    .card-shipment label {
+        font-size: 1.2em!important;
+    }
+
+    .md-content{
+        padding: 20px;
+    }
+
+    button.close{
+        background-color: rgba(255, 123, 0, 0.849)!important;
+        color: white;
+        width: 100%;
+        padding: 40px;
+    }
+
+    .close {
+        float: right;
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+        color: #000;
+        text-shadow: 0 0px 0 #fff;
+        opacity: 1;
+    }
+
+    .carrito-btn{
+        text-align: center!important;
+        margin-top: 10px;
+        font-size: 20px;
+    }
+
+}

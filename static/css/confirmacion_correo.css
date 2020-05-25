@@ -1,0 +1,21 @@
+
+.row{
+    margin: 0px;
+}
+.logo{
+    content: url('../img/Logo_shoppingapp_v2.png')
+}
+
+.waiter{
+    content: url('../img/ajax-loader.gif');
+}
+
+.btn-primary{
+    background-color: #DF0209;
+    border:0px;
+    padding: 10px 20px;
+}
+
+.btn-primary:hover{
+    background-color: rgb(218, 37, 43);
+}

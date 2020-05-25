@@ -1,0 +1,133 @@
+body{
+    background-color: white;
+    font-family: Helvetica Neue,HelveticaNeue,HelveticaNeue-Light,Helvetica Neue Light,helvetica,arial,sans-serif;
+}
+
+.text-big{
+    font-weight: 400;
+    font-size: 24px;
+}
+
+.card{
+    margin-top: 20px;
+    margin-bottom: 100px;
+    text-align: left;
+    padding: 0px;
+    border: 0px;
+    border-top: 1px solid rgb(228, 228, 228);
+}
+
+.card-body{
+    border: 1px solid rgb(228, 228, 228);
+    border-top: 0px;
+    padding: 10px;
+}
+
+.logo_content{
+    text-align: center;
+    content: url('../img/Logo_shoppingapp_pay.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+}
+
+.check_content{
+    text-align: center;
+    content: url('../img/checkmark.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+}
+
+.gray{
+    background-color: #F7F9FA;
+}
+
+/* .text-light{
+    font-weight: 200;
+} */
+
+.text-bold{
+    font-weight:600 !important;
+}
+
+.text-li{
+    font-weight:400 !important;
+}
+
+.smal{
+    font-size: 13px;
+}
+
+.text-right{
+    text-align: right;
+}
+
+.text-left{
+    text-align: left;
+}
+
+.row{
+    margin:0px;
+}
+
+.border-b{
+    border-bottom: 1px solid rgb(228, 228, 228);
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
+.btn-flat{
+    background-color: #E86713;
+    border: none;
+    padding: 10px 10px;
+    color: white;
+    margin-left: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+
+.btn-flat:hover{
+    background-color: #E86713;
+    border: none;
+    padding: 10px 10px;
+    color: white;
+    margin-left: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.margin-b{
+    margin-bottom: 10px;
+}
+
+
+
+/* ajuste a pantallas */
+@media (max-width: 600px) {
+    .br-inicio{
+        display: none;
+    }
+
+    .col-md-12{
+        padding: 0px;
+    }
+
+    .smal{
+        font-size: 10px!important;
+    }
+
+    .btn-flat{
+        background-color: #E86713;
+        border: none;
+        padding: 10px 10px!important;
+        color: white;
+        margin-left: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    
+  
+}
+/* // ajuste a pantallas */

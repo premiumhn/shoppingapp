@@ -1,0 +1,68 @@
+.cont-filtros{
+    background-color: white;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 13px;
+}
+
+.cont-filtros hr{
+    margin: 2px 0px 10px 0px!important;
+}
+
+
+
+.text-gray{
+    color: gray;
+}
+
+.btn-filtrar{
+    margin-top: 18px!important;
+}
+
+
+@media (max-width: 600px) {
+
+    .card_detail {
+        bottom: 0;
+        position: fixed!important;
+        background-color: white;
+        z-index: 100;
+        width: 100%;
+        left: -1px;
+        margin: 0px;
+        border-top: 2px solid #E86713;
+        padding: 10px 0px 0px 0px !important;
+    }
+
+    .btn-flat{
+        width: 100%;
+        margin:0px!important;
+        padding: 20px!important;
+    }
+
+    #search-form{
+        display: none;
+    }
+
+    .info_tipo{
+        position: relative;
+        right: 8px;
+        width: 80px;
+    }
+    
+    .info_tipo_letras{
+        position: absolute;
+        left: 10px;
+        width: 80px;
+        margin-top: 70px;
+        font-size: 13px;
+    }
+
+    .btn_completado{
+        background-color: rgba(2, 175, 2, 0.795)!important;
+        color: white!important;
+        width: 100%;
+    }
+
+
+}

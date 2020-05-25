@@ -1,0 +1,160 @@
+body{
+    /* background: -webkit-linear-gradient(left, #e67e3d, #d45303);  */
+    background-image: url('../img/fon-min.png')!important;
+    /* background-color: rgba(240, 240, 240, 0.705); */
+    background-size: cover;
+    
+}
+
+#body-tienda{
+     /* background: -webkit-linear-gradient(left, #e67e3d, #d45303);  */
+     background-image: url('../img/fondo_login_tienda-min.png')!important;
+     /* background-color: rgba(240, 240, 240, 0.705); */
+     background-size: cover;
+}
+
+h2{
+    font-family: 'Lato', sans-serif;
+}
+
+.row{
+    margin: 0px;   
+}
+
+.logo{
+    content: url('../img/Logo_shoppingapp_v2.png')
+}
+
+.logoTienda{
+    content: url('../img/Logo_shoppingapp_tienda.gif')
+}
+
+#cont-login{
+    background-color: transparent;
+    margin-top: 30px;
+    font-family: 'Roboto', sans-serif;
+    padding: 20px;
+    color: rgb(255, 255, 255);
+    border-radius: 10px;
+
+
+    /* -webkit-box-shadow: 0px 0px 8px -1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 8px -1px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 8px -1px rgba(0,0,0,0.75); */
+}
+
+.el-form{
+    font-size: 20px;
+    font-family: 'Lato', sans-serif!important;
+}
+
+.in-form{
+    background-color: transparent;
+    font-size: 30px;
+    padding: 0px;
+    border: 0px;
+    border-bottom: 1px solid white;
+    caret-color: #ffffff;
+    color:white;
+    font-family: 'Lato', sans-serif!important;
+}
+
+input{
+    outline: none;
+}
+
+a{
+    color: rgb(255, 255, 255);
+}
+
+a:hover{
+    color: rgb(255, 255, 255);
+}
+
+.in-form:focus{
+    border-bottom: 1px solid white;
+}
+
+.btn-flat{
+    background-color: rgb(19, 136, 232);
+    border: none;
+    padding: 15px 10px 15px 10px!important;
+    color: white;
+    margin-left: 5px;
+    cursor: pointer;
+    border-radius: 30px;
+    font-size: 20px;
+    outline: none!important;
+}
+
+.btn-flat:hover{
+    border: none;
+    padding: 15px 10px 15px 10px!important;
+    color: white;
+    margin-left: 5px;
+    cursor: pointer;
+    border-radius: 30px;
+    font-size: 20px;
+    outline: none;
+}
+
+
+#mensaje_alert{
+    visibility: hidden;
+}
+
+.navbar-light{
+    background-color: #FAC400!important;
+}
+
+#logo{
+    width: 100%;
+    position: absolute;
+    top: -10px;
+    left: 0px;
+}
+
+#a_logo{
+    position: absolute;
+    width: 100%;
+}
+
+.btn-flat{
+    background-color: #E86713;
+    border: none;
+    padding: 10px 10px;
+    color: white;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+
+
+.btn-primary{
+    background-color: #DF0209;
+    border:0px;
+    padding: 10px 20px;
+}
+
+.btn-primary:hover{
+    background-color: rgb(218, 37, 43);
+}
+
+.cargando{
+    position: absolute;
+    height:100%;
+    width:100%;
+    background-color: white;
+    z-index: 100;
+}
+
+#lbl-show-pass{
+    font-size: 25px;
+    color: white;
+    position: absolute!important;
+    right: 30px;
+}
+
+#lbl-show-pass:hover{
+    cursor: pointer;
+}

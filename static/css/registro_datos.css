@@ -1,0 +1,134 @@
+body{
+    background-color: rgb(248, 248, 248)!important;
+}
+
+.bordered{
+    /* border: 1px solid black; */
+    height: 500px;
+    padding: 20px 0px 0px 0px;
+}
+
+.navbar-light{
+    background-color: #FAC400!important;
+}
+
+.card{
+    font-size: 1em;
+    width: 100%;
+    border-radius: 0px!important;
+    border:0px!important;
+}
+
+.card-left{
+    font-size: 0.8em;
+    width: 100%;
+    border-radius: 0px!important;
+    border:0px!important;
+}
+
+.card-right{
+    font-size: 0.8em;
+    width: 100%;
+    border-radius: 0px!important;
+    border:0px!important;
+}
+
+.card-title{
+    border-bottom: 1px solid rgb(187, 187, 187);
+    padding-bottom: 10px;
+    color: gray;
+}
+
+.a_list_item{
+    background-color: black!important;
+}
+
+.instruccion{
+    font-size: 13px;
+    background-color: rgb(158, 158, 158)!important;
+    padding: 10px;
+    color:white;
+    border-radius: 10px;
+}
+
+.list-group-item{
+    padding: 0px!important;
+}
+.btn-primary{
+    /* background-color: rgb(0, 137, 196)!important; */
+    border-radius: 0px!important;
+}
+#td_imagen{
+    width: 150px!important;
+}
+
+button.close{
+    background-color: rgba(255, 123, 0, 0.849)!important;
+    color: white;
+    width: 100%;
+    padding: 15px;
+}
+
+  .close {
+    float: right;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 0px 0 #fff;
+    opacity: 1;
+}
+
+#btnEditar{
+    border-radius: 5px!important;
+}
+
+.btn-modal{
+    padding: 10px!important;
+}
+
+.btn-edit i{
+    font-size: 1.4em;
+    margin: 0px;
+    padding: 0px!important;
+    color: rgb(0, 153, 255);
+}
+
+.btn-eliminar i{
+    font-size: 1.4em;
+    margin: 0px;
+    padding: 0px!important;
+    color: rgba(255, 0, 0, 0.74);
+}
+
+.alert-success{
+    background-color: rgba(40, 175, 6, 0.801)!important;
+    color: white!important;
+}
+
+.alert-danger{
+    background-color: rgba(228, 38, 13, 0.801)!important;
+    color: white!important;
+}
+
+.btn-primary{
+    background-color: rgba(8, 124, 233, 0.89)!important;
+    border: none;
+}
+
+.cont_imagen{
+    height: 140px;
+    width: 150px;
+    overflow: hidden;
+    position: relative;
+    margin:auto;
+}
+
+.imagen{
+    position: absolute;
+    height: 130px;
+    min-height: 150px;
+    min-width: 150px;
+    background-color: transparent;
+    padding: 0px!important;
+}

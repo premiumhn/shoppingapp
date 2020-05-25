@@ -1,0 +1,231 @@
+
+td{
+    text-align: right!important;
+}
+
+th{
+    text-align: right!important;
+}
+
+label{
+    margin: 0px!important;
+}
+
+
+.square {
+    width: 350px;
+    height: 350px;
+  }
+
+.temp-border{
+    /* border: 1px solid rgb(202, 202, 202); */
+    /* height: 300px; */
+}
+
+.temp-border-comp{
+    /* border: 1px solid rgb(202, 202, 202); */
+    /* height: 340px; */
+}
+
+.text-bold{
+    font-weight: bold;
+}
+
+.text-gray{
+    color: rgb(134, 134, 134)!important;
+}
+
+.card_detail{
+    padding: 10px!important;
+}
+
+.orange {
+    color: orange!important;
+  }
+ 
+
+  
+
+/* .detail_up{
+    height: 170px;
+} */
+
+.detail_down{
+    height: 80px;
+}
+
+.container {
+    overflow: hidden;
+    position: relative;
+}
+
+.text-small{
+    font-size: 14px!important;
+}
+
+/*.container > .crop {
+    position:absolute;
+    left: -100%;
+    right: -100%;
+    top: -100%;
+    bottom: -100%;
+    margin: auto;
+}*/
+
+
+#form {
+    width: 250px;
+    margin: 0 auto;
+    height: 50px;
+  }
+  
+  #form p {
+    text-align: center;
+  }
+  
+  #form label {
+    font-size: 20px;
+  }
+  
+  input[type="radio"] {
+    display: none;
+  }
+  
+  form label {
+    color: grey;
+  }
+  
+  .clasificacion {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+  }
+  
+  form .estrella:hover,
+  form .estrella:hover ~ label {
+    color: orange;
+  }
+  
+  /* input[type="radio"]:checked ~ label {
+    color: orange;
+  } */
+
+  .estrellas{
+    font-size: 22px!important;
+  }
+
+/* label, a{
+    padding: 0px 5px 0px 0px!important;
+} */
+
+.card_detail {
+    background-color: white;
+    z-index: 100;
+    padding: 10px!important;
+}
+
+.btn-eliminar{
+    color: rgba(255, 0, 0, 0.76);
+    margin:0px!important;
+    padding: 0px!important;
+}
+
+.btn-eliminar:hover{
+    color: rgba(255, 0, 0, 0.76);
+    cursor: pointer;
+
+}
+
+.btn_completado{
+    background-color: rgba(2, 175, 2, 0.795)!important;
+    color: white!important;
+}
+
+
+.info_tipo{
+    position: absolute;
+    right: 8px;
+    width: 80px;
+}
+
+.info_tipo_letras{
+    position: absolute;
+    right: 0px;
+    width: 80px;
+    margin-top: 70px;
+    font-size: 13px;
+}
+
+.cont-filtros{
+    background-color: white;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 13px;
+}
+
+.cont-filtros hr{
+    margin: 2px 0px 10px 0px!important;
+}
+
+
+
+.text-gray{
+    color: gray;
+}
+
+.btn-filtrar{
+    margin-top: 18px!important;
+}
+
+.detail_up .col-md-10{
+    
+    padding: 0px;
+}
+
+
+
+@media (max-width: 600px) {
+
+    .card_detail {
+        bottom: 0;
+        position: fixed!important;
+        background-color: white;
+        z-index: 100;
+        width: 100%;
+        left: -1px;
+        margin: 0px;
+        border-top: 2px solid #E86713;
+        padding: 10px 0px 0px 0px !important;
+    }
+
+    .btn-flat{
+        width: 100%;
+        margin:0px!important;
+        padding: 20px!important;
+    }
+
+    #search-form{
+        display: none;
+    }
+
+    .info_tipo{
+        position: relative;
+        right: 8px;
+        width: 80px;
+    }
+    
+    .info_tipo_letras{
+        position: absolute;
+        left: 10px;
+        width: 80px;
+        margin-top: 70px;
+        font-size: 13px;
+    }
+
+    .btn_completado{
+        background-color: rgba(2, 175, 2, 0.795)!important;
+        color: white!important;
+        width: 100%;
+    }
+
+
+}
