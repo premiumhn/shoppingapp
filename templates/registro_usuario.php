@@ -42,9 +42,7 @@ include ("../global/const.php")
 <body>
 <div role="alert" data-delay="5000" aria-live="assertive" aria-atomic="true" id="toast_mensaje" class="toast" data-autohide="true">
         
-        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
+      
         <div class="toast-body">
             
         </div>

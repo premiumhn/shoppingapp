@@ -39,7 +39,7 @@ include ("../global/conexion.php");
                                                         VALUES(:NombreUsuario, :Contrasena, :Correo, :Estado, :FK_TipoUsuario, :FK_Idioma, :Foto, :CodigoConfirmacion)");
     
                 $insert_usuario->bindParam(':NombreUsuario', $username);
-                $insert_usuario->bindParam(':Contrasena', $password);
+                $insert_usuario->bindParam(':Contrasena', openssl_encrypt($password, COD, KEY));
                 $insert_usuario->bindParam(':Correo', $email);
                 $insert_usuario->bindParam(':Estado', $estado);
                 $insert_usuario->bindParam(':FK_TipoUsuario', $tipoUsuario);

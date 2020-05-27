@@ -112,32 +112,41 @@ switch($accion){
         </body>
         </html>';
 
+        
+
+        $numero_correo = 0;
+
+        $sql_correos = $pdo->prepare('SELECT * FROM Correos');
+        $sql_correos->execute();
+        $correos = $sql_correos->fetchAll(PDO::FETCH_ASSOC);
+
         require("../vendor/phpmailer/phpmailer/src/PHPMailer.php");
         require("../vendor/phpmailer/phpmailer/src/SMTP.php");
-
         $mail = new PHPMailer\PHPMailer\PHPMailer();
         $mail->IsSMTP();
 
-        //$mail->SMTPDebug = 1; 
-        $mail->SMTPAuth = true; 
-        $mail->SMTPSecure = 'tls'; 
-        $mail->Host = "smtp-mail.outlook.com";
-        $mail->Port = 587; 
-        $mail->IsHTML(true);
-        $mail->Username = "shoppingapp-services@outlook.com";
-        $mail->Password = "shoppingapp1234";
-        $mail->SetFrom('shoppingapp-services@outlook.com', 'Shoppingapp');
-        $mail->Subject = "Cambiar password";
-        $mail->MsgHTML($mensaje);
-        $mail->AddAddress($usuario[0]['Correo']);
-        $mail->addCustomHeader('Content-Type', 'text/html;charset=utf-8');
+        do{
+            $mail->SMTPDebug = 0; 
+            $mail->SMTPAuth = true; 
+            $mail->SMTPSecure = 'tls'; 
+            $mail->Host = SERVIDOR;
+            $mail->Port = PUERTO; 
+            $mail->IsHTML(true);
+            $mail->Username = $correos[$numero_correo]['Correo'];
+            $mail->Password = $correos[$numero_correo]['Contrasena'];
+            $mail->SetFrom($correos[$numero_correo]['Correo'], 'Shoppingapp');
+            $mail->Subject = "Confirmar correo";
+            $mail->MsgHTML($mensaje);
+            $mail->AddAddress($usuario[0]['Correo']);
+            
+            
+            $numero_correo += 1;
+
+        }  while ($mail->Send() == 0);
+
         
-        if(!$mail->Send()){
-            echo "Problem sending email.";
-        }else{ 
-            echo "email sent.";
-            header('location: ../Cambiar_Cont?accion=wait');
-        } 
+        header('location: ../Cambiar_Cont?accion=wait');
+
     break;
     case "rest":
         $nueva_contrasena = (isset($_POST['input_nuevaContrasena'])) ? $_POST['input_nuevaContrasena'] : "";
@@ -148,7 +157,7 @@ switch($accion){
                                             SET Contrasena = :Contrasena
                                             WHERE PK_Usuario = :PK_Usuario');
 
-        $actualizar_usuario->bindParam(':Contrasena', $nueva_contrasena);
+        $actualizar_usuario->bindParam(':Contrasena', openssl_encrypt($nueva_contrasena, COD, KEY));
         $actualizar_usuario->bindParam(':PK_Usuario', $pk_usuario);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 

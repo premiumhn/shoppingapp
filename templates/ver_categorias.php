@@ -1,10 +1,33 @@
 <?php
 require ('../scripts/comprobaciones.php'); 
 
+$pagina = false;
+$items_por_pagina = 2;
+
+if (isset($_GET["pagina"])) {
+    $pagina = $_GET["pagina"];
+}
+
+if (!$pagina) {
+    $inicio = 0;
+    $pagina = 1;
+} else {
+    $inicio = ($pagina - 1) * $items_por_pagina;
+}
+
+
 //Consulta seleccionar categorías
-$select_categorias = $pdo->prepare("SELECT * FROM Categorias");
+$select_categorias_total = $pdo->prepare("SELECT * FROM Categorias");
+$select_categorias_total->execute();
+$listaCategorias_total = $select_categorias_total->fetchAll(PDO::FETCH_ASSOC);
+
+//Consulta seleccionar categorías
+$select_categorias = $pdo->prepare("SELECT * FROM Categorias ORDER BY PK_Categoria DESC LIMIT ". $inicio .", " . $items_por_pagina);
 $select_categorias->execute();
 $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
+
+//calculo el total de paginas
+$total_pages = ceil(count($listaCategorias_total) / $items_por_pagina);
 
 ?>
 
@@ -15,17 +38,11 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
 <div class="col-md-2 ">
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <form action="Registro-Datos" method="POST">
-                            <input type="hidden" name="menu" value="registro_categoria" />
-                            <button type="submit" class="col-md-12 btn btn-primary">Nueva</button>
-                        </form>
+                <li class="list-group-item">
+                            <a href="Registro-Datos?menu=ver_categorias" type="submit" class="col-md-12 btn btn-primary">Ver todas</a>
                     </li>
                     <li class="list-group-item">
-                        <form action="Registro-Datos" method="POST">
-                            <input type="hidden" name="menu" value="ver_categorias" />
-                            <button type="submit" class="col-md-12 btn btn-primary">Ver todas</button>
-                        </form>
+                            <a href="Registro-Datos?menu=registro_categoria"  type="submit" class="col-md-12 btn btn-primary">Nueva</a>
                     </li>
                 </ul>
             </div>
@@ -35,9 +52,6 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
 <div id="mensaje-error" class="alert alert-danger" role="alert"></div>
     <div class="card">
     <div class="card-body">
-        <h5 class="card-title text-right">Gestión de categoría - Ver todas</h5>
-  
-        
         <table class="table">
             <thead>
                 <tr>
@@ -53,9 +67,16 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach($listaCategorias as $categoria){ ?>
                 <tr WIDTH="100%">
                     <td  WIDTH="30%" ><div class="cont_imagen"><img id="imagen_<?php echo $categoria['PK_Categoria']?>" class="col-md-12 imagen" src="<?php echo URL_SITIO ?>uploads/img/categorias/<?php echo $categoria['Imagen'] ?>" alt=""></div ></td>
-                    <td  id="nombreCategoria_<?php echo $categoria['PK_Categoria']?>" WIDTH="20%"><?php echo $categoria['NombreCategoria'] ?></td>
-                    <td  id="descripcion_<?php echo $categoria['PK_Categoria']?>"  WIDTH="40%"><?php echo $categoria['Descripcion'] ?></td>
-                    <td id="estado_<?php echo $categoria['PK_Categoria']?>" WIDTH="10%"><?php echo $categoria['Estado'] ?></td>
+                    <td id="nombreCategoria_<?php echo $categoria['PK_Categoria']?>" WIDTH="20%"><?php echo $categoria['NombreCategoria'] ?></td>
+                    <td id="descripcion_<?php echo $categoria['PK_Categoria']?>"  WIDTH="40%"><?php echo $categoria['Descripcion'] ?></td>
+                    <td id="estado_<?php echo $categoria['PK_Categoria']?>" WIDTH="10%"><?php echo ($categoria['Estado']==1)?'<label class="switch">
+                                                                                                                                        <input onClick="cambiarEstadoCategoria('. $categoria["PK_Categoria"] .')" class="check" type="checkbox" checked>
+                                                                                                                                        <span class="slider round"></span>
+                                                                                                                                    </label>':
+                                                                                                                                    '<label class="switch">
+                                                                                                                                        <input onClick="cambiarEstadoCategoria('. $categoria["PK_Categoria"] .')" class="check" type="checkbox">
+                                                                                                                                        <span class="slider round"></span>
+                                                                                                                                    </label>'; ?></td>
                     <td><button onClick="editar(<?php echo $categoria['PK_Categoria'] ?>)" type="button" class="btn btn-edit" data-toggle="modal" data-target=".modal-editar"><i class="fas fa-edit mr-2"></i></button></td>
                     <td><button onClick="eliminar(<?php echo $categoria['PK_Categoria'] ?>)" type="button" class="btn btn-eliminar" data-toggle="modal" data-target=".modal-eliminar"><i class="fas fa-trash-alt mr-2"></i></button></td>
                 </tr>
@@ -65,6 +86,33 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
 
     </div>
     </div>
+    <br>
+    <?php 
+
+echo '<nav class="col-md-12">';
+echo '<ul class="pagination" >';
+
+if ($total_pages > 1) {
+    if ($pagina != 1) {
+        echo '<li class="page-item"><a class="page-link" href="Registro-Datos?menu=ver_categorias&pagina='.($pagina-1).'"><span aria-hidden="true">&laquo;</span></a></li>';
+    }
+
+    for ($i=1;$i<=$total_pages;$i++) {
+        if ($pagina == $i) {
+            echo '<li class="page-item active"><a class="page-link" href="#">'.$pagina.'</a></li>';
+        } else {
+            echo '<li class="page-item"><a class="page-link" href="Registro-Datos?menu=ver_categorias&pagina='.$i.'">'.$i.'</a></li>';
+        }
+    }
+
+    if ($pagina != $total_pages) {
+        echo '<li class="page-item"><a class="page-link" href="Registro-Datos?menu=ver_categorias&pagina='.($pagina+1).'"><span aria-hidden="true">&raquo;</span></a></li>';
+    }
+}
+echo '</ul>';
+echo '</nav>';
+
+?>
 </div>
 
 <!-- modal para editar -->
@@ -193,6 +241,9 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
     <?php } elseif( $msj == 'muypesada'){ ?>
         $('#mensaje-error').html('Imagen demasiado pesada. La imagen debe pesar menos de 3 MB.');
         $('#mensaje-error').show();
+    <?php } elseif( $msj == 'error_1'){ ?>
+        $('#mensaje-error').html('No se puede eliminar la catagoría porque ya tiene productos asociados.');
+        $('#mensaje-error').show();
     <?php } ?>
 
     $('#btnEditar').click(function(e){
@@ -279,6 +330,21 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+    function cambiarEstadoCategoria(pk_categoria){
+         // activar o desactivar usuario
+         var response;
+            $.ajax({
+                    type:"POST",
+                    async: false,
+                    url:"<?php echo URL_SITIO?>scripts/datos_ajax.php",
+                    data: {"request" : "cambiarEstadoCategoria", 
+                           "PK_Categoria" : pk_categoria},
+                    success:function(r){
+                        console.log(r);
+                    }
+            });
+    };
 
     $('#inputImagen').change(function(){
         vistaPrevia(this);

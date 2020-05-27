@@ -1,8 +1,4 @@
 <?php
-//session_start();
-require 'language/requirelanguage.php';
-?>
-<?php
 
 
 $buscar_carrito = $pdo->prepare("SELECT * FROM Carrito c INNER JOIN Clientes cli
@@ -36,24 +32,24 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
     
     <?php if($usuario[0]['FK_TipoUsuario'] == 1 ){ ?> 
       <li class="col-md-2 offset-md-1 nav-item">
-            <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Inicio"><i class="fas fa-home mr-2"></i><?php echo $hinicio ?></a>
+            <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Home"><i class="fas fa-home mr-2"></i>Inicio</a>
           </li>
         <li class="col-md-2 nav-item">
-            <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Inicio"><i class="fas fa-globe-americas mr-2"></i><?php echo $hpaises ?></a>
+            <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Inicio"><i class="fas fa-globe-americas mr-2"></i>Paises</a>
           </li>
         <li   class="col-md-2 nav-item">
-          <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Tiendas"><i class="fas fa-store"></i> <?php echo $htienda ?></a>
+          <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Tiendas"><i class="fas fa-store"></i> Tiendas</a>
         </li>
         <li   class="col-md-2  nav-item">
-          <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Pedidos"><i class="fas fa-box mr-2"></i><?php echo $hpedido ?> </a>
+          <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Pedidos"><i class="fas fa-box mr-2"></i>Pedidos </a>
         </li>
     <?php } ?>
       <?php if(!isset($_SESSION['login_user'])){ ?>
         <li   class="col-md-2 nav-item">
-          <a class="nav-link border-right" href="Login"><i class="fas fa-sign-in-alt mr-2"></i><?php echo $hlogin ?></a>
+          <a class="nav-link border-right" href="Login"><i class="fas fa-sign-in-alt mr-2"></i>Log In</a>
         </li>
         <li   class="col-md-2 nav-item">
-          <a class="nav-link border-right" href="Registro-Usuario"><i class="fas fa-sign-out-alt mr-2"></i><?php echo $hregistrarse ?></a>
+          <a class="nav-link border-right" href="Registro-Usuario"><i class="fas fa-sign-out-alt mr-2"></i>Registrarse</a>
 			</li>
       <?php }?>
       <?php if($usuario[0]['FK_TipoUsuario'] == 1 || $usuario[0]['FK_TipoUsuario'] == 3 ){ ?>
@@ -61,6 +57,9 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
       <?php }else if($usuario[0]['FK_TipoUsuario'] == 2 ){ ?> 
           <li  class="col-md-2 offset-md-5 nav-item">
             <a class="nav-link border-right" href="Inicio"><i class="fas fa-home mr-2"></i>Inicio</a>
+          </li>
+          <li   class="col-md-2  nav-item">
+            <a class="nav-link border-right" href="#"><i class="fas fa-store mr-2"></i>Mi tienda</a>
           </li>
           <li class="col-md-2  nav-item dropdown ">
       <?php } ?>
@@ -80,8 +79,7 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
               
             </div>
           
-          </a>
-        </li>
+        </a>
         
         <div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
           
@@ -103,12 +101,12 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
           <?php if($usuario[0]['FK_TipoUsuario'] == 1 || $usuario[0]['FK_TipoUsuario'] == 3 ){ ?>
             <form action="Login" method="POST">
               <input type="hidden" name="sesion" value="cerrar" />
-              <a class="dropdown-item salir" href="#" value="salir" name="menu" onclick="this.parentNode.submit()" ><?php echo $hsalir ?></a>
+              <a class="dropdown-item salir" href="#" value="salir" name="menu" onclick="this.parentNode.submit()" >Salir</a>
             </form>
           <?php }else if($usuario[0]['FK_TipoUsuario'] == 2 ){ ?>
             <form action="Login-Tienda" method="POST">
               <input type="hidden" name="sesion" value="cerrar" />
-              <a class="dropdown-item salir" href="#" value="salir" name="menu" onclick="this.parentNode.submit()" ><?php echo $hsalir ?></a>
+              <a class="dropdown-item salir" href="#" value="salir" name="menu" onclick="this.parentNode.submit()" >Salir</a>
             </form>
             <?php } ?>
         </div>
@@ -127,13 +125,13 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
 	</div>
 	<div class="col-md-6" >
 			<form class="form-inline" id="search-form" action="#" method="post">
-					<input id="busqueda" name="busqueda" class="input-flat col-md-9 form-control" type="search" placeholder="<?php echo $hbuscar ?>" aria-label="Search" value="<?php echo (isset($_POST['busqueda'])) ? $_POST['busqueda'] : "" ?>">
-					<button class="col-md-2 btn-flat" id="btn-buscar-producto" type="submit"><?php echo $hbuscar ?></button>
+					<input id="busqueda" name="busqueda" class="input-flat col-md-9 form-control" type="search" placeholder="Búsqueda" aria-label="Search" value="<?php echo (isset($_POST['busqueda'])) ? $_POST['busqueda'] : "" ?>">
+					<button class="col-md-2 btn-flat" id="btn-buscar-producto" type="submit">Buscar</button>
 			</form>
 	</div>
 	<div class="col-md-2">
     <div style="display:flex;">
-      <a id="lbl-carrito" href="Carrito"> <i class="fas fa-shopping-cart"></i> <?php echo $hcarrito ?>(<?php echo count($carrito)?>)</a>
+      <a id="lbl-carrito" href="Carrito"> <i class="fas fa-shopping-cart"></i> Carrito ( <?php echo count($carrito) ?> )</a>
 		</div>
 		
 	</div>

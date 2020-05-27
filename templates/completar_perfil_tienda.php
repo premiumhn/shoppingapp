@@ -95,7 +95,7 @@ $usuario = $consulta_tipo_usuario->fetchAll(PDO::FETCH_ASSOC);
                 <br>
                 <form action="<?php echo URL_SITIO ?>scripts/completar_perfil_tienda.php" id="form_completar_tienda" method="post" enctype="multipart/form-data">
                 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="inputCorreoPaypal"><img class="col-md-3" src="<?php echo URL_SITIO ?>static/img/PayPal-Logo.png" alt="logo paypal"> ID de Cliente PayPal <span class="text_required">*</span> </label>
                         <div class="row col-md-12">
                             <input type="text" class="form-control col-md-11" name="input_idClientePaypal" id="inputIDClientePaypal" placeholder="Ejemplo: AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk_">
@@ -103,7 +103,7 @@ $usuario = $consulta_tipo_usuario->fetchAll(PDO::FETCH_ASSOC);
                             <i class=" i-error col-md-1 fa fa-times-circle"></i>
                         </div>
                         
-                    </div>
+                    </div> -->
                     
                     <fieldset class="form-group">
                     <label for="inputAdomicilio">¿Tiene servicio a domicilio?</label>
@@ -196,50 +196,50 @@ $usuario = $consulta_tipo_usuario->fetchAll(PDO::FETCH_ASSOC);
         ocultarMensaje();
     }
 
-    var estado_id_cliente;
-    $('#inputIDClientePaypal').focusout(function(){
+    // var estado_id_cliente;
+    // $('#inputIDClientePaypal').focusout(function(){
        
-        var respuesta;
-        $.ajax({
-                type:"POST",
-                async: false,
-                url:"<?php echo URL_SITIO ?>scripts/datos_ajax.php",
-                data: {"request" : "probarURL", 
-                        "client_id" : $('#inputIDClientePaypal').val()},
-                success:function(r){
-                    respuesta = r;
-                }
-        });
+    //     var respuesta;
+    //     $.ajax({
+    //             type:"POST",
+    //             async: false,
+    //             url:"<?php echo URL_SITIO ?>scripts/datos_ajax.php",
+    //             data: {"request" : "probarURL", 
+    //                     "client_id" : $('#inputIDClientePaypal').val()},
+    //             success:function(r){
+    //                 respuesta = r;
+    //             }
+    //     });
         
-        if($('#inputIDClientePaypal').val() != ''){
+    //     if($('#inputIDClientePaypal').val() != ''){
             
-            var n = respuesta.search("client-id not recognized");
-            if(n != -1){
-                toast('ID de cliente PayPal inválido');
-                $('.i-error').show();
-                $('.i-check').hide();
-                estado_id_cliente = 0;
-            }else{
-                $('.i-check').show();
-                $('.i-error').hide();
-                estado_id_cliente = 1;
-            }
-        }
+    //         var n = respuesta.search("client-id not recognized");
+    //         if(n != -1){
+    //             toast('ID de cliente PayPal inválido');
+    //             $('.i-error').show();
+    //             $('.i-check').hide();
+    //             estado_id_cliente = 0;
+    //         }else{
+    //             $('.i-check').show();
+    //             $('.i-error').hide();
+    //             estado_id_cliente = 1;
+    //         }
+    //     }
         
-    });
+    // });
     
-    $('#btnCompletar').click(function (e) {
-        e.preventDefault();
+    // $('#btnCompletar').click(function (e) {
+    //     e.preventDefault();
 
-        if( $('#inputIDClientePaypal').val() == '' ){
-            toast("Falta uno o más campos");
-        }else if(estado_id_cliente == 0){
-            toast("Ingrese un ID de cliente PayPal válido");
-        }else{
-            $('#form_completar_tienda').submit();
-        }
+    //     if( $('#inputIDClientePaypal').val() == '' ){
+    //         toast("Falta uno o más campos");
+    //     }else if(estado_id_cliente == 0){
+    //         toast("Ingrese un ID de cliente PayPal válido");
+    //     }else{
+    //         $('#form_completar_tienda').submit();
+    //     }
 
-    });
+    // });
 
     function mostrarMensaje(msj){
         $("#mensaje_alert").css("visibility", "visible");

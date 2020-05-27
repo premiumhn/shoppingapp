@@ -7,8 +7,11 @@ if(!isset($pdo)){
   include '../global/conexion.php';
   include '../global/const.php';
   session_start();
-  require 'language/requirelanguage.php';
 }
+
+
+
+
 
 $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios
                                 WHERE PK_Usuario = :PK_Usuario");
@@ -21,6 +24,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
 }
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,7 +35,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title><?php echo $tadmin ?></title>
+  <title>Administración</title>
 
 
 
@@ -40,21 +44,13 @@ if($usuario[0]['FK_TipoUsuario']!=3){
 
    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css" rel="stylesheet">
    <link href="<?php echo URL_SITIO ?>static/css/header_admin.css"rel="stylesheet">
-
+   <link href="<?php echo URL_SITIO ?>static/css/toasts.css" rel="stylesheet" type="text/css" media="all" />
+    <script src="<?php echo URL_SITIO ?>static/js/jquery-3.5.0.min.js" ></script>
     <script src="https://kit.fontawesome.com/b2dbb6a24d.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <?php if($usuario[0]['FK_TipoUsuario']!=3){ ?>
-        <link href="<?php echo URL_SITIO ?>static/css/styles.css" rel="stylesheet" type="text/css" media="all" /> 
-    <?php } ?>
-    <link href="<?php echo URL_SITIO ?>static/css/registro_datos.css" rel="stylesheet" type="text/css" media="all" /> 
-    <link href="<?php echo URL_SITIO ?>static/css/toasts.css" rel="stylesheet" type="text/css" media="all" />
-    <?php include 'iconos.php' ?>
-
-
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css"rel="stylesheet">
-    
+
 
 </head>
 
@@ -65,7 +61,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
     
       <a  class="navbar-brand" href="#">
         <img style="width:180px;" src="<?php echo URL_SITIO ?>static/img/Logo_shoppingapp_v2_trazado.png" alt="">
-        <span class="text-modulo"><?php echo $tmodulo ?></span> 
+        <span class="text-modulo"> Módulo Administrativo</span> 
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -73,22 +69,23 @@ if($usuario[0]['FK_TipoUsuario']!=3){
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item " id="paises">
-            <a class="nav-link " href="<?php echo URL_SITIO?>Admin" ><?php echo $hinicio ?>
+            <a class="nav-link " href="<?php echo URL_SITIO?>Admin" >Inicio
             </a>
           </li>
           <li class="nav-item " id="paises">
-            <a class="nav-link " href="<?php echo URL_SITIO?>Paises" ><?php echo $hpaises ?>
+            <a class="nav-link " href="<?php echo URL_SITIO?>Paises" >Paises
             </a>
           </li>
           <li class="nav-item" id="ciudades">
-            <a class="nav-link" href="<?php echo URL_SITIO ?>Ciudades" ><?php echo $hciudades ?></a>
+            <a class="nav-link" href="<?php echo URL_SITIO ?>Ciudades" >Ciudades</a>
+          </li>
+          <li class="nav-item" id="Usuarios">
+            <a class="nav-link" href="<?php echo URL_SITIO ?>Usuarios-Admin" >Usuarios</a>
           </li>
           <li class="nav-item" id="ciudades">
             <form action="Registro-Datos" method="POST">
-              <input type="hidden" name="menu" value="registro_categoria" />
-              <a class="nav-link" href="#" value="category" name="menu" onclick="this.parentNode.submit()" >
-                <?php echo $tcategorias ?>
-              </a>
+              <input type="hidden" name="menu" value="ver_categorias" />
+              <a class="nav-link" href="Registro-Datos?menu=ver_categorias" value="category" name="menu"  >Gestión de categoría</a>
             </form>
           </li>
           <!-- <li class="nav-item dropdown">
@@ -103,16 +100,6 @@ if($usuario[0]['FK_TipoUsuario']!=3){
             <a class="dropdown-item" href="#">Tipos de Pago</a>
           </div>
         </li> -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <?php echo $fidioma ?>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right bg-warning" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="templates/language/changelanguage.php?language=es"><?php echo $spanish ?></a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="templates/language/changelanguage.php?language=en"><?php echo $english ?></a>
-          </div>
-        </li>
       </ul>
       </div>
     
@@ -131,13 +118,13 @@ if($usuario[0]['FK_TipoUsuario']!=3){
             </a>
             <span><?php echo $usuario[0]['NombreUsuario'] ?></span>
             <br>
-            <form action="Registro-Datos" method="POST">
-              <input type="hidden" name="menu" value="perfil_usuario" />
-              <a style="color:white;font-size:13px;" class="" href="#" value="category" name="menu" onclick="this.parentNode.submit()" ><?php echo $heditperfil ?></a>
+            <form action="Editar-Usuario-Admin" method="POST">
+              <input type="hidden" name="PK_Usuario" value="<?php echo $usuario[0]['PK_Usuario']?>" />
+              <a style="color:white;font-size:13px;" class="" href="#" value="category" name="menu" onclick="this.parentNode.submit()" >Editar pefil</a>
             </form>
             <br>
             <br>
-            <a style="color:white;font-size:13px;" href="<?php echo URL_SITIO ?>Login"><?php echo $hsalir ?></a>
+            <a style="color:white;font-size:13px;" href="<?php echo URL_SITIO ?>Login"> Cerrar Sesión</a>
             <br>
             <br>
           </li>
@@ -149,7 +136,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
+        <h1 class="h2 h2-name">Dashboard</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group mr-2">
             <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>

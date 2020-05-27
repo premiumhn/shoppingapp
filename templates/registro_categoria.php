@@ -7,27 +7,20 @@
 <div class="col-md-2 bordered">
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <form action="Registro-Datos" method="POST">
-                            <input type="hidden" name="menu" value="registro_categoria" />
-                            <button type="submit" class="col-md-12 btn btn-primary">Nueva</button>
-                        </form>
+                <li class="list-group-item">
+                            <a href="Registro-Datos?menu=ver_categorias" type="submit" class="col-md-12 btn btn-primary">Ver todas</a>
                     </li>
                     <li class="list-group-item">
-                        <form action="Registro-Datos" method="POST">
-                            <input type="hidden" name="menu" value="ver_categorias" />
-                            <button type="submit" class="col-md-12 btn btn-primary">Ver todas</button>
-                        </form>
+                            <a href="Registro-Datos?menu=registro_categoria"  type="submit" class="col-md-12 btn btn-primary">Nueva</a>
                     </li>
                 </ul>
             </div>
         </div>
 <div style="height:100%;margin-bottom:60px;" class="col-md-10 bordered">
 <div id="mensaje-success" class="alert alert-success" role="alert"></div>
+<div class="alert alert-warning"></div>
     <div class="card">
     <div class="card-body">
-        <h5 class="card-title text-right">Gestión de categoría - Nuevo</h5>
-        <br>
         <form id="formRegistrar" action="<?php echo URL_SITIO ?>scripts/registro_datos.php" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="inputAddress">Nombre de la categoría</label>
@@ -70,6 +63,8 @@
 </div>
 <script>
      $('#mensaje-success').hide();
+
+     $('.alert-warning').css("display", "none");
  
 
     <?php 
@@ -111,8 +106,8 @@
     });
 
      function toast(msj){
-            $('.toast-body').html(msj);
-            $('#toast_mensaje').toast('show');
+        $('.alert-warning').html(msj);
+        $('.alert-warning').css("display", "");
     }
     
 

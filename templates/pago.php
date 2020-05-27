@@ -67,7 +67,7 @@ $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Checkout</title>
+    <title>Pago</title>
 
      <!-- Imports -->
    
@@ -314,9 +314,9 @@ paypal.Button.render({
   env: '<?php echo PayPalENV; ?>',
   client: {
 	<?php if(ProPayPal) { ?>  
-	production: '<?php echo $lista_carrito[0]['IDClientePaypal']; ?>'
+	production: '<?php echo PayPalClientId ?>'
 	<?php } else { ?>
-	sandbox: '<?php echo $lista_carrito[0]['IDClientePaypal']; ?>'
+	sandbox: '<?php echo PayPalClientId ?>'
 	<?php } ?>	
   },
   style: {

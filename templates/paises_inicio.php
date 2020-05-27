@@ -26,6 +26,7 @@ if($usuario[0]['FK_TipoUsuario'] == 2){
 }
 
 
+
 $busqueda = (isset($_POST['busqueda'])) ? $_POST['busqueda'] : "";
 
 $str_busqueda = '';
@@ -72,7 +73,7 @@ if($busqueda!=''){
 <body>
 	<?php include './header.php'; ?>
 				<div class="col-md-12 text-center titulo">
-					<h2><?php echo $tpaises ?></h2>
+					<h2>Países</h2>
 				</div>	
 				<div class="alert col-md-12 alert-danger text-center"></div>
 				<br>
@@ -85,7 +86,7 @@ if($busqueda!=''){
 					<div id="new" class="card text-white bg-muted o-hidden h-100">
 						<div class="card-body">
 							<div class="card-body-icon">
-								<img src="<?php echo URL_SITIO ?>uploads/img/paises/<?php echo $pais["Logo"] ?>" alt="<?php echo $pais["NombrePais"] ?>" style="border-radius: 7px;">
+								<img src="<?php echo URL_SITIO ?>uploads/img/paises/<?php echo $pais["logo"] ?>" alt="<?php echo $pais["NombrePais"] ?>" style="border-radius: 7px;">
 							</div>
 							<div class="mr-5 text-center">
 							
@@ -93,7 +94,7 @@ if($busqueda!=''){
 						</div>
 						<a class="card-footer  clearfix small z-1" href="<?php echo URL_SITIO ?>Tiendas?idPais=<?php echo $pais["PK_Pais"] ?>" >
 							<span class="float-left" style="font-size: 1rem;">
-								<?php echo $tiendasde ?><strong class="text-uppercase"><?php echo $pais["NombrePais"] ?></strong>  
+								Tiendas de <strong class="text-uppercase"><?php echo $pais["NombrePais"] ?></strong>  
 							</span>
 							<span class="float-right">
 								<i class="fas fa-angle-right"></i>

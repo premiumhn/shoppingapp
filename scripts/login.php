@@ -10,14 +10,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
   
      // comprobar que el usuario no existe
-     $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario and Contrasena = :Contrasena ");
+     $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario ");
      $buscar_usuario->bindParam(':nombreUsuario', $_POST['input_username']);
-     $buscar_usuario->bindParam(':Contrasena', $_POST['input_password']);
+    //  $buscar_usuario->bindParam(':Contrasena', openssl_encrypt($_POST['input_password'], COD, KEY));
      $buscar_usuario->execute();
      $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
      $cuenta_usuario = $buscar_usuario->rowCount();
- 
-    if($cuenta_usuario > 0){
+
+     if(openssl_decrypt($usuario[0]['Contrasena'], COD, KEY) ==  $_POST['input_password']){
         
         session_start();
         $_SESSION['login_user'] = $usuario[0]['PK_Usuario']; 
@@ -27,8 +27,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }else{
        
         header('location: ../Login');
-        echo "<script>alert('No existe el usuario')</script>";
+        //echo "<script>alert('No existe el usuario')</script>";
     }
+ 
+    // if($cuenta_usuario > 0){
+        
+    //     session_start();
+    //     $_SESSION['login_user'] = $usuario[0]['PK_Usuario']; 
+        
+    //     //echo "<script>alert('".$_SESSION['login_user']."')</script>";
+    //     header('location: ../index.php');
+    // }else{
+       
+    //     header('location: ../Login');
+    //     echo "<script>alert('No existe el usuario')</script>";
+    // }
 }
 
     

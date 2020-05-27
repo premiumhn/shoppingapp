@@ -82,7 +82,7 @@ session_start();
 
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $actualizar_cliente->execute();
-                header('Location ../Home');
+                header('Location: ../Inicio');
                 
     
             break;

@@ -260,9 +260,9 @@ paypal.Button.render({
   env: '<?php echo PayPalENV; ?>',
   client: {
 	<?php if(ProPayPal) { ?>  
-	production: '<?php echo $producto[0]['IDClientePaypal']; ?>'
+	production: '<?php echo PayPalClientId ?>'
 	<?php } else { ?>
-	sandbox: '<?php echo $producto[0]['IDClientePaypal']; ?>'
+	sandbox: '<?php echo PayPalClientId ?>'
 	<?php } ?>	
   },
   style: {

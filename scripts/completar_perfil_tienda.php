@@ -107,10 +107,13 @@ session_start();
                
 
                 // actualizar cliente
-                $actualizar_tienda = $pdo->prepare("UPDATE `Tiendas` SET `IDClientePaypal` = :IDClientePaypal, `Adomicilio` = :Adomicilio
+                // $actualizar_tienda = $pdo->prepare("UPDATE `Tiendas` SET `IDClientePaypal` = :IDClientePaypal, `Adomicilio` = :Adomicilio
+                //                                    WHERE `Tiendas`.`PK_Tienda` = :PK_Tienda AND `Tiendas`.`FK_Usuario` = :FK_Usuario;");
+                $actualizar_tienda = $pdo->prepare("UPDATE `Tiendas` SET `Adomicilio` = :Adomicilio
                                                    WHERE `Tiendas`.`PK_Tienda` = :PK_Tienda AND `Tiendas`.`FK_Usuario` = :FK_Usuario;");
     
-                $actualizar_tienda->bindParam(':IDClientePaypal', $id_cliente_paypal);
+
+                //$actualizar_tienda->bindParam(':IDClientePaypal', $id_cliente_paypal);
                 $actualizar_tienda->bindParam(':Adomicilio', $adomicilio);
                 $actualizar_tienda->bindParam(':PK_Tienda', $tienda[0]['PK_Tienda']);
                 $actualizar_tienda->bindParam(':FK_Usuario', $tienda[0]['FK_Usuario']);

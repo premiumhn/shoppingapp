@@ -124,14 +124,25 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         break;
         case "eliminar_categoria":
-
             $pk_categoria = (isset($_POST['pk_categoria'])) ? $_POST['pk_categoria'] : "";
 
+
+            $select_productos = $pdo->prepare("SELECT * FROM Productos
+                                               WHERE FK_Categoria = :PK_Categoria");
+            $select_productos->bindParam(':PK_Categoria', $pk_categoria);
+            $select_productos->execute();
+            $productos = $select_productos->fetchAll(PDO::FETCH_ASSOC);
+       
+            if(count($productos) == 0){
                 $editar_categoria = $pdo->prepare("DELETE FROM Categorias
-                                                   WHERE PK_Categoria = :PK_Categoria");
+                                                WHERE PK_Categoria = :PK_Categoria");
                 $editar_categoria->bindParam(':PK_Categoria', $pk_categoria);
                 $editar_categoria->execute();
                 header('location: ../Registro-Datos?menu=ver_categorias&msj=eliminada');
+            }else{
+                header('location: ../Registro-Datos?menu=ver_categorias&msj=error_1');
+            }
+            
             
 
         break;

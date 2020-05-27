@@ -38,7 +38,7 @@ include ("../global/const.php");
                                                         VALUES(:NombreUsuario, :Contrasena, :Correo, :Estado, :FK_TipoUsuario, :FK_Idioma, :Foto, :CodigoConfirmacion)");
     
                 $insert_usuario->bindParam(':NombreUsuario', $nombreUsuario);
-                $insert_usuario->bindParam(':Contrasena', $contrasena);
+                $insert_usuario->bindParam(':Contrasena', openssl_encrypt($contrasena, COD, KEY));
                 $insert_usuario->bindParam(':Correo', $correo);
                 $insert_usuario->bindParam(':Estado', $estado);
                 $insert_usuario->bindParam(':FK_TipoUsuario', $tipoUsuario);

@@ -110,17 +110,18 @@ $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
 
     </div>
 </div>
-<br>
 <div class="row col-md-12">
     <div class="col-md-4 offset-md-4 text-center">
         <span style="font-size:12px;color:white;">¿No tienes una cuenta?</span>
     </div>
 </div>
 <div class="row col-md-12">
-    <div class="col-md-4 offset-md-4 text-center">
-        <a href="Registro-Tienda" class="btn btn-primary btn_registrarse">Registrar tienda</a>
+    <div class="col-md-8 offset-md-2 text-center">
+        <span style="color:white;">Envíanos tu información a <strong>shoppingapp-services@outlook.com</strong> y solicita crear una cuenta para tu tienda.</span>
+        <!-- <a href="Registro-Tienda" class="btn btn-primary btn_registrarse">Registrar tienda</a> -->
     </div>
 </div>
+<br>
 <br>
 
 

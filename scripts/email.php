@@ -1,6 +1,8 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
+require '../global/config.php';
+require '../global/conexion.php';
 require '../global/const.php';
 
     header("Access-Control-Allow-Origin: *");
@@ -73,27 +75,35 @@ require '../global/const.php';
         </body>
         </html>';
 
+        $numero_correo = 0;
+
+        $sql_correos = $pdo->prepare('SELECT * FROM Correos');
+        $sql_correos->execute();
+        $correos = $sql_correos->fetchAll(PDO::FETCH_ASSOC);
+
         $mail = new PHPMailer\PHPMailer\PHPMailer();
         $mail->IsSMTP();
 
+        do {
 
-        //$mail->SMTPDebug = 1; 
-        $mail->SMTPAuth = true; 
-        $mail->SMTPSecure = 'tls'; 
-        $mail->Host = "smtp-mail.outlook.com";
-        $mail->Port = 587; 
-        $mail->IsHTML(true);
-        $mail->Username = "shoppingapp-services@outlook.com";
-        $mail->Password = "shoppingapp1234";
-        $mail->SetFrom('shoppingapp-services@outlook.com', 'Shoppingapp');
-        $mail->Subject = "Confirmar correo";
-        $mail->MsgHTML($mensaje);
-        $mail->AddAddress($correo_destino);
-        $mail->addCustomHeader('Content-Type', 'text/html;charset=utf-8');
-       
-        
-        $mail->Send();
-        header('location: ../confirmacion_correo?c='.$codigo.'&m='.$correo_destino);
+            $mail->SMTPDebug = 0; 
+            $mail->SMTPAuth = true; 
+            $mail->SMTPSecure = 'tls'; 
+            $mail->Host = SERVIDOR;
+            $mail->Port = PUERTO; 
+            $mail->IsHTML(true);
+            $mail->Username = $correos[$numero_correo]['Correo'];
+            $mail->Password = $correos[$numero_correo]['Contrasena'];
+            $mail->SetFrom($correos[$numero_correo]['Correo'], 'Shoppingapp');
+            $mail->Subject = "Confirmar correo";
+            $mail->MsgHTML($mensaje);
+            $mail->AddAddress($correo_destino);
+
+        } while ($mail->Send() == false);
+
+      
+
+       header('location: ../confirmacion_correo?c='.$codigo.'&m='.$correo_destino);
         
     } else {
         $response_array['status'] = 'error';

@@ -40,6 +40,12 @@ switch($request){
 	case "unidadesDisponibles":
 		unidadesDisponibles();
 	break;
+	case "cambiarEstadoUsuario":
+		cambiarEstadoUsuario();
+	break;
+	case "cambiarEstadoCategoria":
+		cambiarEstadoCategoria();
+	break;
 }
 	function selectCiudades(){
 		global $pdo;
@@ -70,6 +76,7 @@ switch($request){
         $buscar_usuario->execute();
         $cuenta_usuario = $buscar_usuario->rowCount();
 
+
         if ($cuenta_usuario > 0){
             echo 1;
         }else{
@@ -80,17 +87,24 @@ switch($request){
 	function verificarLogin(){
 		global $pdo;
 		// comprobar que el usuario no existe
-        $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario and Contrasena = :Contrasena ");
+        $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario ");
 		$buscar_usuario->bindParam(':nombreUsuario', $_POST['NombreUsuario']);
-		$buscar_usuario->bindParam(':Contrasena', $_POST['Contrasena']);
+		// $buscar_usuario->bindParam(':Contrasena', $_POST['Contrasena']);
         $buscar_usuario->execute();
-        $cuenta_usuario = $buscar_usuario->rowCount();
+		$cuenta_usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
+		
 
-        if ($cuenta_usuario > 0){
+		if (openssl_decrypt($cuenta_usuario[0]['Contrasena'], COD, KEY) == $_POST['Contrasena']){
             echo 1;
         }else{
 			echo 0;
 		}
+
+        // if ($cuenta_usuario > 0){
+        //     echo 1;
+        // }else{
+		// 	echo 0;
+		// }
 
 		
 	}
@@ -254,6 +268,53 @@ switch($request){
 		echo $producto[0]['UnidadesDisponibles'];
 	}
 
+	function cambiarEstadoUsuario(){
+		global $pdo;
+
+		$pk_usuario = (isset($_POST['PK_Usuario']))?$_POST['PK_Usuario']:"";
+
+		$sql_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE PK_Usuario = :PK_Usuario");
+		$sql_usuario->bindParam(':PK_Usuario', $pk_usuario);
+		$sql_usuario->execute();
+		$usuario = $sql_usuario->fetchAll(PDO::FETCH_ASSOC); 
+
+		if($usuario[0]['Estado'] == 0){
+			$actualizar_usuario = $pdo->prepare("UPDATE Usuarios 
+											SET Estado = 1
+											WHERE PK_Usuario = :PK_Usuario");
+		}else{
+			$actualizar_usuario = $pdo->prepare("UPDATE Usuarios 
+											SET Estado = 0
+											WHERE PK_Usuario = :PK_Usuario");
+		}	
+		
+		$actualizar_usuario->bindParam(':PK_Usuario', $pk_usuario);
+		echo $actualizar_usuario->execute();
+	}
+
+	function cambiarEstadoCategoria(){
+		global $pdo;
+
+		$pk_categoria = (isset($_POST['PK_Categoria']))?$_POST['PK_Categoria']:"";
+
+		$sql_categoria = $pdo->prepare("SELECT * FROM Categorias WHERE PK_Categoria = :PK_Categoria");
+		$sql_categoria->bindParam(':PK_Categoria', $pk_categoria);
+		$sql_categoria->execute();
+		$categoria = $sql_categoria->fetchAll(PDO::FETCH_ASSOC); 
+
+		if($categoria[0]['Estado'] == 0){
+			$actualizar_categoria = $pdo->prepare("UPDATE Categorias 
+											SET Estado = 1
+											WHERE PK_Categoria = :PK_Categoria");
+		}else{
+			$actualizar_categoria = $pdo->prepare("UPDATE Categorias 
+												SET Estado = 0
+												WHERE PK_Categoria = :PK_Categoria");
+		}	
+		
+		$actualizar_categoria->bindParam(':PK_Categoria', $pk_categoria);
+		echo $actualizar_categoria->execute();
+	}
 
 
 
