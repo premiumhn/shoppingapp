@@ -1,0 +1,41 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+RewriteRule ^$ index.php
+RewriteRule ^Registro-Usuario/?$ templates/registro_usuario.php
+RewriteRule ^Registro-Tienda/?$ templates/registro_tienda.php
+RewriteRule ^Tiendas/?$ templates/tiendas.php
+RewriteRule ^Paises/?$ templates/paises.php
+RewriteRule ^Ciudades/?$ templates/ciudades.php
+RewriteRule ^Home/?$ templates/home.php
+RewriteRule ^Admin/?$ templates/admin.php
+RewriteRule ^Agregar-Categoria/?$ templates/registro_categoria.php
+RewriteRule ^Ver-Categoria/?$ templates/ver_categorias.php
+RewriteRule ^Productos/?$ templates/productos.php
+RewriteRule ^Producto/?$ templates/producto.php
+RewriteRule ^Destinatarios/?$ templates/destinatarios.php
+RewriteRule ^Producto-Detalle/?$ templates/detalle_producto.php
+RewriteRule ^Carrito/?$ templates/carrito.php
+RewriteRule ^Login/?$ templates/login.php
+RewriteRule ^Login-Tienda/?$ templates/login_tienda.php
+RewriteRule ^css/?$ static/css/styles.css
+RewriteRule ^media/?$ uploads/img/
+
+RewriteRule ^Cambiar_Cont/?$ templates/cambiar_contrasena.php
+RewriteRule ^confirmacion_correo/?$ templates/confirmacion_correo.php
+RewriteRule ^confirmacion_correo_tienda/?$ templates/confirmacion_correo_tienda.php
+RewriteRule ^Pedidos/?$ templates/pedidos.php
+RewriteRule ^Pedidos-Completados/?$ templates/pedidos_completados.php
+RewriteRule ^Pedidos-Tienda/?$ templates/pedidos_tienda.php
+RewriteRule ^Pedidos-Completados-Tienda/?$ templates/pedidos_completados_tienda.php
+RewriteRule ^Registro-Datos/?$ templates/registro_datos.php
+RewriteRule ^Home-Tienda/?$ templates/home_tienda.php
+RewriteRule ^Completar-Pefil-Tienda/?$ templates/completar_perfil_tienda.php
+RewriteRule ^Completar-Perfil-Cliente/?$ templates/completar_perfil_cliente.php
+RewriteRule ^Detalle-Producto/?$ templates/detalle_producto.php
+RewriteRule ^Pago-SoloUno/?$ templates/pago_solouno.php
+RewriteRule ^Pago/?$ templates/pago.php
+RewriteRule ^Index/?$ index.php
+RewriteRule ^Confirmacion-Pago/?$ templates/confirmacion_pago.php
+RewriteRule ^Confirma/?$ templates/confirmacion_pago.php
+RewriteRule ^Inicio/?$ templates/paises_inicio.php

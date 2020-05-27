@@ -53,8 +53,8 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach($listaCategorias as $categoria){ ?>
                 <tr WIDTH="100%">
                     <td  WIDTH="30%" ><div class="cont_imagen"><img id="imagen_<?php echo $categoria['PK_Categoria']?>" class="col-md-12 imagen" src="<?php echo URL_SITIO ?>uploads/img/categorias/<?php echo $categoria['Imagen'] ?>" alt=""></div ></td>
-                    <td id="nombreCategoria_<?php echo $categoria['PK_Categoria']?>" WIDTH="20%"><?php echo $categoria['NombreCategoria'] ?></td>
-                    <td id="descripcion_<?php echo $categoria['PK_Categoria']?>"  WIDTH="40%"><?php echo $categoria['Descripcion'] ?></td>
+                    <td  id="nombreCategoria_<?php echo $categoria['PK_Categoria']?>" WIDTH="20%"><?php echo $categoria['NombreCategoria'] ?></td>
+                    <td  id="descripcion_<?php echo $categoria['PK_Categoria']?>"  WIDTH="40%"><?php echo $categoria['Descripcion'] ?></td>
                     <td id="estado_<?php echo $categoria['PK_Categoria']?>" WIDTH="10%"><?php echo $categoria['Estado'] ?></td>
                     <td><button onClick="editar(<?php echo $categoria['PK_Categoria'] ?>)" type="button" class="btn btn-edit" data-toggle="modal" data-target=".modal-editar"><i class="fas fa-edit mr-2"></i></button></td>
                     <td><button onClick="eliminar(<?php echo $categoria['PK_Categoria'] ?>)" type="button" class="btn btn-eliminar" data-toggle="modal" data-target=".modal-eliminar"><i class="fas fa-trash-alt mr-2"></i></button></td>
