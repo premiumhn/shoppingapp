@@ -1,5 +1,8 @@
-<?php include 'header_admin.php' ?>
 <?php 
+
+include 'header_admin.php';
+
+
 	$txtID=(isset($_POST['PK_Ciudad']))?$_POST["PK_Ciudad"]:"";
 	$txtNombre=(isset($_POST['NombreCiudad']))?$_POST["NombreCiudad"]:"";
 	$txtPais=(isset($_POST['FK_Pais']))?$_POST["FK_Pais"]:"";
@@ -7,8 +10,6 @@
 
 	switch ($accion) {
 		case 'agregar':
-
-						
 					
 					$sentencia=$pdo->prepare("INSERT into Ciudades(NombreCiudad,FK_Pais) VALUES(:NombreCiudad,:FK_Pais)");
 					$sentencia->bindParam(':NombreCiudad',$txtNombre);
@@ -16,17 +17,17 @@
 					$sentencia->execute();
 				break;
 		case 'editar':
-					$sql2=$pdo->prepare("UPDATE Paises
+					$sql2=$pdo->prepare("UPDATE Ciudades
 					SET NombreCiudad=:NombreCiudad
-					WHERE PK_Pais=:PK_Pais");
+					WHERE PK_Ciudad=:PK_Ciudad");
 					$sql2->bindParam(':NombreCiudad',$txtNombre);
-					$sql2->bindParam(':PK_Pais',$txtID);
+					$sql2->bindParam(':PK_Ciudad',$txtID);
 					$sql2->execute();
 			break;
 		case 'eliminar':
-					$sql3=$pdo->prepare("DELETE from Paises
-					WHERE PK_Pais=:PK_Pais");
-					$sql3->bindParam(':PK_Pais',$txtID);
+					$sql3=$pdo->prepare("DELETE from Ciudades
+					WHERE PK_Ciudad=:PK_Ciudad");
+					$sql3->bindParam(':PK_Ciudad',$txtID);
 					$sql3->execute();
 			break;
 		case 'cancelar':
@@ -54,7 +55,7 @@
 		<div class="col-md-4">
 			<div class="card">
 			  <div class="card-header">
-			    Registro de Ciudad
+			    <?php echo $rciudades ?>
 			  </div>
 			 	<form class="form-line" id="frmRegistro" method="post">
 			  <div class="card-body">
@@ -62,31 +63,30 @@
 					
 					<input class="form-control" hidden type="text" name="PK_Ciudad" value="<?php echo $txtID ?>"  placeholder="Primary Key" id="inputPK_Ciudad" readonly >
 					<br>
-					<label class="" for="">Ciudad:</label>
-					<input class="form-control" type="text" name="NombreCiudad" placeholder="Ingrese el nombre de la ciudad" id="inputNombreCiudad" required value="<?php echo $txtNombre ?>">
+					<label class="" for=""><?php echo $nciudad ?>:</label>
+					<input class="form-control" type="text" name="NombreCiudad" maxlength="80" id="inputNombreCiudad" required value="<?php echo $txtNombre ?>">
 					<br>
 
 					<div class="">
                         <select name="FK_Pais" id="" class="form-control" required>
-                        	<option value="">--Seleccione--</option>
+                        	<option value="">--<?php echo $btnSeleccionar ?>--</option>
                         	<?php foreach ($listPais as $paisL ) {?>
-
                         		<option value="<?php echo $paisL['PK_Pais'] ?>"><?php  echo $paisL['NombrePais'] ?></option>
                         	<?php } ?>
                         </select>
                     </div>
 			  	</div>
 				<div class="card-footer text-muted text-center">
-				  	<button class="btn btn-primary" value="agregar" type="submit" name="accion" data-toggle="tooltip" title="Guardar">
+				  	<button class="btn btn-primary" value="agregar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnGuardar ?>">
 				  		<i class="fas fa-save fas-faw"></i>
 				  	</button>
-					<button class="btn btn-success" value="editar" type="submit" name="accion" data-toggle="tooltip" title="Editar">
+					<button class="btn btn-success" value="editar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnEditar ?>">
 						<i class="fas fa-edit fas-faw"></i>
 					</button>
-					<button class="btn btn-danger" value="eliminar" type="submit" name="accion" data-toggle="tooltip" title="Eliminar">
+					<button class="btn btn-danger" value="eliminar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnEliminar ?>">
 						<i class="fas fa-trash-alt fas-faw"></i>
 					</button>
-					<button class="btn btn-warning" value="cancelar" type="submit" name="accion" data-toggle="tooltip" title="Cancelar">
+					<button class="btn btn-warning" value="cancelar" type="reset" name="accion" data-toggle="tooltip" title="<?php echo $btnCancelar ?>">
 						<i class="fas fa-ban fas-faw"></i>
 					</button>
 				</div>
@@ -97,7 +97,7 @@
 			<div class="card mb-3 ">
 	          	<div class="card-header">
 	             	<i class="fas fa-table"></i>
-	            	Listado de Ciudades
+	            	<?php echo $lciudad ?>
 	          	</div>
             	<div class="card-body">
               		<div class="table-responsive">
@@ -105,10 +105,10 @@
                   			<thead class="text-center">
 			                    <tr>
 									<th hidden>IDCIUDAD</th>
-									<th>Ciudad</th>
+									<th><?php echo $nciudad ?></th>
 									<th hidden>IDPAIS</th>
-									<th >Pais</th>
-									<th>ACCION</th>
+									<th ><?php echo $npais ?></th>
+									<th><?php echo $naccion ?></th>
 								</tr>
 			                </thead>
                 			<tbody> 
@@ -123,7 +123,7 @@
 												<input hidden type="text" name="PK_Ciudad" value="<?php echo $pais["PK_Ciudad"]; ?>">
 												<input hidden type="text" name="NombreCiudad" value="<?php echo $pais["NombreCiudad"]; ?>">
 												<input hidden type="text" name="FK_Pais" value="<?php echo $pais["FK_Pais"]; ?>">
-												<button type="submit" class="btn btn-primary">Seleccionar</button>
+												<button type="submit" class="btn btn-primary" data-toggle="tooltip" title="<?php echo $btnSeleccionar ?>"><i class="fas fa-check"></i></button>
 												
 											</form>
 										</td>
@@ -133,7 +133,7 @@
                 		</table>
               		</div>
             	</div>
-          		<div class="card-footer small text-muted">Ciudades</div>
+          		<div class="card-footer small text-muted"><?php echo $hciudades ?></div>
     		</div>
 	</div>
 	

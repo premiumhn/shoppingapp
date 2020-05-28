@@ -342,9 +342,12 @@ $('#lbl-carrito').hide();
                 }
         });
 
-        if($('#inputCantidad').val() > unidades_disponibles){
+       
+        var  solicita=parseInt($('#inputCantidad').val());
+        if(solicita > parseInt(unidades_disponibles)){
             e.preventDefault();
-            $('.toast-body').html('No hay suficientes unidades dispobibles de este producto');
+            var pide=$('#inputCantidad').val();
+            $('.toast-body').html('No hay suficientes unidades dispobibles de este producto: '+unidades_disponibles);
             $('#toast_mensaje').toast('show');
         }
 

@@ -52,7 +52,7 @@ if($busqueda!=''){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Tiendas</title>
+    <title><?php echo $ttiendas ?></title>
 
     <!-- Imports -->
     <link href="<?php echo URL_SITIO ?>static/css/styles.css" rel="stylesheet" type="text/css" media="all" />
@@ -69,7 +69,7 @@ if($busqueda!=''){
   <body>
   <?php include 'header.php'; ?>
     <div class="col-md-12 text-center titulo">
-			<h2>Tiendas</h2>
+			<h2><?php echo $ttiendas ?></h2>
     </div>	
     <div class="alert col-md-12 alert-danger text-center"></div>
 
@@ -95,7 +95,7 @@ if($busqueda!=''){
                     </div>
                     <a class="card-footer  clearfix small z-1" href="<?php echo URL_SITIO ?>Home?Tienda=<?php echo $pais["PK_Tienda"] ?>" >
                       <span class="float-left" style="font-size: 1rem;">
-                       Comprar dentro de <strong class="text-uppercase"><?php echo $pais["NombreTienda"] ?></strong>  
+                      <?php echo $compraren ?><strong class="text-uppercase"><?php echo $pais["NombreTienda"] ?></strong>  
                       </span>
                       <span class="float-right">
                         <i class="fas fa-angle-right"></i>

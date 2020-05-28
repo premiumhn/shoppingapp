@@ -17,7 +17,7 @@
 </style>
 <div class="row" id="LogoaAdmin">
 	<div class="col-md-12" id="contenedor">
-		<img src="/shoppingapp/static/img/fondo_tienda.jpg" alt="">
+        <img src="/shoppingapp/static/img/fon.png" alt="">
 	</div>
 </div>
 

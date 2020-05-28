@@ -1,17 +1,16 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
-include ("../global/config.php");
-include ("../global/conexion.php");
-include ('../global/const.php');
+include '../global/config.php';
+include '../global/conexion.php';
+include '../global/const.php';
 
 session_start();
+require 'language/requirelanguage.php';
 
 require ('../scripts/comprobaciones.php');
-
 // tipo de registro
 $form = (isset($_REQUEST['menu']))? $_REQUEST['menu'] : "";
-
 $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios
                                 WHERE PK_Usuario = :PK_Usuario");
 $buscar_usuario->bindParam('PK_Usuario', $_SESSION['login_user']);
