@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:8889
--- Tiempo de generación: 23-05-2020 a las 17:05:56
+-- Tiempo de generación: 28-05-2020 a las 15:23:39
 -- Versión del servidor: 5.7.23
 -- Versión de PHP: 7.2.10
 
@@ -60,8 +60,8 @@ CREATE TABLE `Categorias` (
 
 INSERT INTO `Categorias` (`PK_Categoria`, `NombreCategoria`, `Descripcion`, `Imagen`, `Estado`) VALUES
 (1, 'Calzado', 'Calzado general', 'Calzado_1590187771_blog_35.jpg', 1),
-(2, 'Tecnología', 'Tecnología', 'Tecnología_1590183253_mejores-gadgets-2019-z.jpg', 0),
-(4, 'Ropa', 'Ropa', 'Ropa_1590183275_ropa-medioambiente-t.jpg', 0);
+(2, 'Tecnología', 'Tecnología', 'Tecnología_1590183253_mejores-gadgets-2019-z.jpg', 1),
+(5, 'Ropa', 'Ropa', 'Ropa_1590606955_ropa-medioambiente-t.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -111,8 +111,7 @@ CREATE TABLE `Clientes` (
 
 INSERT INTO `Clientes` (`PK_Cliente`, `FK_Usuario`, `PrimerNombre`, `SegundoNombre`, `PrimerApellido`, `SegundoApellido`, `Direccion1`, `Direccion2`, `Telefono`, `FK_Ciudad`) VALUES
 (1, 3, 'Juan', '', 'Perez', '', 'barrio la cruz', 'calle del registro', '23443344', 5),
-(5, 18, 'administrador', '', 'del sitio', '', 'N/A', '', '23443243', 2),
-(8, 21, '', '', '', '', '', NULL, '', NULL);
+(14, 28, '', '', '', '', '', NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -131,6 +130,29 @@ CREATE TABLE `Colores` (
 
 INSERT INTO `Colores` (`PK_Color`, `Color`) VALUES
 (1, 'Rojo');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `Correos`
+--
+
+CREATE TABLE `Correos` (
+  `PK_Correo` int(11) NOT NULL,
+  `Correo` varchar(200) DEFAULT NULL,
+  `Contrasena` varchar(50) DEFAULT NULL,
+  `CorreosEnviados` int(11) DEFAULT NULL,
+  `Turno` int(11) DEFAULT NULL,
+  `Actual` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `Correos`
+--
+
+INSERT INTO `Correos` (`PK_Correo`, `Correo`, `Contrasena`, `CorreosEnviados`, `Turno`, `Actual`) VALUES
+(1, 'shoppingappworld@gmail.com', 'shoppingapp1234!', 2, 1, 1),
+(2, 'shoppingapp.mails@gmail.com', 'shoppingapp1234!', 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -214,7 +236,8 @@ INSERT INTO `DetallePedidos` (`PK_DetallePedido`, `Cantidad`, `FK_Producto`, `FK
 (50, 1, 3, 28, NULL, NULL, 1, '2020-05-13 15:27:33', 1, NULL, 0, NULL, 0, 'P3-3330515Y20D05133888\n'),
 (51, 1, 2, 29, 1, 1, 1, '2020-05-17 16:04:58', 1, NULL, 0, NULL, 0, 'P3-2580516Y20D05179104\n'),
 (52, 1, 3, 29, NULL, NULL, 1, '2020-05-17 16:04:58', 1, NULL, 0, NULL, 0, 'P3-3580516Y20D05179152\n'),
-(53, 1, 2, 30, 1, 1, 1, '2020-05-17 16:24:26', 1, NULL, 0, NULL, 0, 'P3-2260516Y20D05177120\n');
+(53, 1, 2, 30, 1, 1, 1, '2020-05-17 16:24:26', 1, NULL, 0, NULL, 0, 'P3-2260516Y20D05177120\n'),
+(54, 1, 2, 31, 1, 1, 1, '2020-05-25 20:50:32', 1, NULL, 0, NULL, 0, 'P3-2320520Y20D05258928\n');
 
 -- --------------------------------------------------------
 
@@ -382,7 +405,8 @@ INSERT INTO `Pedidos` (`PK_Pedido`, `FK_Cliente`, `FK_Tienda`, `NumeroPedido`, `
 (27, 1, 1, 'PAYID-L26BAEQ3A6343579U690740R', '2020-05-13 15:20:08', '2020-05-13 15:20:08', NULL, NULL, 0),
 (28, 1, 1, 'PAYID-L26BDVI8270803464450010R', '2020-05-13 15:27:33', '2020-05-13 15:27:33', NULL, NULL, 0),
 (29, 1, 1, 'PAYID-L3AWAOQ5MR238953H2208933', '2020-05-17 16:04:58', '2020-05-17 16:04:58', NULL, NULL, 0),
-(30, 1, 1, 'PAYID-L3AWKJA1JT84973MV432202P', '2020-05-17 16:24:26', '2020-05-17 16:24:26', NULL, NULL, 0);
+(30, 1, 1, 'PAYID-L3AWKJA1JT84973MV432202P', '2020-05-17 16:24:26', '2020-05-17 16:24:26', NULL, NULL, 0),
+(31, 1, 1, 'PAYID-L3GC6ZY6VY29919CR519220F', '2020-05-25 20:50:32', '2020-05-25 20:50:32', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -414,10 +438,10 @@ CREATE TABLE `Productos` (
 --
 
 INSERT INTO `Productos` (`PK_Producto`, `NombreProducto`, `Descripcion`, `CantidadPorUnidad`, `PrecioUnitario`, `PrecioEnvio`, `Descuento`, `UnidadesDisponibles`, `UnidadesVendidas`, `Estado`, `Imagen`, `Ranking`, `Nota`, `FK_Tienda`, `FK_Categoria`, `Adomicilio`) VALUES
-(2, 'Sandalias de colores', '\r\nManufacturer Model: CoDrone\r\nFun and educational drone\r\nPerfect for beginners learning programming\r\nArduino Compatible controller\r\nUse your Apple or Android smart phone to fly, battle, voice control CoDrone\r\nEasily removable/replaceable motors\r\nDescription\r\nLearning to code is fast and simple with CoDrone, a fully programmable drone. Simply unbox your CoDrone, watch our tutorials, and start coding within minutes. Then watch your code take flight! Start from introductory basics to gaining hands-on experience with real world programming for hardware.\r\n\r\n', 1, 2, 1, 10, 228, 57, 1, 'uploads/img/productos/product.jpg', 1, 'Nuevas', 1, 1, 1),
+(2, 'Sandalias de colores', '\r\nManufacturer Model: CoDrone\r\nFun and educational drone\r\nPerfect for beginners learning programming\r\nArduino Compatible controller\r\nUse your Apple or Android smart phone to fly, battle, voice control CoDrone\r\nEasily removable/replaceable motors\r\nDescription\r\nLearning to code is fast and simple with CoDrone, a fully programmable drone. Simply unbox your CoDrone, watch our tutorials, and start coding within minutes. Then watch your code take flight! Start from introductory basics to gaining hands-on experience with real world programming for hardware.\r\n\r\n', 1, 2, 1, 10, 227, 58, 1, 'uploads/img/productos/product.jpg', 1, 'Nuevas', 1, 1, 1),
 (3, 'Zapatillas para hombre de cuero genuino', 'Características del artículo\r\nEstado:	\r\nNuevo en caja: Un artículo completamente nuevo, que no fue utilizado ni tiene desgaste (incluidos los hechos a mano) en su envase original (como la caja o la bolsa originales) y/o con las etiquetas originales. Ver todas las definiciones de estado	Estado del artículo:	Nuevo en caja\r\nMens Moccasin Shoes:	Mens Moccasin Shoes	Material de la plantilla:	EVA\r\nCasual Shoes:	Casual Shoes	Genuine Leather S:	Genuine Leather Shoes\r\nMen Flats:	Men Flats	Nombre del departamento:	Adulto\r\nSupervisión materiales:	Cuero geniuno	Talla de calzado (USA): hombre:	4\r\nLoafers:	Loafers	Marca:	Sin marca\r\nEstilo:	Baseball Shoes	Material del revestimiento:	Sintético\r\nTipo de artículo:	Varios zapatos', 1, 10, NULL, NULL, 5, 1, 1, 'uploads/img/productos/product2.jpg', NULL, 'nada', 1, 1, 0),
 (4, 'Robolink CoDrone Pro programables', 'Robolink CoDrone Pro programables', 1, 200, 10, 10, 300, 3, 1, 'uploads/img/productos/dron.jpg', 2, NULL, 1, 2, 1),
-(6, 'Camiseta De Manga Larga Calavera ', 'Camiseta De Manga Larga Calavera ', 1, 20, 2, NULL, 20, 1, 1, 'uploads/img/productos/camisa.jpg', 4, NULL, 7, 2, 1);
+(6, 'Camiseta De Manga Larga Calavera ', 'Camiseta De Manga Larga Calavera ', 1, 20, 2, NULL, 20, 1, 1, 'uploads/img/productos/camisa.jpg', 4, NULL, 7, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -588,14 +612,16 @@ CREATE TABLE `Usuarios` (
 --
 
 INSERT INTO `Usuarios` (`PK_Usuario`, `NombreUsuario`, `Contrasena`, `Correo`, `Estado`, `FK_TipoUsuario`, `FK_Idioma`, `Foto`, `CodigoConfirmacion`, `EstadoCorreo`, `CodRestContrasena`) VALUES
-(1, 'kevine1', 'hola1234', 'noe@noe', 1, 1, 1, NULL, NULL, 1, NULL),
-(2, 'noe@noe.com', 'hola1234', 'noe@noe.com TEMP', 1, 2, 2, 'tienda_2_logo.jpg', NULL, 1, NULL),
-(3, 'cliente1', 'hola1234', 'cliente@cliente.com', 1, 1, 1, 'user_3_20200517182451.jpg', NULL, 1, 'U3C153115d20200514'),
-(8, 'test@test.com', 'hola1234', 'test@test.com', 1, 2, 1, 'tienda_8_logo.jpg', NULL, 0, NULL),
-(10, 'ken', 'hola1234', 'kncm.js@gmail.com', 1, 1, 1, 'user_10_foto_perfil.jpg', 'C185817d20200509', 1, 'U10C163425d20200514'),
-(14, 'noe_k@outlook.com', 'holahola', 'noe_k@ou.com', 1, 2, 1, 'tienda_14_20200515224038.jpg', 'C012224d20200510', 1, 'U14C221131d20200516'),
-(18, 'admin', 'admin1234', 'shoppingappworld@gmail.com', 1, 3, 1, 'user_18_foto_perfil.jpg', 'C171806d20200517', 1, NULL),
-(21, 'nuevo', 'prueba1234', 'kevinmontoya64@gmail.com', 1, 1, 1, '', 'C182010d20200520', 1, 'U21C213941d20200520');
+(1, 'kevine1', 'eNxbTbYbHFCdi36ieolpyg==', 'noe@noe', 1, 1, 1, NULL, NULL, 1, NULL),
+(2, 'noe@noe.com', 'eNxbTbYbHFCdi36ieolpyg==', 'noe@noe.com TEMP', 1, 2, 2, 'tienda_2_logo.jpg', NULL, 1, NULL),
+(3, 'cliente1', 'eNxbTbYbHFCdi36ieolpyg==', 'cliente@cliente.com', 1, 1, 1, 'user_3_20200517182451.jpg', NULL, 1, 'U3C150636d20200526'),
+(8, 'test@test.com', 'eNxbTbYbHFCdi36ieolpyg==', 'test@test.com', 1, 2, 1, 'tienda_8_logo.jpg', NULL, 0, NULL),
+(14, 'noe_k@outlook.com', '0tmsk97Jd3Q86Tef5cwRSA==', 'noe_k@ou.com', 1, 2, 1, 'tienda_14_20200515224038.jpg', 'C012224d20200510', 1, 'U14C221131d20200516'),
+(28, 'test', 'eNxbTbYbHFCdi36ieolpyg==', 'kncm.js@gmail.com', 1, 1, 1, '', 'C195834d20200526', 0, 'U28C210004d20200526'),
+(32, 'admin', 'eNxbTbYbHFCdi36ieolpyg==', 'hola@fioef.com', 1, 3, 1, 'user_admin_foto_perfil.jpg', 'C161905d20200527', 0, NULL),
+(36, 'nuevoadmin', 'eNxbTbYbHFCdi36ieolpyg==', 'nuevo@nuevo.com', 1, 3, 1, '', 'C183641d20200527', 0, NULL),
+(37, 'admin2', 'eNxbTbYbHFCdi36ieolpyg==', 'admin@gmail.com', 1, 3, 1, 'user_admin2_foto_perfil.jpg', 'C183836d20200527', 0, NULL),
+(38, 'prueba_admin', 'eNxbTbYbHFCdi36ieolpyg==', 'prueba@gmail.com', 1, 3, 1, '', 'C184408d20200527', 0, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -640,6 +666,12 @@ ALTER TABLE `Clientes`
 --
 ALTER TABLE `Colores`
   ADD PRIMARY KEY (`PK_Color`);
+
+--
+-- Indices de la tabla `Correos`
+--
+ALTER TABLE `Correos`
+  ADD PRIMARY KEY (`PK_Correo`);
 
 --
 -- Indices de la tabla `Destinatarios`
@@ -797,7 +829,7 @@ ALTER TABLE `Carrito`
 -- AUTO_INCREMENT de la tabla `Categorias`
 --
 ALTER TABLE `Categorias`
-  MODIFY `PK_Categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `PK_Categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `Ciudades`
@@ -809,13 +841,19 @@ ALTER TABLE `Ciudades`
 -- AUTO_INCREMENT de la tabla `Clientes`
 --
 ALTER TABLE `Clientes`
-  MODIFY `PK_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `PK_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `Colores`
 --
 ALTER TABLE `Colores`
   MODIFY `PK_Color` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `Correos`
+--
+ALTER TABLE `Correos`
+  MODIFY `PK_Correo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `Destinatarios`
@@ -827,7 +865,7 @@ ALTER TABLE `Destinatarios`
 -- AUTO_INCREMENT de la tabla `DetallePedidos`
 --
 ALTER TABLE `DetallePedidos`
-  MODIFY `PK_DetallePedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `PK_DetallePedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT de la tabla `DetalleProducto`
@@ -857,7 +895,7 @@ ALTER TABLE `Paises`
 -- AUTO_INCREMENT de la tabla `Pedidos`
 --
 ALTER TABLE `Pedidos`
-  MODIFY `PK_Pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `PK_Pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `Productos`
@@ -887,7 +925,7 @@ ALTER TABLE `Temp`
 -- AUTO_INCREMENT de la tabla `Tiendas`
 --
 ALTER TABLE `Tiendas`
-  MODIFY `PK_Tienda` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `PK_Tienda` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `TiposPago`
@@ -911,7 +949,7 @@ ALTER TABLE `TipoUsuario`
 -- AUTO_INCREMENT de la tabla `Usuarios`
 --
 ALTER TABLE `Usuarios`
-  MODIFY `PK_Usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `PK_Usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- Restricciones para tablas volcadas
