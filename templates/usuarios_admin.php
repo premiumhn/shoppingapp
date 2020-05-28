@@ -9,7 +9,7 @@ require ('../scripts/comprobaciones.php');
 
 
 $pagina = false;
-$items_por_pagina = 2;
+$items_por_pagina = 5;
 
 if (isset($_GET["pagina"])) {
     $pagina = $_GET["pagina"];
