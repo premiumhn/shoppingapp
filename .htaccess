@@ -41,5 +41,7 @@ RewriteRule ^Confirma/?$ templates/confirmacion_pago.php
 RewriteRule ^Usuarios-Admin/?$ templates/usuarios_admin.php
 RewriteRule ^Nuevo-Usuario-Admin/?$ templates/nuevo_usuario_admin.php
 RewriteRule ^Editar-Usuario-Admin/?$ templates/editar_usuario_admin.php
+RewriteRule ^Tiendas-Admin/?$ templates/tiendas_admin.php
+RewriteRule ^Nueva-Tienda/?$ templates/nueva_tienda.php
+RewriteRule ^Visualizar-Tienda/?$ templates/visualizar_tienda.php
 RewriteRule ^Inicio/?$ templates/paises_inicio.php
-
