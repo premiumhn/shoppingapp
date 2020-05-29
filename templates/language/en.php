@@ -37,7 +37,7 @@ $compraren="Buy at";
 $tcategorias="Categories";
 $tpaises="Countries";
 $htiendas = "Shops";
-
+$husuario="Users";
 $ttiendas="Shops";
 $tadmin="Administration";
 $tmodulo="Administrative module";
