@@ -154,7 +154,7 @@ if(isset($_SESSION['categoria'])){
                                 <?php 
                                 $cont = 1;
                                 $ranking = $avg_ranking_tienda[0]['AVG'];
-                                echo $avg_ranking_tienda[0]['AVG'];
+                                //echo $avg_ranking_tienda[0]['AVG'];
 
                                 
                                 for($i = 1; $i <= 5; $i++){ 

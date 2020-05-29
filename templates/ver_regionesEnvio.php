@@ -1,12 +1,16 @@
 <?php
 require ('../scripts/comprobaciones.php'); 
 
+
+
 //Consulta seleccionar categorías
 $select_regiones = $pdo->prepare("SELECT * 
                                  FROM RegionesEnvio re INNER JOIN Ciudades c 
                                  ON re.FK_Ciudad = c.PK_Ciudad INNER JOIN Paises p
                                  ON p.PK_Pais = c.FK_Pais INNER JOIN Tiendas t
-                                 ON t.PK_Tienda = re.FK_Tienda ");
+                                 ON t.PK_Tienda = re.FK_Tienda 
+                                 WHERE FK_Tienda = :FK_Tienda");
+$select_regiones->bindParam('FK_Tienda', $_SESSION['PK_Tienda']);                                 
 $select_regiones->execute();
 $listaRegioes = $select_regiones->fetchAll(PDO::FETCH_ASSOC);
 
@@ -30,22 +34,22 @@ $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
 
 
 ?>
-
+<link href="<?php echo URL_SITIO ?>static/css/regiones_envio.css"rel="stylesheet">
 <div  role="alert" data-delay="5000" aria-live="assertive" aria-atomic="true" id="toast_mensaje" class="toast" data-autohide="true">
         <div class="toast-body">
         </div>
 </div> 
-<div class="col-md-2 bordered">
+<div class="col-md-2 ">
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <form action="Registro-Datos" method="POST">
+                        <form action="Registro-Datos" method="get">
                             <input type="hidden" name="menu" value="registro_regionesEnvio" />
                             <button type="submit" class="col-md-12 btn btn-primary">Nueva</button>
                         </form>
                     </li>
                     <li class="list-group-item">
-                        <form action="Registro-Datos" method="POST">
+                        <form action="Registro-Datos" method="get">
                             <input type="hidden" name="menu" value="ver_regionesEnvio" />
                             <button type="submit" class="col-md-12 btn btn-primary">Ver todas</button>
                         </form>
@@ -53,41 +57,43 @@ $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
                 </ul>
             </div>
         </div>
-<div style="height:100%;margin-bottom:60px;" class="col-md-8 bordered">
-<div id="mensaje-success" class="alert alert-success" role="alert"></div>
-<div id="mensaje-error" class="alert alert-danger" role="alert"></div>
-    <div class="card">
-    <div class="card-body">
-        <h5 class="card-title text-right">Regiones de envío - Ver todas</h5>
-  
-        
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">País</th>
-                    <th scope="col">Ciudad</th>
-                    <th scope="col">Precio de envío</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($listaRegioes as $region){ ?>
-                <tr WIDTH="100%">
-                    <td  WIDTH="30%"> <input id="pais_<?php echo $region['PK_RegionEnvio']?>" type="hidden" value="<?php echo $region['PK_Pais'] ?>"><?php echo $region['NombrePais'] ?></td>
-                    <td  WIDTH="20%"><input id="ciudad_<?php echo $region['PK_RegionEnvio']?>" type="hidden" value="<?php echo $region['PK_Ciudad'] ?>"><?php echo $region['NombreCiudad'] ?></td>
-                    <td  WIDTH="40%">$ <input style="border:0px;" disabled id="precioEnvio_<?php echo $region['PK_RegionEnvio']?>"  type="text" value="<?php echo $region['PrecioEnvio'] ?>"></td>
-                    <td><button onClick="editar(<?php echo $region['PK_RegionEnvio']?>)" type="button" class="btn btn-edit" data-toggle="modal" data-target=".modal-editar"><i class="fas fa-edit"></i></button></td>
-                    <td><button onClick="eliminar(<?php echo $region['PK_RegionEnvio']?>)" type="button" class="btn btn-eliminar" data-toggle="modal" data-target=".modal-eliminar"><i class="fas fa-trash-alt mr-2"></i></button></td>
-                </tr>
-                <?php }?>
-            </tbody>
-        </table>
-
+<div class="col-md-8">
+    <div class="card mb-3 ">
+        <div class="card-header">
+            <i class="fas fa-table"></i>
+                <?php echo $lregiones_envio ?>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="text-center">
+                        <tr>
+                            <!-- <th hidden>ID</th> -->
+                            <th scope="col"><?php echo $re_pais ?></th>
+                            <th scope="col"><?php echo $re_ciudad ?></th>
+                            <th scope="col"><?php echo $re_precio_envio ?></th>
+                            <th scope="col" style="color:white;" class="no_border-r"></th>
+                            <th scope="col" style="color:white;" class="no_border-l"></th>
+                        </tr>
+                    </thead>
+                    <tbody> 
+                        <?php foreach ($listaRegioes as $region) {?>
+                            <tr WIDTH="100%">
+                                <td  WIDTH="30%"> <input id="pais_<?php echo $region['PK_RegionEnvio']?>" type="hidden" value="<?php echo $region['PK_Pais'] ?>"><?php echo $region['NombrePais'] ?></td>
+                                <td  WIDTH="20%"><input id="ciudad_<?php echo $region['PK_RegionEnvio']?>" type="hidden" value="<?php echo $region['PK_Ciudad'] ?>"><?php echo $region['NombreCiudad'] ?></td>
+                                <td  WIDTH="40%">$ <input style="border:0px;" disabled id="precioEnvio_<?php echo $region['PK_RegionEnvio']?>"  type="text" value="<?php echo $region['PrecioEnvio'] ?>"></td>
+                                <td class="no_border-r"><button onClick="editar(<?php echo $region['PK_RegionEnvio']?>)" type="button" class="btn btn-edit" data-toggle="modal" data-target=".modal-editar"><i class="fas fa-edit"></i></button></td>
+                                <td class="no_border-l"><button onClick="eliminar(<?php echo $region['PK_RegionEnvio']?>)" type="button" class="btn btn-eliminar" data-toggle="modal" data-target=".modal-eliminar"><i class="fas fa-trash-alt mr-2"></i></button></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer small text-muted"><?php echo $lregiones_envio ?></div>
     </div>
-    </div>
-</div>
-<div class="col-md-2 bordered">
+</div> 
+<div class="col-md-2 ">
 <div class="card card-right" style="width">
         <div class="card-body">
             <h5 class="card-title">Atajos</h5>
@@ -203,6 +209,8 @@ $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
 
 
 <script type="text/javascript">
+    $('.h2-name').html('<?php echo $lregiones_envio ?>');
+    $('#titulo_pagina').html('Shoppingapp | <?php echo $lregiones_envio ?>');
 
     $('#mensaje-success').hide();
     $('#mensaje-error').hide();

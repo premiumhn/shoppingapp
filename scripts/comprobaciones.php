@@ -19,12 +19,8 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
     $usuario = $consulta_tipo_usuario->fetchAll(PDO::FETCH_ASSOC);
    
 
-    if($usuario[0]['EstadoCorreo'] == 0){
-        if($usuario[0]['FK_TipoUsuario'] == 1 ){
+    if($usuario[0]['EstadoCorreo'] == 0 and $usuario[0]['FK_TipoUsuario'] == 1){
             header('Location: login.php?msj=nc');
-        }elseif($usuario[0]['FK_TipoUsuario'] == 2){
-            header('Location: login_tienda.php?msj=nc');
-        }
     }elseif($usuario[0]['FK_TipoUsuario'] == 1){
 
         // consultar si el cliente ha completado su peril    
@@ -45,24 +41,7 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
         }
 
     }elseif($usuario[0]['FK_TipoUsuario'] == 2){
-
-        // consultar si la tienda ha completado su peril    
-        // $buscar_perfil = $pdo->prepare("SELECT IDClientePaypal FROM Tiendas
-        //                                 WHERE FK_Usuario = :FK_Usuario;");
-
-        // $buscar_perfil->bindParam(':FK_Usuario', $_SESSION['login_user']);
-
-        // $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        // $buscar_perfil->execute();
-        // $estado_perfil = $buscar_perfil->fetchAll(PDO::FETCH_ASSOC);
-
-        // // comprobar si el perfil esta completo
-        // if($estado_perfil[0]['IDClientePaypal'] == ""){
-        //     $perfil_completo = 0;
-        // }else{
-        //     $perfil_completo = 1;
-        // }
-
+        $perfil_completo = 1;
     }
     
 

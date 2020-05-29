@@ -175,10 +175,10 @@ $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
                                         <label class="subtotal col-md-12" for="">Subtotal : $ <?php echo $carrito['Subtotal'] ?> </label>
                                     </div>
                                     <div class="text-left row">
-                                        <label class="descuento col-md-12" for="">Descuento : <?php echo (isset($carrito['DescuentoDecimal']))?"-&nbsp$ ".(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):'&nbsp&nbsp N/A'?></label>
+                                        <label class="descuento col-md-12" for="">Descuento : <?php echo (isset($carrito['DescuentoDecimal']))?"-&nbsp$ ".round((($carrito['Subtotal'])/$carrito['DescuentoDecimal']), 2):'&nbsp&nbsp N/A'?></label>
                                     </div>
                                     <div class=" text-left row">
-                                        <label class="total col-md-12" for="">Total : $ <?php echo ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0) ?> </label>
+                                        <label class="total col-md-12" for="">Total : $ <?php echo round((($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0)), 2) ?> </label>
                                     </div>
                                 </div>
                             </div>
@@ -230,7 +230,7 @@ $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
                         foreach($lista_carrito as $carrito){ 
                             $total_descuentos+= ($carrito['Descuento']!=0)?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0;
                         } 
-                        echo $total_descuentos;
+                        echo round($total_descuentos, 2);
                         ?>
                         </span>
                     </label>
@@ -243,7 +243,7 @@ $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
                         foreach($lista_carrito as $carrito){ 
                             $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0) ;
                         } 
-                        echo $total_todos;
+                        echo round($total_todos, 2);
                         ?>
                         </span>
                     </label>

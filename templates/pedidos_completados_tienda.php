@@ -15,13 +15,13 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
 }
 
 // Búsqueda
-$busqueda = (isset($_POST['input_busqueda']))?$_POST['input_busqueda']:"";
+$busqueda = (isset($_REQUEST['input_busqueda']))?$_REQUEST['input_busqueda']:"";
 
 
 // filtros
-$filtro_tipo_pedido = (isset($_POST['input_tipoPedido']))?$_POST['input_tipoPedido']:"";
-$filtro_desde = (isset($_POST['input_desde']))?$_POST['input_desde']:"";
-$filtro_hasta = (isset($_POST['input_hasta']))?$_POST['input_hasta']:"";
+$filtro_tipo_pedido = (isset($_REQUEST['input_tipoPedido']))?$_REQUEST['input_tipoPedido']:"";
+$filtro_desde = (isset($_REQUEST['input_desde']))?$_REQUEST['input_desde']:"";
+$filtro_hasta = (isset($_REQUEST['input_hasta']))?$_REQUEST['input_hasta']:"";
 
 // buscar tienda
 $buscar_tienda = $pdo->prepare('SELECT * FROM Tiendas
@@ -169,7 +169,6 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
 
    <!-- Imports -->
    
-   <link href="<?php echo URL_SITIO ?>static/css/registro_datos.css" rel="stylesheet" type="text/css" media="all" />
     <link href="<?php echo URL_SITIO ?>static/css/pedidos.css" rel="stylesheet" type="text/css" media="all" />
     <link href="<?php echo URL_SITIO ?>static/css/pedidos_tienda.css" rel="stylesheet" type="text/css" media="all" />
     <link href="<?php echo URL_SITIO ?>static/css/styles.css" rel="stylesheet" type="text/css" media="all" />
@@ -200,12 +199,12 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <form action="Pedidos-Tienda" method="POST">
+                        <form action="Pedidos-Tienda" method="get">
                             <button type="submit" class="col-md-12 btn btn-primary">Pendientes</button>
                         </form>
                     </li>
                     <li class="list-group-item">
-                        <form action="Pedidos-Completados-Tienda" method="POST">
+                        <form action="Pedidos-Completados-Tienda" method="get">
                             <button type="submit" class="col-md-12 btn btn-primary">Completados</button>
                         </form>
                     </li>
@@ -216,7 +215,7 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
     <div id="mensaje-success" class="alert alert-success" role="alert"></div>
     <div id="mensaje-error" class="alert alert-danger" role="alert"></div>
     <div class="cont-filtros">
-    <form action="Pedidos-Completados-Tienda" method="post">
+    <form action="Pedidos-Completados-Tienda" method="get">
         <div class="row col-md-12">
             
                 <div class="col-md-10">
@@ -230,7 +229,7 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
         </form>
         <br>
         <hr>
-        <form action="Pedidos-Completados-Tienda" method="post">
+        <form action="Pedidos-Completados-Tienda" method="get">
         <div class="row col-md-12">
             
             <div class="col-md-2">
@@ -266,7 +265,7 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
                             <div class="card-body">
                                 
                             <div class="row">
-                            <div class="col-md-4 square container "> <img class="crop col-md-12" src="../<?php echo $detalle_pedido['Imagen'] ?>" alt=""> </div>
+                            <div class="col-md-4 square container "> <img class="crop col-md-12" src="<?php echo URL_SITIO.$detalle_pedido['Imagen'] ?>" alt=""> </div>
                             <div class="col-md-8 ">
                                 <div class="detail_up col-md-12 ">
                                     <h4 class=""><?php echo $detalle_pedido['NombreProducto'] ?>  
@@ -289,7 +288,7 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
                                             <label class="subtotal col-md-12" for="">Subtotal  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: $ <?php echo $detalle_pedido['Subtotal'] ?> </label>
                                         </div>
                                         <div class="text-left row">
-                                            <label class="descuento  col-md-12" for="">Descuento  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:<?php echo (isset($detalle_pedido['DescuentoDecimal']))?"-&nbsp$ ".(($detalle_pedido['Subtotal'])/$detalle_pedido['DescuentoDecimal']):'&nbsp&nbsp N/A';  ?></label>
+                                            <label class="descuento  col-md-12" for="">Descuento  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:<?php echo (isset($detalle_pedido['DescuentoDecimal']))?"-&nbsp$ ".round((($detalle_pedido['Subtotal'])/$detalle_pedido['DescuentoDecimal']), 2):'&nbsp&nbsp N/A';  ?></label>
                                         </div>
                                         <?php if($detalle_pedido['FK_TipoPedido']==2){ ?>
                                             <div class="text-left row">
@@ -297,7 +296,7 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
                                             </div>
                                         <?php } ?>
                                         <div class=" text-left row">
-                                            <label class="total text-bold col-md-12" for="">Total  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: $ <?php echo ($detalle_pedido['Subtotal']) - ((isset($detalle_pedido['DescuentoDecimal']))?(($detalle_pedido['Subtotal'])/$detalle_pedido['DescuentoDecimal']):0) + (($detalle_pedido['FK_TipoPedido']==2)?$detalle_pedido['PrecioEnvio']:0)  ?> </label>
+                                            <label class="total text-bold col-md-12" for="">Total  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: $ <?php echo round((($detalle_pedido['Subtotal']) - ((isset($detalle_pedido['DescuentoDecimal']))?(($detalle_pedido['Subtotal'])/$detalle_pedido['DescuentoDecimal']):0) + (($detalle_pedido['FK_TipoPedido']==2)?$detalle_pedido['PrecioEnvio']:0)), 2)  ?> </label>
                                         </div>
                                         <hr>
                                         <div class="text-left row">

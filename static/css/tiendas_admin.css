@@ -86,3 +86,42 @@ border-right: 0px!important;
   border: 1px solid rgb(218, 218, 218)!important;
   border-radius: 5px!important;
 }
+
+#cont_register{
+  background-color: white!important;
+  border-radius: 5px;
+  border: 1px solid rgb(230, 230, 230);
+  padding: 20px; 
+}
+
+.list-group-item{
+  padding: 0px;
+  border: 0px;
+}
+
+.btn-primary{
+  border-radius:0px;
+}
+
+.text_required{
+  color:red;
+}
+
+.btn-flat{
+  background-color: #E86713;
+  border: none;
+  padding: 10px 50px;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-flat:hover{
+  text-decoration: none;
+  color: white;
+  background-color: rgb(231, 115, 38);
+}
+
+.body-eliminar{
+  font-size: 13px;
+}

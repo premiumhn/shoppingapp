@@ -16,20 +16,16 @@ if (!$pagina) {
 }
 
 
-//Consulta seleccionar categorías
-$select_categorias_total = $pdo->prepare("SELECT * FROM Categorias");
-$select_categorias_total->execute();
-$listaCategorias_total = $select_categorias_total->fetchAll(PDO::FETCH_ASSOC);
 
 //Consulta seleccionar categorías
-$select_categorias = $pdo->prepare("SELECT * FROM Categorias ORDER BY PK_Categoria DESC LIMIT ". $inicio .", " . $items_por_pagina);
+$select_categorias = $pdo->prepare("SELECT * FROM Categorias");
 $select_categorias->execute();
 $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
 
-//calculo el total de paginas
-$total_pages = ceil(count($listaCategorias_total) / $items_por_pagina);
 
 ?>
+
+<link href="<?php echo URL_SITIO ?>static/css/categorias.css"rel="stylesheet">
 
 <div  role="alert" data-delay="5000" aria-live="assertive" aria-atomic="true" id="toast_mensaje" class="toast" data-autohide="true">
         <div class="toast-body">
@@ -47,73 +43,52 @@ $total_pages = ceil(count($listaCategorias_total) / $items_por_pagina);
                 </ul>
             </div>
         </div>
-<div style="height:100%;margin-bottom:60px;" class="col-md-10 ">
-<div id="mensaje-success" class="alert alert-success" role="alert"></div>
-<div id="mensaje-error" class="alert alert-danger" role="alert"></div>
-    <div class="card">
-    <div class="card-body">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Imagen</th>
-                    <th scope="col">Categoría</th>
-                    <th scope="col">Descripción</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($listaCategorias as $categoria){ ?>
-                <tr WIDTH="100%">
-                    <td  WIDTH="30%" ><div class="cont_imagen"><img id="imagen_<?php echo $categoria['PK_Categoria']?>" class="col-md-12 imagen" src="<?php echo URL_SITIO ?>uploads/img/categorias/<?php echo $categoria['Imagen'] ?>" alt=""></div ></td>
-                    <td id="nombreCategoria_<?php echo $categoria['PK_Categoria']?>" WIDTH="20%"><?php echo $categoria['NombreCategoria'] ?></td>
-                    <td id="descripcion_<?php echo $categoria['PK_Categoria']?>"  WIDTH="40%"><?php echo $categoria['Descripcion'] ?></td>
-                    <td id="estado_<?php echo $categoria['PK_Categoria']?>" WIDTH="10%"><?php echo ($categoria['Estado']==1)?'<label class="switch">
-                                                                                                                                        <input onClick="cambiarEstadoCategoria('. $categoria["PK_Categoria"] .')" class="check" type="checkbox" checked>
-                                                                                                                                        <span class="slider round"></span>
-                                                                                                                                    </label>':
-                                                                                                                                    '<label class="switch">
-                                                                                                                                        <input onClick="cambiarEstadoCategoria('. $categoria["PK_Categoria"] .')" class="check" type="checkbox">
-                                                                                                                                        <span class="slider round"></span>
-                                                                                                                                    </label>'; ?></td>
-                    <td><button onClick="editar(<?php echo $categoria['PK_Categoria'] ?>)" type="button" class="btn btn-edit" data-toggle="modal" data-target=".modal-editar"><i class="fas fa-edit mr-2"></i></button></td>
-                    <td><button onClick="eliminar(<?php echo $categoria['PK_Categoria'] ?>)" type="button" class="btn btn-eliminar" data-toggle="modal" data-target=".modal-eliminar"><i class="fas fa-trash-alt mr-2"></i></button></td>
-                </tr>
-                <?php }?>
-            </tbody>
-        </table>
-
+<div class="col-md-10">
+    <div class="card mb-3 ">
+        <div class="card-header">
+            <i class="fas fa-table"></i>
+                <?php echo $lcategorias ?>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="text-center">
+                        <tr>
+                            <!-- <th hidden>ID</th> -->
+                            <th scope="col"><?php echo $cat_imagen ?></th>
+                            <th scope="col"><?php echo $cat_categoria ?></th>
+                            <th scope="col"><?php echo $cat_descripcion ?></th>
+                            <th scope="col"><?php echo $uestado ?></th>
+                            <th scope="col" style="color:white;" class="no_border-r"></th>
+                            <th scope="col" style="color:white;" class="no_border-l"></th>
+                        </tr>
+                    </thead>
+                    <tbody> 
+                        <?php foreach ($listaCategorias as $categoria) {?>
+                            <tr WIDTH="100%">
+                            <td  WIDTH="30%" ><div class="cont_imagen"><img id="imagen_<?php echo $categoria['PK_Categoria']?>" class="col-md-12 imagen" src="<?php echo URL_SITIO ?>uploads/img/categorias/<?php echo $categoria['Imagen'] ?>" alt=""></div ></td>
+                            <td id="nombreCategoria_<?php echo $categoria['PK_Categoria']?>" WIDTH="20%"><?php echo $categoria['NombreCategoria'] ?></td>
+                            <td id="descripcion_<?php echo $categoria['PK_Categoria']?>"  WIDTH="40%"><?php echo $categoria['Descripcion'] ?></td>
+                            <td id="estado_<?php echo $categoria['PK_Categoria']?>" WIDTH="10%"><?php echo ($categoria['Estado']==1)?'<label class="switch">
+                                                                                                                                                <input onClick="cambiarEstadoCategoria('. $categoria["PK_Categoria"] .')" class="check" type="checkbox" checked>
+                                                                                                                                                <span class="slider round"></span>
+                                                                                                                                            </label>':
+                                                                                                                                            '<label class="switch">
+                                                                                                                                                <input onClick="cambiarEstadoCategoria('. $categoria["PK_Categoria"] .')" class="check" type="checkbox">
+                                                                                                                                                <span class="slider round"></span>
+                                                                                                                                            </label>'; ?></td>
+                            <td class="no_border-r"><button onClick="editar(<?php echo $categoria['PK_Categoria'] ?>)" type="button" class="btn btn-edit" data-toggle="modal" data-target=".modal-editar"><i class="fas fa-edit mr-2"></i></button></td>
+                            <td class="no_border-l"><button onClick="eliminar(<?php echo $categoria['PK_Categoria'] ?>)" type="button" class="btn btn-eliminar" data-toggle="modal" data-target=".modal-eliminar"><i class="fas fa-trash-alt mr-2"></i></button></td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer small text-muted"><?php echo $fcategorias ?></div>
     </div>
-    </div>
-    <br>
-    <?php 
+</div> 
 
-echo '<nav class="col-md-12">';
-echo '<ul class="pagination" >';
-
-if ($total_pages > 1) {
-    if ($pagina != 1) {
-        echo '<li class="page-item"><a class="page-link" href="Registro-Datos?menu=ver_categorias&pagina='.($pagina-1).'"><span aria-hidden="true">&laquo;</span></a></li>';
-    }
-
-    for ($i=1;$i<=$total_pages;$i++) {
-        if ($pagina == $i) {
-            echo '<li class="page-item active"><a class="page-link" href="#">'.$pagina.'</a></li>';
-        } else {
-            echo '<li class="page-item"><a class="page-link" href="Registro-Datos?menu=ver_categorias&pagina='.$i.'">'.$i.'</a></li>';
-        }
-    }
-
-    if ($pagina != $total_pages) {
-        echo '<li class="page-item"><a class="page-link" href="Registro-Datos?menu=ver_categorias&pagina='.($pagina+1).'"><span aria-hidden="true">&raquo;</span></a></li>';
-    }
-}
-echo '</ul>';
-echo '</nav>';
-
-?>
-</div>
 
 <!-- modal para editar -->
 <div class="modal fade modal-editar" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -225,6 +200,9 @@ echo '</nav>';
 
 
 <script type="text/javascript">
+
+    $('.h2-name').html('<?php echo $fcategorias ?>');
+    $('#titulo_pagina').html('Shoppingapp | <?php echo $fcategorias ?>');
 
     $('#mensaje-success').hide();
     $('#mensaje-error').hide();

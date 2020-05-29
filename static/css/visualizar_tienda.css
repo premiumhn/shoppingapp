@@ -1,0 +1,143 @@
+
+
+.circular--square {
+    object-fit: cover;
+     border: 1px solid #aaa;
+     width: 15vw;
+     height: 15vw;
+     padding: 0px;
+     border: 5px solid #e86813d7;
+     border-radius: 50%;
+}
+
+.text-bold{
+    font-weight: bold;
+}
+
+.text-big{
+    font-size: 1.7em;
+}
+
+#nombreCliente{
+    position: absolute;
+    bottom: 3px;
+    margin-left: 10px;
+}
+
+#cont-form{
+    padding: 30px!important;
+}
+
+input{
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid rgb(0, 157, 219);
+}
+
+.form-control{
+    padding: 30px!important;
+    border-radius: 5px;
+    border: 1px solid rgb(0, 157, 219);
+}
+
+.cont{
+position: relative;
+text-align: right;
+}
+
+.btnEditar{
+    position: absolute;
+    right: 4px;
+    margin: auto;
+}
+
+.containerImgV {
+    width: 15vw;
+    height: 15vw;
+    overflow: hidden;
+    margin: 0px;
+    position: relative;
+    border-radius: 0%;
+    border: 5px solid #e86813d7;
+}
+.containerImgV > .cropV {
+    position:absolute;
+    left: -100%;
+    right: -100%;
+    top: -100%;
+    bottom: -100%;
+    margin: auto;
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.img_pV{
+    width: 100%;
+    object-fit: cover;
+    margin: auto;
+}
+
+.containerPor {
+    width: 500px;
+    height: 500px;
+    overflow: hidden;
+    margin: 0px;
+    position: relative;
+    border: 5px solid #e86813d7;
+}
+.containerPor > .crop {
+    position:absolute;
+    left: -10%;
+    right: -10%;
+    top: -10%;
+    bottom: -10%;
+    margin: auto;
+    min-height: 10%;
+    min-width: 10%;
+}
+
+.img_por{
+    width: 100%;
+    object-fit: cover;
+}
+
+.row{
+    margin:0px;
+}
+
+.data{
+    margin-top:10px;
+}
+
+.container-fluid{
+    padding: 0px;
+}
+
+.btn-flat:hover{
+    text-decoration: none;
+    color: white;
+    background-color: rgb(231, 115, 38);
+}
+
+@media (max-width: 600px) {
+    #nombreCliente{
+        font-size: 18px;
+        margin-left: 30%;
+    }
+
+    .col-md-12{
+        padding: 0px;
+    }
+
+    .containerImg {
+        width: 25vw;
+        height: 25vw;
+        overflow: hidden;
+        margin: 0px;
+        position: relative;
+        border-radius: 50%;
+        border: 5px solid #e86813d7;
+    }
+
+}
+

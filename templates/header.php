@@ -56,8 +56,14 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
       <?php if($usuario[0]['FK_TipoUsuario'] == 1 || $usuario[0]['FK_TipoUsuario'] == 3 ){ ?>
           <li class="col-md-2 nav-item dropdown ">
       <?php }else if($usuario[0]['FK_TipoUsuario'] == 2 ){ ?> 
-          <li  class="col-md-2 offset-md-5 nav-item">
+          <li  class="col-md-2 oddset-md-1  nav-item">
             <a class="nav-link border-right" href="Inicio"><i class="fas fa-home mr-2"></i>Inicio</a>
+          </li>
+          <li  class="col-md-2  nav-item">
+            <a class="nav-link border-right" href="Pedidos-Tienda"><i class="fas fa-box mr-2"></i>Pedidos</a>
+          </li>
+          <li  class="col-md-2  nav-item">
+            <a class="nav-link border-right" href="Productos"><i class="fas fa-box-open mr-2"></i>Productos</a>
           </li>
           <li   class="col-md-2  nav-item">
             <a class="nav-link border-right" href="#"><i class="fas fa-store mr-2"></i>Mi tienda</a>
@@ -125,7 +131,7 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
 		<a href="Inicio"><div class="col-md-10 offset-md-1" id="logo1" alt=""></div></a>
 	</div>
 	<div class="col-md-6" >
-			<form class="form-inline" id="search-form" action="#" method="post">
+			<form class="form-inline" id="search-form" action="#" method="get">
 					<input id="busqueda" name="busqueda" class="input-flat col-md-9 form-control" type="search" placeholder="<?php echo $hbuscar ?>" aria-label="Search" value="<?php echo (isset($_POST['busqueda'])) ? $_POST['busqueda'] : "" ?>">
 					<button class="col-md-2 btn-flat" id="btn-buscar-producto" type="submit"><?php echo $hbuscar ?></button>
 			</form>

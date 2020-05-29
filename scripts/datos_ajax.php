@@ -46,6 +46,9 @@ switch($request){
 	case "cambiarEstadoCategoria":
 		cambiarEstadoCategoria();
 	break;
+	case "cambiarEstadoTienda":
+		cambiarEstadoTienda();
+	break;
 }
 	function selectCiudades(){
 		global $pdo;
@@ -90,21 +93,22 @@ switch($request){
         $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario ");
 		$buscar_usuario->bindParam(':nombreUsuario', $_POST['NombreUsuario']);
 		// $buscar_usuario->bindParam(':Contrasena', $_POST['Contrasena']);
-        $buscar_usuario->execute();
+		$buscar_usuario->execute();
 		$cuenta_usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
+        
 		
-
-		if (openssl_decrypt($cuenta_usuario[0]['Contrasena'], COD, KEY) == $_POST['Contrasena']){
-            echo 1;
-        }else{
+		
+		if(count($cuenta_usuario) > 0){
+			if (openssl_decrypt($cuenta_usuario[0]['Contrasena'], COD, KEY) == $_POST['Contrasena']){
+				echo 1;
+			}else{
+				echo 0;
+			}
+		}else{
 			echo 0;
 		}
+		
 
-        // if ($cuenta_usuario > 0){
-        //     echo 1;
-        // }else{
-		// 	echo 0;
-		// }
 
 		
 	}
@@ -314,6 +318,30 @@ switch($request){
 		
 		$actualizar_categoria->bindParam(':PK_Categoria', $pk_categoria);
 		echo $actualizar_categoria->execute();
+	}
+
+	function cambiarEstadoTienda(){
+		global $pdo;
+
+		$pk_tienda = (isset($_POST['PK_Tienda']))?$_POST['PK_Tienda']:"";
+
+		$sql_tienda = $pdo->prepare("SELECT * FROM Tiendas WHERE PK_Tienda = :PK_Tienda");
+		$sql_tienda->bindParam(':PK_Tienda', $pk_tienda);
+		$sql_tienda->execute();
+		$tienda = $sql_tienda->fetchAll(PDO::FETCH_ASSOC); 
+
+		if($tienda[0]['Estado'] == 0){
+			$actualizar_tienda = $pdo->prepare("UPDATE Tiendas 
+											SET Estado = 1
+											WHERE PK_Tienda = :PK_Tienda");
+		}else{
+			$actualizar_tienda = $pdo->prepare("UPDATE Tiendas 
+												SET Estado = 0
+												WHERE PK_Tienda = :PK_Tienda");
+		}	
+		
+		$actualizar_tienda->bindParam(':PK_Tienda', $pk_tienda);
+		echo $actualizar_tienda->execute();
 	}
 
 

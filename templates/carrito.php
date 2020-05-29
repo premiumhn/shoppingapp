@@ -14,6 +14,11 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
     // header('Location: completar_perfil_tienda.php');
 }
 
+// Búsqueda
+$busqueda = (isset($_REQUEST['input_busqueda']))?$_REQUEST['input_busqueda']:"";
+$str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda . "%'
+                                    OR ti.NombreTienda LIKE '%" . $busqueda . "%'":"";
+
 
     $select_carrito = $pdo->prepare("SELECT p.NombreProducto, 
                                     c.Cantidad, 
@@ -36,7 +41,8 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
                                     ON c.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
                                     ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Tiendas ti
                                     ON p.FK_Tienda = ti.PK_Tienda 
-                                    WHERE cli.FK_Usuario = :FK_Usuario");
+                                    WHERE cli.FK_Usuario = :FK_Usuario" . $str_busqueda ."
+                                     ORDER BY c.PK_Carrito DESC");
  $select_carrito->bindParam(':FK_Usuario', $user);                           
  $select_carrito->execute();
  $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
@@ -55,9 +61,8 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
 
    <!-- Imports -->
    
-    <link href="<?php echo URL_SITIO ?>static/css/registro_datos.css" rel="stylesheet" type="text/css" media="all" />
-    <link href="<?php echo URL_SITIO ?>static/css/carrito.css" rel="stylesheet" type="text/css" media="all" />
     <link href="<?php echo URL_SITIO ?>static/css/styles.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="<?php echo URL_SITIO ?>static/css/carrito.css" rel="stylesheet" type="text/css" media="all" />
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 	<script src="https://kit.fontawesome.com/b2dbb6a24d.js" crossorigin="anonymous"></script>
@@ -91,7 +96,7 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
                                 <div class="detail_up col-md-12 temp-border">
                                 
                                     <h4 class="col-md-1 offset-md-11 ">
-                                        <button onClick="eliminar(<?php echo $carrito['PK_Carrito'] ?>)" type="button" class="btn btn-eliminar" data-toggle="modal" data-target=".modal-eliminar"> <h4><i class="fas fa-trash-alt mr-2"></i></h4> </button>
+                                        <button onClick="eliminar(<?php echo $carrito['PK_Carrito'] ?>)" type="button" class="btn btn-eliminar" data-toggle="modal" data-target=".modal-eliminar"> <h4><i style="color:red;" class="fas fa-trash-alt mr-2"></i></h4> </button>
                                     </h4>
                                     <h4 class=""><?php echo $carrito['NombreProducto'] ?> <a href="">  </h4>
                                     <div class=" text-left row">
@@ -112,7 +117,7 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
 
                                         
                                         <div class="text-left row">
-                                            <label class="descuento col-md-12" for="">Descuento  &nbsp&nbsp&nbsp<?php echo (isset($carrito['DescuentoDecimal']))?"-&nbsp$ ".(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):'&nbsp&nbsp N/A';  ?></label>
+                                            <label class="descuento col-md-12" for="">Descuento  &nbsp&nbsp&nbsp<?php echo (isset($carrito['DescuentoDecimal']))?"-&nbsp$ ".round((($carrito['Subtotal'])/$carrito['DescuentoDecimal']), 2):'&nbsp&nbsp N/A';  ?></label>
                                         </div>
                                         
 
@@ -122,7 +127,7 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
                                             </div>
                                         <?php } ?>
                                         <div class=" text-left row">
-                                            <label class="total col-md-12" for="">Total  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp$ <?php echo ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0)  ?> </label>
+                                            <label class="total col-md-12" for="">Total  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp$ <?php echo round((($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0)), 2)  ?> </label>
                                         </div>
                                     </div>
                                    
@@ -178,7 +183,7 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
                         foreach($lista_carrito as $carrito){ 
                             $total_descuentos+= (isset($carrito['Descuento']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0;
                         } 
-                        echo $total_descuentos;
+                        echo round($total_descuentos, 2);
                         ?>
                         </span>
                     </label>
@@ -191,7 +196,7 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
                         foreach($lista_carrito as $carrito){ 
                             $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0) ;
                         } 
-                        echo $total_todos;
+                        echo round($total_todos, 2);
                         ?>
                         </span>
                     </label>
@@ -243,6 +248,8 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
 </div>
 
 
+
+
 <script type="text/javascript">
     $("#mensaje_alert").css("visibility", "hidden");
 
@@ -291,6 +298,8 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
         
         $('#form-eliminar').submit();
     })
+
+    $('#search-form').hide();
 
 
 </script>

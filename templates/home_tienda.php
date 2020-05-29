@@ -12,8 +12,6 @@ require ('../scripts/comprobaciones.php');
 
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,7 +48,7 @@ require ('../scripts/comprobaciones.php');
 				<img style="width:100%;" src="<?php echo URL_SITIO ?>static/img/icon_productos.png" alt="">
 				<span class="text_menu">Productos</span>
 			</a>
-			<a href="Registro-Datos?menu=registro_regionesEnvio" class="card col-md-3 ">
+			<a href="Registro-Datos?menu=ver_regionesEnvio" class="card col-md-3 ">
 				<img style="width:100%;" src="<?php echo URL_SITIO ?>static/img/icon_regiones_envio.png" alt="">
 				<span class="text_menu">Regiones de envío</span>
 			</a>

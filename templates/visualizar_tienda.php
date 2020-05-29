@@ -1,18 +1,20 @@
 <?php
-
+include ('./header_admin.php');
 require ('../scripts/comprobaciones.php');
+
+$pk_tienda = (isset($_REQUEST['PK_Tienda']))?$_REQUEST['PK_Tienda']:"";
+
+//Consulta seleccionar Tienda
+$select_tienda = $pdo->prepare("SELECT * FROM Tiendas WHERE PK_Tienda = :PK_Tienda");
+$select_tienda->bindParam(':PK_Tienda', $pk_tienda);
+$select_tienda->execute();
+$tienda = $select_tienda->fetchAll(PDO::FETCH_ASSOC);
 
 //Consulta seleccionar usuario
 $select_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE PK_Usuario = :PK_Usuario");
-$select_usuario->bindParam(':PK_Usuario', $_SESSION['login_user']);
+$select_usuario->bindParam(':PK_Usuario', $tienda[0]['FK_Usuario']);
 $select_usuario->execute();
 $usuario = $select_usuario->fetchAll(PDO::FETCH_ASSOC);
-
-//Consulta seleccionar Tienda
-$select_tienda = $pdo->prepare("SELECT * FROM Tiendas WHERE FK_Usuario = :PK_Usuario");
-$select_tienda->bindParam(':PK_Usuario', $_SESSION['login_user']);
-$select_tienda->execute();
-$tienda = $select_tienda->fetchAll(PDO::FETCH_ASSOC);
 
 //Consulta seleccionar Idioma
 $fk_idioma = $usuario[0]['FK_Idioma'];
@@ -52,49 +54,49 @@ $select_cuidades->execute();
 $ciudades = $select_cuidades->fetchAll(PDO::FETCH_ASSOC);
 
 
-
-
 ?>
 
-<link href="<?php echo URL_SITIO ?>static/css/perfil_tienda.css" rel="stylesheet" type="text/css" media="all" />
+<link href="<?php echo URL_SITIO ?>static/css/visualizar_tienda.css" rel="stylesheet" type="text/css" media="all" />
+
 <div  role="alert" data-delay="5000" aria-live="assertive" aria-atomic="true" id="toast_mensaje" class="toast" data-autohide="true">
         <div class="toast-body">
         </div>
 </div> 
-<div class="col-md-2 data">
-            <div class="card card-left">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <form action="" method="POST">
-                            <input type="hidden" name="menu" value="perfil_tienda" />
-                            <button type="submit" class="col-md-12 btn btn-primary">Datos de la tienda</button>
-                        </form>
-                    </li>
-                </ul>
-        </div>
+<div class="col-md-12">
+<form action="Tiendas-Admin" method="get">
+    <button class="btn btn-flat"><i class="fa fa-arrow-left" aria-hidden="true"></i> Volver</button>
+</form>
 </div>
-<div style="height:100%;margin-bottom:60px;" class="col-md-8 data">
+<div style="height:100%;margin-bottom:60px;" class="col-md-12 data">
 <div id="mensaje-success" class="alert alert-success" role="alert"></div>
 <div id="mensaje-error" class="alert alert-danger" role="alert"></div>
     <div class="card">
     <div class="card-body" id="cont-form">
         <form id="formEditar" action="<?php echo URL_SITIO ?>scripts/registro_datos.php" method="post" enctype="multipart/form-data">
-            <div class="row col-md-12 form-group">
-                <div class="containerImg">
-                    <img class="crop img_p" src="<?php echo URL_SITIO ?>uploads/img/logos/<?php echo $tienda[0]['Logo'] ?>" />
+            <div class="row  form-group">
+                <label class="col-md-12 text-bold" for="inputAddress2">Logo</label>
+                <div class="col-md-12">
+                    <div class="col containerImgV">
+                        <img class="cropV img_pV" src="<?php echo URL_SITIO ?>uploads/img/logos/<?php echo $tienda[0]['Logo'] ?>" />
+                    </div>
                 </div>
-                <div class="col-md-8">
+                <!-- <div class="col-md-8">
                     <div id="contInputImagen" class="custom-file onEdit">
                         <input type="file" accept="image/*" class="custom-file-input" id="inputLogo" name="input_logo">
                         <label class="custom-file-label" data-browse="Elegir" for="customFile">Cambiar logo</label>
                     </div>
                     <label class=" text-bold text-big onInfo" id="nombreCliente" for=""><?php echo $tienda[0]['NombreTienda'] ?></label>
-                </div>
+                </div> -->
             </div>
-            <div class="cont col-md-12" >
+            <!-- <div class="cont col-md-12" >
                 <button id="btnEditar" class=" btn btn-primary onInfo"> <i class="fa fa-edit"></i>&nbsp;Editar perfil</button>
-            </div>
-
+            </div> -->
+            <br>
+            <div class="row form-group">
+                <label class="col-md-12 text-bold" for="inputAddress2">Nombre de la tienda</label>
+                <label class="col-md-12" for=""><?php echo $tienda[0]['NombreTienda'] ?></label>
+        </div>
+        <br>
             <div class="row form-group">
                 <label class="col-md-12 text-bold" for="inputAddress2">Nombre del contacto</label>
                 <label class="col-md-12 onInfo" id="nombreContacto" for=""><?php echo $tienda[0]['NombreContacto']?></label>
@@ -241,21 +243,12 @@ $ciudades = $select_cuidades->fetchAll(PDO::FETCH_ASSOC);
     </div>
     </div>
 </div>
-<div class="col-md-2 data">
-    <div class="card card-right" style="width">
-        <div class="card-body">
-            <h5 class="card-title">Atajos</h5>
-        </div>
-        <ul class="">
-            <li class=""> <a href="<?php echo URL_SITIO ?>Home">Inicio</a> </li>
-            <li class=""> <a href="<?php echo URL_SITIO ?>Home">Productos</a> </li>
-            <li class=""> <a href="<?php echo URL_SITIO ?>Registro-Datos?menu=registro_regionesEnvio">Regiones de envío</a> </li>
-        </ul>
-    </div>
-</div>
 <br><br><br><br><br><br><br><br>
 
 <script type="text/javascript">
+
+    $('.h2-name').html('Ver Tienda');
+    $('#titulo_pagina').html('Shoppingapp | Ver Tienda');
 
     $('#mensaje-success').hide();
     $('#mensaje-error').hide();
@@ -442,3 +435,4 @@ $ciudades = $select_cuidades->fetchAll(PDO::FETCH_ASSOC);
         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
 </script>
+<?php include ('./footer_admin.php'); ?>

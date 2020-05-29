@@ -111,7 +111,7 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
                     <img src="<?php echo URL_SITIO?>static/img/checkmark.gif" width="100%" alt="">
                 </div>
                 <br>
-                <div class="col-md-12 text-center text-big">Ha realizado un pago de <span class="text-bold "> $ <?php echo $total_todos ?></span></div>
+                <div class="col-md-12 text-center text-big">Ha realizado un pago de <span class="text-bold "> $ <?php echo round($total_todos, 2) ?></span></div>
                 <label class="text-center col-md-12 text-li" for="">a el comercio Shoppingapp</label>
                 <br>
                 <br>
@@ -119,7 +119,7 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
                 <?php foreach($lista_detalle as $detalle){ ?>
                     <div class="row col-md-12">
                             <div class="col-md-6 text-left text-li" for=""><?php echo $detalle['Cantidad'] ?> x <?php echo $detalle['NombreProducto'] ?></div>
-                            <div class="col-md-6 text-right text-bold" for="">$ <?php echo $detalle['Subtotal'] - (($detalle['DescuentoDecimal']!=0)?(($detalle['Subtotal'])/$detalle['DescuentoDecimal']):0) ?> <span class="text-li small" >USD</span></div>
+                            <div class="col-md-6 text-right text-bold" for="">$ <?php echo round(($detalle['Subtotal'] - (($detalle['DescuentoDecimal']!=0)?(($detalle['Subtotal'])/$detalle['DescuentoDecimal']):0)), 2) ?> <span class="text-li small" >USD</span></div>
                     </div>
                     <div class="row col-md-12">
                             <div class="col-md-12 text-left text-li small" for=""> <span class="text-bold">N.º de artículo:</span> 1_2020-05-02_16:13:51_2</div>
@@ -133,16 +133,16 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
                 <div class="row col-md-12">
                 <hr><hr>
                         <div class="col-md-6 text-left text-li" for="">Subtotal</div>
-                        <div class="col-md-6 text-right text-bold" for="">$ <?php echo $subtotal_todos ?> <span class="text-li small" >USD</span></div>
+                        <div class="col-md-6 text-right text-bold" for="">$ <?php echo round($subtotal_todos, 2) ?> <span class="text-li small" >USD</span></div>
                 </div>
                 <hr>
                 <div class="row col-md-12 border-b">
                         <div class="col-md-6 text-left text-li" for="">Envío</div>
-                        <div class="col-md-6 text-right text-bold" for="">$ <?php echo $total_envio ?> <span class="text-li small" >USD</span></div>
+                        <div class="col-md-6 text-right text-bold" for="">$ <?php echo round($total_envio, 2) ?> <span class="text-li small" >USD</span></div>
                 </div>
                 <div class="row col-md-12 text-bold">
                         <div class="col-md-6 text-left" for="">Total</div>
-                        <div class="col-md-6 text-right " for="">$ <?php echo $total_todos ?> <span class="text-li small" >USD</span></div>
+                        <div class="col-md-6 text-right " for="">$ <?php echo round($total_todos, 2) ?> <span class="text-li small" >USD</span></div>
                 </div>
                 <br>
 
@@ -159,7 +159,7 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
                 </div>
                 <div class="row col-md-12">
                         <div class="col-md-6 text-left text-li" for="">Paypal</div>
-                        <div class="col-md-6 text-right text-bold" for="">$ <?php echo $total_todos ?> <span class="text-li small" >USD</span> </div>
+                        <div class="col-md-6 text-right text-bold" for="">$ <?php echo round($total_todos, 2) ?> <span class="text-li small" >USD</span> </div>
                 </div>
                 <br>
                 <br>
@@ -176,8 +176,7 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
                     <br>
                         <div class="col-md-12 text-left text-li" for="">Se envió una confirmación al correo de su cuenta PayPal.</div>
                 </div>
-                
-                <div class="row col-md-12">
+                <div style="margin-top:20px!important;margin-bottom:30px!important;" class="row col-md-12">
                     <br>
                     <a class="btn-flat col-md-12 text-center" href="<?php echo URL_SITIO ?>Home">Continuar en Shoppingapp</a>
                     <br>

@@ -1,0 +1,24 @@
+.cont_imagen{
+    height: 140px;
+    width: 150px;
+    overflow: hidden;
+    position: relative;
+    margin:auto;
+}
+
+.no_border-l{
+  border-left: 0px!important;
+}
+
+.no_border-r{
+border-right: 0px!important;
+}
+
+.col-md-10 > .card{
+  border: 1px solid rgb(218, 218, 218)!important;
+  border-radius: 5px!important;
+}
+
+.btn-primary{
+    border: 1px solid #F8F8F8;
+}

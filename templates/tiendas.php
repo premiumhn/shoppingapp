@@ -32,7 +32,8 @@ if($busqueda!=''){
     FROM Tiendas t INNER JOIN Ciudades c
     ON t.FK_Ciudad=c.PK_Ciudad INNER JOIN Paises p
     ON c.FK_Pais=p.PK_Pais
-    WHERE p.PK_Pais=".$_SESSION['pais']. $str_busqueda ."");
+    WHERE p.PK_Pais=".$_SESSION['pais']. $str_busqueda ."
+     AND t.Estado = 1");
     
     $sentenc->execute();
     $listaPaises = $sentenc->fetchAll(PDO::FETCH_ASSOC);
@@ -52,7 +53,7 @@ if($busqueda!=''){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?php echo $ttiendas ?></title>
+    <title>Tiendas</title>
 
     <!-- Imports -->
     <link href="<?php echo URL_SITIO ?>static/css/styles.css" rel="stylesheet" type="text/css" media="all" />
@@ -95,7 +96,7 @@ if($busqueda!=''){
                     </div>
                     <a class="card-footer  clearfix small z-1" href="<?php echo URL_SITIO ?>Home?Tienda=<?php echo $pais["PK_Tienda"] ?>" >
                       <span class="float-left" style="font-size: 1rem;">
-                      <?php echo $compraren ?><strong class="text-uppercase"><?php echo $pais["NombreTienda"] ?></strong>  
+                      <?php echo $compraren ?> <strong class="text-uppercase"><?php echo $pais["NombreTienda"] ?></strong>  
                       </span>
                       <span class="float-right">
                         <i class="fas fa-angle-right"></i>

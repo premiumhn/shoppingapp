@@ -16,22 +16,23 @@ $buscar_tienda->execute();
 $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+<link href="<?php echo URL_SITIO ?>static/css/regiones_envio.css"rel="stylesheet">
 <div role="alert" data-delay="5000" aria-live="assertive" aria-atomic="true" id="toast_mensaje" class="toast" data-autohide="true">
         <div class="toast-body">
         </div>
 </div> 
 
-<div class="col-md-2 bordered">
+<div class="col-md-2 ">
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <form action="Registro-Datos" method="POST">
+                        <form action="Registro-Datos" method="get">
                             <input type="hidden" name="menu" value="registro_regionesEnvio" />
                             <button type="submit" class="col-md-12 btn btn-primary">Nueva</button>
                         </form>
                     </li>
                     <li class="list-group-item">
-                        <form action="Registro-Datos" method="POST">
+                        <form action="Registro-Datos" method="get">
                             <input type="hidden" name="menu" value="ver_regionesEnvio" />
                             <button type="submit" class="col-md-12 btn btn-primary">Ver todas</button>
                         </form>
@@ -39,12 +40,10 @@ $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
                 </ul>
             </div>
         </div>
-<div style="height:100%;margin-bottom:60px;" class="col-md-7 bordered">
+<div style="height:100%;margin-bottom:60px;" class="col-md-7 ">
 <div id="mensaje-success" class="alert alert-success" role="alert"></div>
     <div class="card">
     <div class="card-body">
-        <h5 class="card-title text-right">Regiones de envío - Nueva</h5>
-        <br>
         <form id="formRegistrar" action="<?php echo URL_SITIO ?>scripts/registro_datos.php" method="post" enctype="multipart/form-data">
             <label class="instruccion" for="">A continuación registre una nueva región, donde tu tienda pueda realizar envíos a domicilio.</label>
            <br>

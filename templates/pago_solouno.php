@@ -168,10 +168,10 @@ $producto = $select_producto->fetchAll(PDO::FETCH_ASSOC);
                                         <label class="subtotal col-md-12" for="">Subtotal : $ <?php echo $producto[0]['Cantidad'] * $producto[0]['PrecioUnitario'] ?> </label>
                                     </div>
                                     <div class="text-left row">
-                                        <label class="descuento col-md-12" for="">Descuento : <?php echo (isset($producto[0]['DescuentoDecimal']))?"-&nbsp$ ".(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):'&nbsp&nbsp N/A'?></label>
+                                        <label class="descuento col-md-12" for="">Descuento : <?php echo (isset($producto[0]['DescuentoDecimal']))?"-&nbsp$ ".round((($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']), 2):'&nbsp&nbsp N/A'?></label>
                                     </div>
                                     <div class=" text-left row">
-                                        <label class="total col-md-12" for="">Total : $ <?php echo ($producto[0]['Subtotal']) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']:0) ?> </label>
+                                        <label class="total col-md-12" for="">Total : $ <?php echo round((($producto[0]['Subtotal']) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']:0)), 2) ?> </label>
                                     </div>
                                 </div>
                             </div>
@@ -214,7 +214,7 @@ $producto = $select_producto->fetchAll(PDO::FETCH_ASSOC);
                         Descuento: - 
                         <span class="text-right"> $
                         <?php
-                            echo ($producto[0]['DescuentoDecimal']!=0)? ($producto[0]['Subtotal']/$producto[0]['DescuentoDecimal']) : 0;
+                            echo ($producto[0]['DescuentoDecimal']!=0)? round(($producto[0]['Subtotal']/$producto[0]['DescuentoDecimal']), 2) : 0;
                         ?>
                         </span>
                     </label>
@@ -223,7 +223,7 @@ $producto = $select_producto->fetchAll(PDO::FETCH_ASSOC);
                         Total:
                         <span class="text-right"> $
                         <?php
-                            echo ($producto[0]['Subtotal']) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']:0);
+                            echo round((($producto[0]['Subtotal']) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']:0)), 2);
                         ?>
                         </span>
                     </label>
@@ -278,10 +278,10 @@ paypal.Button.render({
 	  transactions: [{
 
 		amount: {
-		    total: <?php echo ($producto[0]['Subtotal']) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']:0) ?>,
+		    total: <?php echo round((($producto[0]['Subtotal']) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']:0)), 2) ?>,
 		    currency: 'USD',
             details: {
-                subtotal: <?php echo $producto[0]['Subtotal'] - (($producto[0]['DescuentoDecimal']!=0)?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) ?>,
+                subtotal: <?php echo round(($producto[0]['Subtotal'] - (($producto[0]['DescuentoDecimal']!=0)?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0)), 2) ?>,
                 shipping: <?php echo ($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']:0; ?>,
         }
 		},
@@ -291,7 +291,7 @@ paypal.Button.render({
             {
                 name: '<?php echo $producto[0]['NombreProducto'] ?>',
                 quantity: <?php echo $producto[0]['Cantidad'] ?>,
-                price: <?php echo $producto[0]['PrecioUnitario'] - ((isset($producto[0]['Descuento']))?(($producto[0]['PrecioUnitario'])/$producto[0]['DescuentoDecimal']):0)?>,
+                price: <?php echo round(($producto[0]['PrecioUnitario'] - ((isset($producto[0]['Descuento']))?(($producto[0]['PrecioUnitario'])/$producto[0]['DescuentoDecimal']):0)), 2)?>,
                 shipping: <?php echo ($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']:0 ?>,
                 
                 currency: 'USD'

@@ -6,8 +6,9 @@ if(!isset($pdo)){
   include '../global/config.php';
   include '../global/conexion.php';
   include '../global/const.php';
-  require 'language/requirelanguage.php';
+  
   session_start();
+  require 'language/requirelanguage.php';
 }
 
 
@@ -36,7 +37,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Administración</title>
+  <title id="titulo_pagina">Administración</title>
 
 
 
@@ -52,7 +53,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css"rel="stylesheet">
     
-
+    <?php include 'iconos.php' ?>
 
 </head>
 
@@ -82,10 +83,13 @@ if($usuario[0]['FK_TipoUsuario']!=3){
             <a class="nav-link" href="<?php echo URL_SITIO ?>Ciudades" ><?php echo $hciudades ?></a>
           </li>
           <li class="nav-item" id="Usuarios">
-            <a class="nav-link" href="<?php echo URL_SITIO ?>Usuarios-Admin" >Usuarios</a>
+            <a class="nav-link" href="<?php echo URL_SITIO ?>Usuarios-Admin" ><?php echo $husuarios ?></a>
+          </li>
+          <li class="nav-item" id="Tiendas">
+            <a class="nav-link" href="<?php echo URL_SITIO ?>Tiendas-Admin" ><?php echo $htienda ?></a>
           </li>
           <li class="nav-item" id="ciudades">
-            <form action="Registro-Datos" method="POST">
+            <form action="Registro-Datos" method="get">
               <input type="hidden" name="menu" value="ver_categorias" />
               <a class="nav-link" href="Registro-Datos?menu=ver_categorias" value="category" name="menu"  ><?php echo $tcategorias ?></a>
             </form>

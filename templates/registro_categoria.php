@@ -1,10 +1,10 @@
-
+<link href="<?php echo URL_SITIO ?>static/css/categorias.css"rel="stylesheet">
 <div role="alert" data-delay="5000" aria-live="assertive" aria-atomic="true" id="toast_mensaje" class="toast" data-autohide="true">
         <div class="toast-body">
         </div>
 </div> 
 
-<div class="col-md-2 bordered">
+<div class="col-md-2 ">
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
                 <li class="list-group-item">
@@ -16,7 +16,7 @@
                 </ul>
             </div>
         </div>
-<div style="height:100%;margin-bottom:60px;" class="col-md-10 bordered">
+<div style="height:100%;margin-bottom:60px;" class="col-md-10 ">
 <div id="mensaje-success" class="alert alert-success" role="alert"></div>
 <div class="alert alert-warning"></div>
     <div class="card">

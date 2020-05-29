@@ -7,6 +7,10 @@ th{
     text-align: right!important;
 }
 
+body{
+    background-color: #F8F8F8!important;
+}
+
 
 
 .square {
@@ -79,6 +83,13 @@ th{
 
 }
 
+.card-body{
+    border: 0px!important;
+}
+
+.card{
+    border: 0px!important;
+}
 
 
 

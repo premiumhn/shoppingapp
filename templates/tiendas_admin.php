@@ -10,18 +10,20 @@ require ('../scripts/comprobaciones.php');
 
 
 //Consulta seleccionar usuarios admin
-$select_usuarios_admin = $pdo->prepare("SELECT * 
-                                        FROM Usuarios 
-                                        WHERE FK_TipoUsuario = 3");
-$select_usuarios_admin->execute();
-$lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
+$select_tiendas = $pdo->prepare("SELECT t.NombreTienda, t.PK_Tienda, t.Correo, t.Logo, p.NombrePais, t.Estado 
+                                FROM Tiendas t INNER JOIN Ciudades c
+                                ON t.FK_Ciudad = c.PK_Ciudad INNER JOIN Paises p
+                                ON p.PK_Pais = c.FK_Pais
+                                ORDER BY t.PK_Tienda DESC");
+$select_tiendas->execute();
+$lista_tiendas = $select_tiendas->fetchAll(PDO::FETCH_ASSOC);
 
 
 
 ?>
 
 <link href="<?php echo URL_SITIO ?>static/css/registro_datos.css"rel="stylesheet">
-<link href="<?php echo URL_SITIO ?>static/css/usuarios_admin.css"rel="stylesheet">
+<link href="<?php echo URL_SITIO ?>static/css/tiendas_admin.css"rel="stylesheet">
 
 
 <div  role="alert" data-delay="5000" aria-live="assertive" aria-atomic="true" id="toast_mensaje" class="toast" data-autohide="true">
@@ -34,10 +36,10 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                            <a style="border:1px solid #F8F8F8" href="Nuevo-Usuario-Admin" type="submit" class="col-md-12 btn btn-primary"><?php echo $ubtn_nuevo ?></a>
+                            <a style="border:1px solid #F8F8F8" href="Nueva-Tienda" type="submit" class="col-md-12 btn btn-primary"><?php echo $ubtn_nuevo ?></a>
                     </li>
                     <li class="list-group-item">
-                            <a style="border:1px solid #F8F8F8" href="Usuarios-Admin" type="submit" class="col-md-12 btn btn-primary"><?php echo $ubtn_ver_todas ?></a>
+                            <a style="border:1px solid #F8F8F8" href="Tiendas-Admin" type="submit" class="col-md-12 btn btn-primary"><?php echo $ubtn_ver_todas ?></a>
                     </li>
                     
                 </ul>
@@ -45,50 +47,54 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
     </div>
     
     <div class="col-md-10">
+        <div class="alert alert-success" role="alert"></div>
 			<div class="card mb-3 ">
 	          	<div class="card-header">
 	             	<i class="fas fa-table"></i>
-					 <?php echo $lusuarios_admin ?>
+					 <?php echo $ltiendas ?>
 	          	</div>
             	<div class="card-body">
               		<div class="table-responsive">
                 		<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   			<thead class="text-center">
 			                    <tr>
-									<!-- <th hidden>ID</th> -->
-                                    <th scope="col"><?php echo $ufoto ?></th>
-                                    <th scope="col"><?php echo $uusuario ?></th>
-                                    <th scope="col"><?php echo $ucorreo ?></th>
-                                    <th scope="col"><?php echo $uestado ?></th>
-                                    <th scope="col" style="color:white;" class="no_border-r"></th>
-                                    <th scope="col" style="color:white;" class="no_border-l"></th>
+                                    <!-- <th hidden>ID</th> -->
+                                    <th scope="col"></th>
+                                    <th scope="col"><?php echo $tlogo ?></th>
+                                    <th scope="col"><?php echo $tnombre_tienda ?></th>
+                                    <!-- <th scope="col"><?php echo $tcorreo ?></th> -->
+                                    <th scope="col"><?php echo $tpais ?></th>
+                                    <th scope="col"><?php echo $testado ?></th>
+                                    <!-- <th scope="col" style="color:white;" class="no_border-r"></th> -->
+                                    <th scope="col" style="color:white;" class=""></th>
 								</tr>
 			                </thead>
                 			<tbody> 
-                				<?php foreach ($lista_usuarios_admin as $usuario_Admin) {?>
+                				<?php foreach ($lista_tiendas as $tienda) {?>
 									<tr WIDTH="100%">
-                                        <td  WIDTH="30%" ><div class="cont_imagen"><img id="imagen_<?php echo $usuario_Admin['PK_Usuario']?>" class="col-md-12 imagen" src="<?php echo URL_SITIO ?>uploads/img/perfiles/<?php echo ($usuario_Admin['Foto'] != "")?$usuario_Admin['Foto']:"no-foto.png"; ?>" alt=""></div ></td>
-                                        <td id="nombreUsuario_<?php echo $usuario_Admin['PK_Usuario']?>" WIDTH="20%"><?php echo $usuario_Admin['NombreUsuario'] ?></td>
-                                        <td id="correo_<?php echo $usuario_Admin['PK_Usuario']?>"  WIDTH="40%"><?php echo $usuario_Admin['Correo'] ?></td>
-                                        <input type="hidden" id="contrasena_<?php echo $usuario_Admin['PK_Usuario']?>"  WIDTH="40%" value="<?php echo openssl_decrypt($usuario_Admin['Contrasena'], COD, KEY)?>" >
+                                        <th scope="col"><a href="Visualizar-Tienda?PK_Tienda=<?php echo $tienda['PK_Tienda'] ?>" type="button" class="btn btn-edit" ><i class="fas fa-eye mr-2"></i></a></th>
+                                        <td  WIDTH="30%" ><div class="cont_imagen"><img id="imagen_<?php echo $tienda['PK_Tienda']?>" class="col-md-12 imagen" src="<?php echo URL_SITIO ?>uploads/img/logos/<?php echo ($tienda['Logo'] != "")?$tienda['Logo']:"no-foto.png"; ?>" alt=""></div ></td>
+                                        <td id="nombreTienda_<?php echo $tienda['PK_Tienda']?>" WIDTH="20%"><?php echo $tienda['NombreTienda'] ?></td>
+                                        <!-- <td id="correo_<?php echo $tienda['PK_Tienda']?>"  WIDTH="40%"><?php echo $tienda['Correo'] ?></td> -->
+                                        <td id="pais_<?php echo $tienda['PK_Tienda']?>"  WIDTH="40%"><?php echo $tienda['NombrePais'] ?></td>
                                         
-                                        <td id="estado_<?php echo $usuario_Admin['PK_Usuario']?>" WIDTH="10%"><?php echo ($usuario_Admin['Estado']==1)?'<label class="switch">
-                                                                                                                                                            <input onClick="cambiarEstadoUsuario('. $usuario_Admin["PK_Usuario"] .')" class="check" type="checkbox" checked>
+                                        <td id="estado_<?php echo $tienda['PK_Tienda']?>" WIDTH="10%"><?php echo ($tienda['Estado']==1)?'<label class="switch">
+                                                                                                                                                            <input onClick="cambiarEstadoTienda('. $tienda["PK_Tienda"] .')" class="check" type="checkbox" checked>
                                                                                                                                                             <span class="slider round"></span>
                                                                                                                                                         </label>':
                                                                                                                                                         '<label class="switch">
-                                                                                                                                                            <input onClick="cambiarEstadoUsuario('. $usuario_Admin["PK_Usuario"] .')" class="check" type="checkbox">
+                                                                                                                                                            <input onClick="cambiarEstadoTienda('. $tienda["PK_Tienda"] .')" class="check" type="checkbox">
                                                                                                                                                             <span class="slider round"></span>
                                                                                                                                                         </label>'; ?></td>
-                                        <td class="no_border-r"><button onClick="editar(<?php echo $usuario_Admin['PK_Usuario'] ?>)" type="button" class="btn btn-edit" data-toggle="modal" data-target=".modal-editar"><i class="fas fa-edit mr-2"></i></button></td>
-                                        <td class="no_border-l"><button onClick="eliminar(<?php echo $usuario_Admin['PK_Usuario'] ?>)" type="button" class="btn btn-eliminar" data-toggle="modal" data-target=".modal-eliminar"><i class="fas fa-trash-alt mr-2"></i></button></td>
+                                        <!-- <td class="no_border-r"><button onClick="editar(<?php echo $tienda['PK_Tienda'] ?>)" type="button" class="btn btn-edit" data-toggle="modal" data-target=".modal-editar"><i class="fas fa-edit mr-2"></i></button></td> -->
+                                        <td class=""><a onClick="eliminar(<?php echo $tienda['PK_Tienda'] ?>)" type="button" class="btn btn-eliminar" data-toggle="modal" data-target=".modal-eliminar"><i class="fas fa-trash-alt mr-2"></i></a></td>
                                     </tr>
 								<?php } ?>
 							</tbody>
                 		</table>
               		</div>
             	</div>
-          		<div class="card-footer small text-muted"><?php echo $fusuarios_admin ?></div>
+          		<div class="card-footer small text-muted"><?php echo $ltiendas ?></div>
     		</div>
 		</div>
 </div>
@@ -101,14 +107,14 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
         <div class="modal-content">
             <div class=" md-content col-md-12">
                 <br>
-                <label class="text-center col-md-12" for=""><strong><?php echo $ueditar_usuario ?></strong></label>
+                <label class="text-center col-md-12" for="">Tienda: <strong> <span id="NombreTiendaV"></span></strong></label>
           
             <div style="height:100%;margin-bottom:60px;" class="col-md-12 offset-md-0 bordered">
                 <div class="card">
                 <div class="card-body">
                     <form id="form-edit" action="<?php echo URL_SITIO ?>scripts/usuarios_admin.php" method="post" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label for="inputAddress"><?php echo $unombre_usuario ?></label>
+                            <label for="inputAddress"></label>
                             <input type="text" class="form-control" name="input_nombreUsuario" id="inputNombreUsuario" placeholder="">
                         </div>
                         <div class="form-group">
@@ -157,22 +163,32 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
         <div class="modal-content">
             <div class=" md-content col-md-12">
                 <br>
-                <label class="text-center col-md-12" for=""><strong>Eliminar usuario</strong></label>
+                <label class="text-center col-md-12" for=""><strong>Eliminar tienda</strong></label>
           
             <div style="height:100%;margin-bottom:60px;" class="col-md-12 offset-md-0 bordered">
                 <div class="card">
                 <div class="card-body">
-                    <form id="form-eliminar" action="<?php echo URL_SITIO?>scripts/usuarios_admin.php" method="post" enctype="multipart/form-data">
+                    <form id="form-eliminar" action="<?php echo URL_SITIO?>scripts/registro_tienda.php" method="post" enctype="multipart/form-data">
                       
-                        <label for="">¿Seguro que desea eliminar el usuario "<span id="nombreUsuarioEl"></span>"?</label>
+                        <label for="">¿Seguro que desea eliminar la tienda "<span id="nombreTiendaEl"></span>"?</label>
+                        
+                        <div class="body-eliminar">
+                            <p>Esto eliminará también:</p>
+                            <ul>
+                                <li>Los pedidos que han hecho a esta tienda.</li>
+                                <li>Los productos que estén en carrito de compras de algún cliente, los cuales pertenezcan a esta tienda.</li>
+                                <li>Los productos de la tienda.</li>
+                            </ul>
+                        </div>
+                        
 
                         <br>
                         <br>
                         <br>
                         <br>
 
-                        <input type="hidden" id="PK_UsuarioEl" name="PK_Usuario">
-                        <input type="hidden" value="eliminar_usuario" name="action">
+                        <input type="hidden" id="PK_TiendaEl" name="PK_Tienda">
+                        <input type="hidden" value="eliminar_tienda" name="action">
 
                         <div class="text-center col-md-12">
                         <button id="btnEliminar" type="submit" data-dismiss="modal" class=" btn-modal btn btn-danger col-md-5">Eliminar</button>&nbsp&nbsp&nbsp
@@ -191,9 +207,10 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
 
 
 <script type="text/javascript">
+    $('.alert-success').hide();
 
-    $('.h2-name').html('<?php echo $unombre_pagina ?>');
-    $('#titulo_pagina').html('Shoppingapp | <?php echo $unombre_pagina ?>');
+    $('.h2-name').html('<?php echo $lnombre_pagina ?>');
+    $('#titulo_pagina').html('Shoppingapp | <?php echo $lnombre_pagina ?>');
 
     $('#mensaje-success').hide();
     $('#mensaje-error').hide();
@@ -202,13 +219,13 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
 
     <?php 
         $msj = (isset($_GET['msj']))?$_GET['msj']:"";
-        if( $msj == 'editado'){ 
+        if( $msj == 'registrada'){ 
     ?>
-        $('#mensaje-success').html('<i class="fa fa-check"></i>Usuario actualizado exitosamente');
-        $('#mensaje-success').show();
-    <?php } elseif( $msj == 'eliminado'){ ?>
-        $('#mensaje-success').html('<i class="fa fa-check"></i>Usuario eliminado.');
-        $('#mensaje-success').show();
+        $('.alert-success').html('<i class="fa fa-check"></i>Tienda registrada exitosamente');
+        $('.alert-success').show('slow');
+    <?php } elseif( $msj == 'eliminada'){ ?>
+        $('.alert-success').html('<i class="fa fa-check"></i>Tienda eliminada.');
+        $('.alert-success').show();
     <?php } elseif( $msj == 'error_1'){ ?>
         $('#mensaje-error').html('No se puede eliminar el usuario porque es el único administrador');
         $('#mensaje-error').show();
@@ -242,6 +259,10 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
 
     });
 
+    function visualizar(pk_tienda){
+        $('#NombreTiendaV').html($('#nombreTienda_'+pk_tienda)[0].innerText);
+    }
+
     $('#inputImagen').bind('change', function() {
             var peso = this.files[0].size/1024/1024;
             if(peso > 5){
@@ -274,9 +295,9 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
          nombre_actual = $('#nombreUsuario_'+pk_usuario)[0].innerText;
      }
 
-     function eliminar(pk_usuario){
-         $('#nombreUsuarioEl').html($('#nombreUsuario_'+pk_usuario)[0].innerText);
-         $('#PK_UsuarioEl').val(pk_usuario);
+     function eliminar(pk_tienda){
+         $('#nombreTiendaEl').html($('#nombreTienda_'+pk_tienda)[0].innerText);
+         $('#PK_TiendaEl').val(pk_tienda);
 
      }
 
@@ -298,15 +319,15 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
         vistaPrevia(this);
     });
 
-    function cambiarEstadoUsuario(pk_usuario){
-         // activar o desactivar usuario
+    function cambiarEstadoTienda(pk_tienda){
+         // activar o desactivar tienda
          var response;
             $.ajax({
                     type:"POST",
                     async: false,
                     url:"<?php echo URL_SITIO?>scripts/datos_ajax.php",
-                    data: {"request" : "cambiarEstadoUsuario", 
-                           "PK_Usuario" : pk_usuario},
+                    data: {"request" : "cambiarEstadoTienda", 
+                           "PK_Tienda" : pk_tienda},
                     success:function(r){
                         console.log(r);
                     }

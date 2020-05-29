@@ -74,7 +74,7 @@ $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
     <div class="alert alert-danger" id="mensaje_alert" class="alert-dismissible fade show"></div>
     <div class="alert alert-success" id="mensaje_alert_success" style="display:none;"></div>
  
-    <form lang="en" action="<?php echo URL_SITIO ?>scripts/login.php" method="post" id="form_login">
+    <form lang="en" action="<?php echo URL_SITIO ?>scripts/login_tienda.php" method="post" id="form_login">
         
             <div class="form-group col-md-12">
             <input type="hidden" id="inputConf" value="<?php echo $p ?>">
@@ -117,7 +117,7 @@ $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
 </div>
 <div class="row col-md-12">
     <div class="col-md-8 offset-md-2 text-center">
-        <span style="color:white;">Envíanos tu información a <strong>shoppingapp-services@outlook.com</strong> y solicita crear una cuenta para tu tienda.</span>
+        <span style="color:white;">Envíanos tu información a <strong>shoppingappworld@gmail.com</strong> y solicita crear una cuenta para tu tienda.</span>
         <!-- <a href="Registro-Tienda" class="btn btn-primary btn_registrarse">Registrar tienda</a> -->
     </div>
 </div>
@@ -176,6 +176,7 @@ $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
                             "NombreUsuario" : $('#inputUsername').val()},
                     success:function(r){
                         verificar_usuario = r;
+                        console.log(r);
                     }
             });
             

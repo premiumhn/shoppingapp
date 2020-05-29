@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:8889
--- Tiempo de generación: 28-05-2020 a las 15:23:39
+-- Tiempo de generación: 29-05-2020 a las 19:08:28
 -- Versión del servidor: 5.7.23
 -- Versión de PHP: 7.2.10
 
@@ -38,7 +38,9 @@ CREATE TABLE `Carrito` (
 --
 
 INSERT INTO `Carrito` (`PK_Carrito`, `Cantidad`, `FK_Producto`, `FK_Pedido`, `FK_Talla`, `FK_Color`, `FK_Cliente`, `FechaHoraAgregado`, `FK_TipoPedido`, `FK_Destinatario`) VALUES
-(37, 228, 2, NULL, 1, 1, 1, '2020-05-21 15:14:56', 1, NULL);
+(37, 228, 2, NULL, 1, 1, 1, '2020-05-21 15:14:56', 1, NULL),
+(38, 1, 4, NULL, NULL, NULL, 1, '2020-05-28 16:18:44', 1, NULL),
+(39, 1, 3, NULL, NULL, NULL, 1, '2020-05-28 16:19:02', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -337,7 +339,8 @@ INSERT INTO `Pago_solouno_temp` (`PK_Pago`, `Cantidad`, `FK_Producto`, `FK_Pedid
 ('1_2020-05-17_16:22:09_3', 1, 3, NULL, NULL, NULL, 1, '2020-05-17 16:22:09', 1, NULL),
 ('1_2020-05-17_18:19:19_4', 1, 4, NULL, NULL, NULL, 1, '2020-05-17 18:19:19', 1, NULL),
 ('1_2020-05-21_15:10:52_2', 1, 2, NULL, 1, 1, 1, '2020-05-21 15:10:52', 1, NULL),
-('1_2020-05-21_15:11:45_2', 1, 2, NULL, 1, 1, 1, '2020-05-21 15:11:45', 1, NULL);
+('1_2020-05-21_15:11:45_2', 1, 2, NULL, 1, 1, 1, '2020-05-21 15:11:45', 1, NULL),
+('1_2020-05-29_17:35:27_3', 1, 3, NULL, NULL, NULL, 1, '2020-05-29 17:35:27', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -514,17 +517,19 @@ CREATE TABLE `Tiendas` (
   `FK_Ciudad` int(11) NOT NULL,
   `FK_Usuario` int(11) NOT NULL,
   `Telefono` varchar(20) DEFAULT NULL,
-  `Portada` varchar(100) DEFAULT NULL
+  `Portada` varchar(100) DEFAULT NULL,
+  `Estado` tinyint(4) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `Tiendas`
 --
 
-INSERT INTO `Tiendas` (`PK_Tienda`, `NombreTienda`, `NombreContacto`, `ApellidoContacto`, `Direccion1`, `Direccion2`, `SitioWeb`, `Correo`, `IDClientePaypal`, `Logo`, `Adomicilio`, `FK_Ciudad`, `FK_Usuario`, `Telefono`, `Portada`) VALUES
-(1, 'Mi Tienda', 'kevin ', 'canales TEMP', '2fre TEMP', 'erf TEMP', 'opticadelrey.ml', 'noe@noe.com', 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk_', 'tienda_2_logo.jpg', NULL, 1, 2, '234444', 'tienda_2_portada.jpg'),
-(4, 'Tienda de prueba', 'Noe', 'Montoya', 'dire', 'dire 2', '', 'test@test.com', 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk', 'tienda_2_logo.jpg', 1, 1, 8, '345', 'tienda_8_portada.jpg'),
-(7, 'tienda_test', 'kevin', 'canales', 'feriofjerf', 'erferferfref', '', 'noe_k@outlook.com', 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk_', 'tienda_14_20200515224038.jpg', NULL, 4, 14, '3455345', 'tienda_14_20200515221833.jpg');
+INSERT INTO `Tiendas` (`PK_Tienda`, `NombreTienda`, `NombreContacto`, `ApellidoContacto`, `Direccion1`, `Direccion2`, `SitioWeb`, `Correo`, `IDClientePaypal`, `Logo`, `Adomicilio`, `FK_Ciudad`, `FK_Usuario`, `Telefono`, `Portada`, `Estado`) VALUES
+(1, 'Mi Tienda', 'kevin ', 'canales TEMP', '2fre TEMP', 'erf TEMP', 'opticadelrey.ml', 'noe@noe.com', 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk_', 'tienda_2_logo.jpg', NULL, 1, 2, '234444', 'tienda_2_portada.jpg', 1),
+(4, 'Tienda de prueba', 'Noe', 'Montoya', 'dire', 'dire 2', '', 'test@test.com', 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk', 'tienda_2_logo.jpg', 1, 1, 8, '345', 'tienda_8_portada.jpg', 1),
+(7, 'tienda_test', 'kevin', 'canales', 'feriofjerf', 'erferferfref', '', 'noe_k@outlook.com', 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk_', 'tienda_14_20200515224038.jpg', NULL, 4, 14, '3455345', 'tienda_14_20200515221833.jpg', 0),
+(9, 'nuevatienda', 'nuevocontacto', 'apellidonuevocontacto', 'NA', 'NA', 'fdsfsd', 'nueva@nuevatienda.com', '', '', 0, 1, 39, '23423423423', '', 1);
 
 -- --------------------------------------------------------
 
@@ -621,7 +626,10 @@ INSERT INTO `Usuarios` (`PK_Usuario`, `NombreUsuario`, `Contrasena`, `Correo`, `
 (32, 'admin', 'eNxbTbYbHFCdi36ieolpyg==', 'hola@fioef.com', 1, 3, 1, 'user_admin_foto_perfil.jpg', 'C161905d20200527', 0, NULL),
 (36, 'nuevoadmin', 'eNxbTbYbHFCdi36ieolpyg==', 'nuevo@nuevo.com', 1, 3, 1, '', 'C183641d20200527', 0, NULL),
 (37, 'admin2', 'eNxbTbYbHFCdi36ieolpyg==', 'admin@gmail.com', 1, 3, 1, 'user_admin2_foto_perfil.jpg', 'C183836d20200527', 0, NULL),
-(38, 'prueba_admin', 'eNxbTbYbHFCdi36ieolpyg==', 'prueba@gmail.com', 1, 3, 1, '', 'C184408d20200527', 0, NULL);
+(38, 'prueba_admin', 'eNxbTbYbHFCdi36ieolpyg==', 'prueba@gmail.com', 1, 3, 1, '', 'C184408d20200527', 0, NULL),
+(39, 'nueva@nuevatienda.com', 'eNxbTbYbHFCdi36ieolpyg==', 'nueva@nuevatienda.com', 1, 2, 1, '', 'C220246d20200528', 0, NULL),
+(48, 'ef@oirefjfr.com', 'eNxbTbYbHFCdi36ieolpyg==', 'ef@oirefjfr.com', 1, 2, 1, 'tienda_48_logo.jpg', 'C225058d20200528', 0, NULL),
+(49, 'erferf@fjerfr,.com', 'eNxbTbYbHFCdi36ieolpyg==', 'erferf@fjerfr,.com', 1, 2, 1, 'tienda_49_logo.jpg', 'C023221d20200529', 0, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -823,7 +831,7 @@ ALTER TABLE `Usuarios`
 -- AUTO_INCREMENT de la tabla `Carrito`
 --
 ALTER TABLE `Carrito`
-  MODIFY `PK_Carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `PK_Carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT de la tabla `Categorias`
@@ -841,7 +849,7 @@ ALTER TABLE `Ciudades`
 -- AUTO_INCREMENT de la tabla `Clientes`
 --
 ALTER TABLE `Clientes`
-  MODIFY `PK_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `PK_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `Colores`
@@ -865,7 +873,7 @@ ALTER TABLE `Destinatarios`
 -- AUTO_INCREMENT de la tabla `DetallePedidos`
 --
 ALTER TABLE `DetallePedidos`
-  MODIFY `PK_DetallePedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `PK_DetallePedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT de la tabla `DetalleProducto`
@@ -895,19 +903,19 @@ ALTER TABLE `Paises`
 -- AUTO_INCREMENT de la tabla `Pedidos`
 --
 ALTER TABLE `Pedidos`
-  MODIFY `PK_Pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `PK_Pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `Productos`
 --
 ALTER TABLE `Productos`
-  MODIFY `PK_Producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `PK_Producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `RegionesEnvio`
 --
 ALTER TABLE `RegionesEnvio`
-  MODIFY `PK_RegionEnvio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `PK_RegionEnvio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `Tallas`
@@ -925,7 +933,7 @@ ALTER TABLE `Temp`
 -- AUTO_INCREMENT de la tabla `Tiendas`
 --
 ALTER TABLE `Tiendas`
-  MODIFY `PK_Tienda` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `PK_Tienda` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `TiposPago`
@@ -949,7 +957,7 @@ ALTER TABLE `TipoUsuario`
 -- AUTO_INCREMENT de la tabla `Usuarios`
 --
 ALTER TABLE `Usuarios`
-  MODIFY `PK_Usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `PK_Usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- Restricciones para tablas volcadas
