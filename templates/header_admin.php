@@ -6,8 +6,8 @@ if(!isset($pdo)){
   include '../global/config.php';
   include '../global/conexion.php';
   include '../global/const.php';
-  require 'language/requirelanguage.php';
   session_start();
+  require 'language/requirelanguage.php';
 }
 
 
@@ -82,7 +82,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
             <a class="nav-link" href="<?php echo URL_SITIO ?>Ciudades" ><?php echo $hciudades ?></a>
           </li>
           <li class="nav-item" id="Usuarios">
-            <a class="nav-link" href="<?php echo URL_SITIO ?>Usuarios-Admin" >Usuarios</a>
+            <a class="nav-link" href="<?php echo URL_SITIO ?>Usuarios-Admin" ><?php echo $husuario ?></a>
           </li>
           <li class="nav-item" id="ciudades">
             <form action="Registro-Datos" method="POST">

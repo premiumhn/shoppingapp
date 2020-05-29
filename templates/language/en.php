@@ -34,7 +34,7 @@ $tiendasde="Store of ";
 $compraren="Buy at";
 $tcategorias="Categories";
 $tpaises="Countries";
-
+$husuario="Users";
 $ttiendas="Shops";
 $tadmin="Administration";
 $tmodulo="Administrative module";

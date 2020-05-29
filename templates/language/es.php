@@ -34,6 +34,7 @@ $tiendasde="Tiendas de ";
 $compraren="Comprar En";
 $tcategorias="Categorías";
 $tpaises="Paises";
+$husuario="Usuarios";
 //title
 $ttiendas="Tiendas";
 $tadmin="Administración";
