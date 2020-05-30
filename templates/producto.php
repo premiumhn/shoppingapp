@@ -114,7 +114,7 @@
 			  		<div class="form-row">
 			  			<div class="col-md-6">
 			  				<div class="form-label-group">
-			  					<label for="InputUnidadesDisponibles">Tienda</label>
+			  					<label for="InputUnidadesDisponibles">Tienda:</label>
 			  					<input type="text" id="InputUnidadesDisponibles" required placeholder="Unidades Disponibles" name="UnidadesDisponibles" class="form-control">
 			  				</div>
 			  			</div>
