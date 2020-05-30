@@ -12,7 +12,6 @@ $spanish="Spanish";
 $english="English";
 $fidioma="Language";
 $fpaises="Countries";
-$fusuarios_admin = "Admin users";
 $flink="Links";
 $fcontacto="Contact us";
 $finicio="Home";
@@ -37,7 +36,7 @@ $compraren="Buy at";
 $tcategorias="Categories";
 $tpaises="Countries";
 $htiendas = "Shops";
-$husuario="Users";
+
 $ttiendas="Shops";
 $tadmin="Administration";
 $tmodulo="Administrative module";
@@ -66,6 +65,13 @@ $unombre_usuario = "Username";
 $ucontrasena = "Password";
 $ucambiar_imagen = "Change photo";
 $lusuarios_admin = "List of admin users";
+$fusuarios_admin = "Admin users";
+$umisma_contrasena = "Same Pasword";
+$ufoto_perfil = "Profile photo";
+$umostrar_contrasena = "Show password";
+$useleccionar_archivo = "Choose file";
+$ubtn_registrar_usuario = "Register user";
+$uelegir = "Choose";
 //categorias
 $lcategorias = "List of categories";
 $cat_btn_nuevo = "New";
@@ -74,6 +80,10 @@ $cat_imagen = "Image";
 $cat_categoria = "Category";
 $cat_descripcion = "Description";
 $fcategorias = "Categories";
+$cat_nombre_categoria = "Category name";
+$cat_activa = "Active";
+$cat_inactiva = "Inactive";
+
 //regiones envio
 $lregiones_envio = "Shipping regions";
 $re_pais = "Country";
@@ -87,6 +97,18 @@ $tcorreo = "Email";
 $testado = "State";
 $lnombre_pagina = "Shops";
 $tpais = "Country";
+$tregistro_de_tiendas = "Shops registration";
+$tnombre_contacto = "Contact name";
+$tapellido_contacto = "Contact last name";
+$twebsite = "Web site (optional)";
+$ttelefono = "Telephone";
+$tdireccion = "Address";
+$tciudad = "City";
+$tseleccione = "Choose";
+$t_tiene_adomicilio_ = "It have shipping service?";
+$tsi = "Yes";
+$tportada = "Cover for the page";
+
 
 
 

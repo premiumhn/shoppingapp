@@ -8,10 +8,10 @@
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                            <a href="Registro-Datos?menu=ver_categorias" type="submit" class="col-md-12 btn btn-primary">Ver todas</a>
+                            <a href="Registro-Datos?menu=registro_categoria" type="submit" class="col-md-12 btn btn-primary"><?php echo $cat_btn_nuevo ?></a>
                     </li>
                     <li class="list-group-item">
-                            <a href="Registro-Datos?menu=registro_categoria"  type="submit" class="col-md-12 btn btn-primary">Nueva</a>
+                            <a href="Registro-Datos?menu=ver_categorias"  type="submit" class="col-md-12 btn btn-primary"><?php echo $cat_btn_ver_todas ?></a>
                     </li>
                 </ul>
             </div>
@@ -23,39 +23,39 @@
     <div class="card-body">
         <form id="formRegistrar" action="<?php echo URL_SITIO ?>scripts/registro_datos.php" method="post" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="inputAddress">Nombre de la categoría</label>
+                <label for="inputAddress"><?php echo $cat_nombre_categoria ?></label>
                 <input type="text" class="form-control" name="input_nombreCategoria" id="inputCategoryName" placeholder="">
             </div>
             <div class="form-group">
-                <label for="inputAddress2">Descripción</label>
+                <label for="inputAddress2"><?php echo $cat_descripcion ?></label>
                 <input type="text" class="form-control" name="input_descripcion" id="inputDescripcion" placeholder="">
             </div>
-            <label for="inputAddress2">Imagen</label>
+            <label for="inputAddress2"><?php echo $cat_imagen ?></label>
             <div class="custom-file">
                 <input type="file" accept="image/*" class="custom-file-input" id="inputImagen" name="input_imagen">
-                <label class="custom-file-label" for="customFile">Escoger archivo</label>
+                <label class="custom-file-label" for="customFile"><?php echo $useleccionar_archivo ?></label>
             </div>
             <br>
             <br>
             <fieldset class="form-group">
-            <label for="inputAddress2">Estado</label>
+            <label for="inputAddress2"><?php echo $uestado ?></label>
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="input_estado" id="inputRadioActivo" value="1" checked>
                 <label class="form-check-label" for="inputRadioActivo">
-                    Activa
+                    <?php echo $cat_activa ?>
                 </label>
                 </div>
                 <div class="form-check">
                 <input class="form-check-input" type="radio" name="input_estado" id="inputRadioInactivo" value="0">
                 <label class="form-check-label" for="inputRadioInactivo">
-                    Inactiva
+                    <?php echo $cat_inactiva ?>
                 </label>
                 </div>
             </fieldset>
             <br>
             <input type="hidden" value="registrar_categoria" name="action">
             <input type="hidden" value="registrar_categoria" name="menu">
-            <button id="btnAgregar" class="col-md-8 offset-md-2 btn btn-primary">Agregar</button>
+            <button id="btnAgregar" class="col-md-8 offset-md-2 btn btn-primary"><?php echo $btnGuardar ?></button>
         </form>
 
     </div>

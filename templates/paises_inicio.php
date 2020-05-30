@@ -77,7 +77,7 @@ if($busqueda!=''){
 				</div>	
 				<div class="alert col-md-12 alert-danger text-center"></div>
 				<br>
-	<div class="container height-full">
+	<div class="cont_paises container height-full">
 		<div class="row">
 			
 			<?php foreach ($listaPaises as $pais){?>

@@ -294,19 +294,19 @@ $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
             
             </div>
         </div>
-        <br>
-        <br>
 
     </div>
-        <div class="container cont-descripcion white-back internal-padding text-left ">
+        
+    </div>
+    <br>
+    <br>
+    <div class="container cont-descripcion white-back internal-padding text-left ">
             <h4 class="col-md-12">Descripcción del artículo</h4>
             <br>
             <textarea class="text-descripccion" disabled class="col-md-12">
                 <?php echo $productos[0]['Descripcion'] ?>
             </textarea>
         </div>
-    </div>
-    
     <br>
     <br>
         <?php include '../templates/footer.php'; ?>
@@ -366,7 +366,8 @@ $('#lbl-carrito').hide();
                 }
         });
 
-        if($('#inputCantidad').val() > unidades_disponibles){
+        var  solicita=parseInt($('#inputCantidad').val());
+        if(solicita > parseInt(unidades_disponibles)){
             e.preventDefault();
             $('.toast-body').html('No hay suficientes unidades dispobibles de este producto');
             $('#toast_mensaje').toast('show');

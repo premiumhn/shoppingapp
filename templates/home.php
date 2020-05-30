@@ -242,7 +242,7 @@ if(isset($_SESSION['categoria'])){
 <div style="padding:50px 20px 50px 20px;" class="text-center ">
 
 
-<div class="container row col-md-12 ">
+<div class="cont_categorias container row col-md-12 ">
 <?php if(isset($_SESSION['categoria'])){ ?>
     <?php foreach($productos as $producto){ ?>
         <div class="col-md-3">

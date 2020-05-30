@@ -35,10 +35,10 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                            <a href="Registro-Datos?menu=ver_categorias" type="submit" class="col-md-12 btn btn-primary">Ver todas</a>
+                            <a href="Registro-Datos?menu=registro_categoria" type="submit" class="col-md-12 btn btn-primary"><?php echo $cat_btn_nuevo ?></a>
                     </li>
                     <li class="list-group-item">
-                            <a href="Registro-Datos?menu=registro_categoria"  type="submit" class="col-md-12 btn btn-primary">Nueva</a>
+                            <a href="Registro-Datos?menu=ver_categorias"  type="submit" class="col-md-12 btn btn-primary"><?php echo $cat_btn_ver_todas ?></a>
                     </li>
                 </ul>
             </div>

@@ -32,7 +32,7 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
     <ul class="row offset-md-2 col-md-10 navbar-nav ml-auto mt-2 mt-lg-0">
     
     <?php if($usuario[0]['FK_TipoUsuario'] == 1 ){ ?> 
-        <li class="col-md-2 offset-md-1 nav-item">
+        <li class="col-md-2  nav-item">
             <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Inicio"><i class="fas fa-home mr-2"></i><?php echo $hinicio ?></a>
           </li>
         <li   class="col-md-2 nav-item">
@@ -56,7 +56,7 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
       <?php if($usuario[0]['FK_TipoUsuario'] == 1 || $usuario[0]['FK_TipoUsuario'] == 3 ){ ?>
           <li class="col-md-2 nav-item dropdown ">
       <?php }else if($usuario[0]['FK_TipoUsuario'] == 2 ){ ?> 
-          <li  class="col-md-2 oddset-md-1  nav-item">
+          <li  class="col-md-2   nav-item">
             <a class="nav-link border-right" href="Inicio"><i class="fas fa-home mr-2"></i>Inicio</a>
           </li>
           <li  class="col-md-2  nav-item">
@@ -118,8 +118,11 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
             <?php } ?>
         </div>
       </li>
-			
-		</ul>
+			<li>
+          <div id="google_translate_element" class="google"></div>
+          </li>
+    </ul>
+    
   </div>
 </nav>
 <!-- // primer nav -->
@@ -163,7 +166,4 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
         $('.dropdown-toggle').hide();
       }
     </script>
-
-
-
 

@@ -130,9 +130,8 @@ session_start();
 
                 //reducir del inventario
                 foreach($lista_carrito as $carrito){
-                    $eliminar_temp = $pdo->prepare("SET @cant = (SELECT UnidadesDisponibles FROM Productos WHERE PK_Producto = :PK_Producto);
-                                                    UPDATE Productos
-                                                    SET UnidadesDisponibles = (  @cant - :Cantidad ) 
+                    $eliminar_temp = $pdo->prepare("UPDATE Productos
+                                                    SET UnidadesDisponibles = (UnidadesDisponibles - :Cantidad)  
                                                     WHERE PK_Producto  = :PK_Producto;");
 
                     $eliminar_temp->bindParam(':PK_Producto', $carrito['FK_Producto']);
@@ -258,9 +257,7 @@ session_start();
                 $eliminar_temp->execute(); 
 
                 //reducir del inventario
-                $reducir = $pdo->prepare("SET @cant = (SELECT UnidadesDisponibles FROM Productos WHERE PK_Producto = :PK_Producto);
-                                                SET @ven = (SELECT UnidadesVendidas FROM Productos WHERE PK_Producto = :PK_Producto);
-                                                UPDATE Productos
+                $reducir = $pdo->prepare("      UPDATE Productos
                                                 SET UnidadesDisponibles = UnidadesDisponibles - :Cantidad ,
                                                 UnidadesVendidas = UnidadesVendidas + :Cantidad 
                                                 WHERE PK_Producto  = :PK_Producto;");

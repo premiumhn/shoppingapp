@@ -185,6 +185,10 @@ button:focus {
     outline:0!important;
 }
 
+.cont_categorias{
+    min-height: 80vh;
+}
+
 
 /* ajuste a pantallas */
 @media (max-width: 600px) {

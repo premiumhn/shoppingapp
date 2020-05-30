@@ -49,3 +49,33 @@ body{
     vertical-align: bottom;
     margin-left: 10px;
 }
+
+.goog-te-banner-frame {
+    display:none!important;
+}
+
+/* iframe{
+    display: none!important;
+} */
+
+body {
+    background-color: rgb(248, 248, 248)!important;
+    position: absolute!important;
+    width: 100%;
+    top: 0px!important;
+}
+
+.goog-te-gadget-icon{
+    display: none!important;
+}
+
+.goog-te-gadget-simple{
+    padding: 10px 10px 10px 10px!important;
+    background-color: #EA7731!important;
+    border:none!important
+}
+
+.goog-te-menu-value {
+    color:rgba(255, 255, 255, 0.555)!important;
+    font-size: 15px;
+}

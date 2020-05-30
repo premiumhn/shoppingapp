@@ -75,7 +75,7 @@ if($busqueda!=''){
     <div class="alert col-md-12 alert-danger text-center"></div>
 
 		<br>
-<div class="container">
+<div class="cont_tiendas container">
 	<div class="row">
 
     <?php if(count($listaPaises)>0){ ?>

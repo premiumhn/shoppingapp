@@ -20,6 +20,7 @@ require ('../scripts/comprobaciones.php');
 
 <div class="row col-md-12">
 
+
 <div class="col-md-2 ">
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
@@ -34,61 +35,61 @@ require ('../scripts/comprobaciones.php');
             </div>
     </div>
 <div id="cont_register" class=" col-md-10">
-    <h2 class="text-center">Registro de tiendas</h2>
+    <h2 class="text-center"><?php echo $tregistro_de_tiendas ?></h2>
    <div class="alert alert-danger" id="mensaje_alert" class="alert-dismissible fade show"></div>
    <div class="alert alert-warning" class="alert-dismissible fade show"></div>
     <form autocomplete="off" action="<?php echo URL_SITIO ?>scripts/registro_tienda.php" method="post" id="form_register" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="inputnombreTienda">Nombre de la tienda <span class="text_required">*</span> </label>
+            <label for="inputnombreTienda"><?php echo $tnombre_tienda ?><span class="text_required">*</span> </label>
             <input type="text" class="form-control" name="input_nombreTienda" id="inputnombreTienda" placeholder="">
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="inputnombreContacto">Nombre del contacto <span class="text_required">*</span></label>
+                <label for="inputnombreContacto"><?php echo $tnombre_contacto ?><span class="text_required">*</span></label>
                 <input type="text" class="form-control" name="input_nombreContacto" id="inputnombreContacto" placeholder="">
             </div>
             <div class="form-group col-md-6">
-                <label for="inputApellidoContacto">Apellido del contacto<span class="text_required">*</span> </label>
+                <label for="inputApellidoContacto"><?php echo $tapellido_contacto ?><span class="text_required">*</span> </label>
                 <input type="text" class="form-control" name="input_apellidoContacto" id="inputApellidoContacto" placeholder="">
             </div>
         </div>
         <div class="form-group">
-            <label for="inputCorreo">Correo <span class="text_required">*</span> </label>
+            <label for="inputCorreo"><?php echo $ucorreo ?> <span class="text_required">*</span> </label>
             <input autocomplete="off" type="text" class="form-control" name="input_correo" id="inputCorreo" placeholder="">
         </div>
         <div class="form-group">
-                <label for="inputPassword4">Contraseña <span class="text_required">*</span> </label>
+                <label for="inputPassword4"><?php echo $ucontrasena ?>' <span class="text_required">*</span> </label>
                 <input  autocomplete="new-password" type="password" class="form-control" name="input_contrasena" id="inputContrasena" placeholder="">
         </div>
         <div class="form-group">
-                <label for="inputSamePassword">Misma contraseña <span class="text_required">*</span> </label>
+                <label for="inputSamePassword"><?php echo $umisma_contrasena ?><span class="text_required">*</span> </label>
                 <input  autocomplete="new-password" type="password" class="form-control" name="input_mismaContrasena" id="inputMismaContrasena" placeholder="">
         </div>
         <div class="col-md-12" id="mostrar_pass">
                 <input  id="show-pass" type="checkbox" onclick="showpass()">
-                <label style="font-size:15px;color:gray;" for="show-pass">Mostrar contraseñas</label>
+                <label style="font-size:15px;color:gray;" for="show-pass"><?php echo $umostrar_contrasena ?></label>
             </div>
         <div class="form-group">
-            <label for="inputWebsite">Sitio web (opcional) </label>
+            <label for="inputWebsite"><?php echo $twebsite ?></label>
             <input  type="phone" class="form-control" name="input_website" id="inputWebsite" placeholder="">
         </div>
         <div class="form-group">
-            <label for="inputTelefono">Telefono <span class="text_required">*</span> </label>
+            <label for="inputTelefono"><?php echo $ttelefono ?> <span class="text_required">*</span> </label>
             <input  type="phone" class="form-control solo-numeros" name="input_telefono" id="inputTelefono" placeholder="">
         </div>
         <div class="form-group">
-            <label for="inputDireccion1">Dirección 1<span class="text_required">*</span> </label>
+            <label for="inputDireccion1"><?php echo $tdireccion ?> 1<span class="text_required">*</span> </label>
             <input  type="text" class="form-control" name="input_direccion1" id="inputDireccion1" placeholder="">
         </div>
         <div class="form-group">
-            <label for="inputDireccion2">Dirección 2</label>
+            <label for="inputDireccion2"><?php echo $tdireccion ?> 2</label>
             <input  type="text" class="form-control" name="input_direccion2" id="inputDireccion2" placeholder="">
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="inputPais">País <span class="text_required">*</span> </label>
+                <label for="inputPais"><?php echo $tpais ?> <span class="text_required">*</span> </label>
                 <select  id="inputPais" name="input_pais" class="form-control">
-                    <option selected>- Seleccione -</option>
+                    <option selected>- <?php echo $tseleccione ?> -</option>
                     <?php
                     foreach($listaPaises as $pais){
                         echo "<option value='". $pais['PK_Pais'] ."' >".$pais['NombrePais']."</option>";
@@ -97,21 +98,21 @@ require ('../scripts/comprobaciones.php');
                 </select>
             </div>
             <div class="form-group col-md-6">
-                <label for="inputCiudad">Ciudad <span class="text_required">*</span> </label>
+                <label for="inputCiudad"><?php echo $tciudad ?> <span class="text_required">*</span> </label>
                 <div id="cont_cbo_ciudad">
                     <select  id="inputCiudad" name="input_ciudad" class="form-control">
-                        <option selected>- Seleccione -</option>
+                        <option selected>- <?php echo $tseleccione ?> -</option>
                     </select> 
                 </div>
             </div>
            
         </div>
         <fieldset class="form-group">
-        <label for="inputAdomicilio">¿Tiene servicio a domicilio?</label>
+        <label for="inputAdomicilio"><?php echo $t_tiene_adomicilio_ ?></label>
         <div class="form-check">
             <input class="form-check-input" type="radio" name="input_adomicilio" id="inputRadioYes" value="1" checked>
             <label class="form-check-label" for="inputRadioActivo">
-                Si
+                <?php echo $tsi ?>
             </label>
             </div>
             <div class="form-check">
@@ -122,23 +123,23 @@ require ('../scripts/comprobaciones.php');
             </div>
         </fieldset>
         <div class="form-group">
-            <label for="">Logo de la tienda</label>
+            <label for=""><?php echo $tlogo ?></label>
             <div class="custom-file">
                 <input type="file" accept="image/*" class="custom-file-input" id="inputLogo" name="input_logo">
-                <label class="custom-file-label" data-browse="Elegir" for="customFile">Seleccione</label>
+                <label class="custom-file-label" data-browse="Elegir" for="customFile"><?php echo $uelegir ?></label>
             </div>
         </div>
         <div class="form-group">
-            <label for="">Portada para la página</label>
+            <label for=""><?php echo $tportada ?></label>
             <div class="custom-file">
                 <input type="file" accept="image/*" class="custom-file-input" id="inputPortada" name="input_portada">
-                <label class="custom-file-label" data-browse="Elegir" for="customFile">Seleccione</label>
+                <label class="custom-file-label" data-browse="Elegir" for="customFile"><?php echo $uelegir ?></label>
             </div>
         </div>
         <br>
         <br>
         <input type="text" hidden name="action" value="register">
-        <button type="submit" class="btn-flat col-md-8 offset-md-2">Registrar tienda</button>
+        <button type="submit" class="btn-flat col-md-8 offset-md-2"><?php echo $btnGuardar ?></button>
     </form>
 
     </div>
@@ -304,6 +305,15 @@ require ('../scripts/comprobaciones.php');
     });
 
 </script>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+	new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'ca,eu,gl,en,fr,it,pt,de', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, gaTrack: true}, 'google_translate_element');
+        }
+</script>
+
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </div>
 
 
 	

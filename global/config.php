@@ -1,7 +1,7 @@
 <?php
     define("SERVER", "localhost");
     define("USER", "root");
-    define("PASSWORD", "L17r3c1@*");
+    define("PASSWORD", "gekeanma30");
     define("DB", "shoppingapp");
 
     // encriptado

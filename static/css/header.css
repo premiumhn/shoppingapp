@@ -39,6 +39,33 @@
 }
 
 
+.goog-te-banner-frame {
+    display:none!important;
+}
+
+body {
+    background-color: rgb(248, 248, 248)!important;
+    position: absolute!important;
+    width: 100%;
+    top: 0px!important;
+}
+
+.goog-te-gadget-icon{
+    display: none!important;
+}
+
+.goog-te-gadget-simple{
+    /* padding: 5px 5px 5px 5px!important; */
+    background-color: #FAC400!important;
+    border:none!important
+}
+
+.goog-te-menu-value {
+    color:rgb(255, 255, 255)!important;
+    font-size: 15px;
+}
+
+
 
 @media (max-width: 600px) {
     .nav-link{

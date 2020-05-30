@@ -71,6 +71,9 @@ if($usuario[0]['FK_TipoUsuario']!=3){
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
+          <li>
+          <div id="google_translate_element" class="google"></div>
+          </li>
             <li class="nav-item " id="paises">
             <a class="nav-link " href="<?php echo URL_SITIO?>Admin" ><?php echo $hinicio ?>
             </a>
@@ -152,6 +155,8 @@ if($usuario[0]['FK_TipoUsuario']!=3){
           </button>
         </div>
       </div>
+
+    
   
 
   
