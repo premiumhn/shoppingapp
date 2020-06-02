@@ -35,7 +35,9 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
                                     ti.NombreTienda,
                                     p.PrecioEnvio,
                                     c.FK_TipoPedido,
-                                    c.PK_Carrito
+                                    c.PK_Carrito,
+                                    ti.PK_Tienda,
+                                    (SELECT FK_Ciudad FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'FK_Ciudad'
                                     FROM Carrito c INNER JOIN Productos p
                                     ON c.FK_Producto = p.PK_Producto INNER JOIN Clientes cli
                                     ON c.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
@@ -47,7 +49,17 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
  $select_carrito->execute();
  $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
 
-
+ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
+     global $pdo;
+    $sql_precio = $pdo->prepare("SELECT * FROM RegionesEnvio WHERE FK_Tienda = :FK_Tienda and FK_Ciudad = :FK_Ciudad");
+    $sql_precio->bindParam(':FK_Tienda', $FK_Tienda);
+    $sql_precio->bindParam(':FK_Ciudad', $FK_Ciudad);
+    $sql_precio->execute();
+    $precio = $sql_precio->fetchAll(PDO::FETCH_ASSOC); 
+    
+    return $precio[0]['PrecioEnvio'];
+ }
+ 
 
 ?>
 
@@ -123,7 +135,7 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
 
                                         <?php if($carrito['FK_TipoPedido']==2){ ?>
                                             <div class="text-left row">
-                                                <label class=" subtotal col-md-12" for="">Precio envío &nbsp&nbsp&nbsp&nbsp$ <?php echo (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:'N/A') ?></label>
+                                                <label class=" subtotal col-md-12" for="">Precio envío &nbsp&nbsp&nbsp&nbsp$ <?php echo (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):'N/A') ?></label>
                                             </div>
                                         <?php } ?>
                                         <div class=" text-left row">
@@ -164,12 +176,12 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
                         </span>
                     </label>
                     <label for="" class="col-md-12 lbl-detail">
-                        Envio: 
+                        Envios: 
                         <span class="text-right"> $
                         <?php
                         $total_envio = 0; 
                         foreach($lista_carrito as $carrito){ 
-                            $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0;
+                            $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0;
                         } 
                         echo $total_envio;
                         ?>

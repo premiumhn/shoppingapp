@@ -69,7 +69,8 @@ $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
             </div>
       
             <div class="form-group">
-                <label for="inputAddress2">Precio de envío</label>
+                <label for="inputAddress2">Costo adicional de envío</label>
+                <label class="instruccion" for="">En caso de que exista un costo adicional por realizar envíos a esta región, puede agragarlo aquí, de no ser así puede dejarlo en blanco.</label>
                 <input type="text" class="form-control solo-numeros" name="input_PrecioEnvio" id="inputPrecioEnvio" placeholder="">
             </div>
             <br>
@@ -83,7 +84,7 @@ $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
     </div>
     </div>
 </div>
-<div class="col-md-3 bordered">
+<div class="col-md-3 ">
         <div class="card card-right" style="width">
                 <div class="card-body">
                     <h5 class="card-title">Atajos</h5>
@@ -126,7 +127,7 @@ $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
             });
 
 
-        if($('#inputCiudad').prop('selectedIndex') == 0 || $('#inputPais').prop('selectedIndex') == 0 || $('#inputPrecioEnvio').val() == ''){
+        if($('#inputCiudad').prop('selectedIndex') == 0 || $('#inputPais').prop('selectedIndex') == 0{
             toast('Faltan uno o más campos');
         }else if(existe_region == 1){
             toast('Tu tienda ya tiene esa región registrada, puedes editarla.');

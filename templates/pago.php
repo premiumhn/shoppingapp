@@ -7,7 +7,7 @@ include '../global/config_paypal.php';
 include '../global/const.php';
 
 session_start();
-
+require 'language/requirelanguage.php';
 include '../scripts/comprobaciones.php';
 
   //Consulta seleccionar carrito
@@ -27,18 +27,30 @@ include '../scripts/comprobaciones.php';
                                     p.PrecioEnvio,
                                     c.FK_TipoPedido,
                                     ti.IDClientePaypal,
-                                    c.FK_Cliente
+                                    c.FK_Cliente,
+                                    ti.PK_Tienda,
+                                    (SELECT FK_Ciudad FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'FK_Ciudad'
                                     FROM Carrito c INNER JOIN Productos p
                                     ON c.FK_Producto = p.PK_Producto INNER JOIN Clientes cli
                                     ON c.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
                                     ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Tiendas ti
                                     ON p.FK_Tienda = ti.PK_Tienda 
-                                    WHERE cli.FK_Usuario = :FK_Usuario");
+                                    WHERE cli.FK_Usuario = :FK_Usuario
+                                    ORDER BY c.PK_Carrito DESC");
 $select_carrito->bindParam(':FK_Usuario', $_SESSION['login_user']);                           
 $select_carrito->execute();
 $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
 
-
+function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
+    global $pdo;
+   $sql_precio = $pdo->prepare("SELECT * FROM RegionesEnvio WHERE FK_Tienda = :FK_Tienda and FK_Ciudad = :FK_Ciudad");
+   $sql_precio->bindParam(':FK_Tienda', $FK_Tienda);
+   $sql_precio->bindParam(':FK_Ciudad', $FK_Ciudad);
+   $sql_precio->execute();
+   $precio = $sql_precio->fetchAll(PDO::FETCH_ASSOC); 
+   
+   return $precio[0]['PrecioEnvio'];
+}
 
  //Consulta seleccionar destinatario
  $select_destinatario = $pdo->prepare("SELECT d.NombresDestinatario, d.ApellidosDestinatario, d.Telefono, d.Departamento, d.Direccion1, d.Direccion2, d.CodigoPostal, ciu.NombreCiudad, p.NombrePais
@@ -112,12 +124,12 @@ $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
                             </label>
                         </div>
                         <br>
-                        <div class="form-check">
+                        <!-- <div class="form-check">
                             <input class="form-check-input" type="radio" name="input_estado" id="inputRadioInactivo" value="0">
                             <label class="form-check-label" for="inputRadioInactivo">
                                 Other
                             </label>
-                        </div>
+                        </div> -->
                     </fieldset>
                 </div>
                 <div style="height:20px;" class="col-md-12 gray_back"></div>
@@ -177,6 +189,9 @@ $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
                                     <div class="text-left row">
                                         <label class="descuento col-md-12" for="">Descuento : <?php echo (isset($carrito['DescuentoDecimal']))?"-&nbsp$ ".round((($carrito['Subtotal'])/$carrito['DescuentoDecimal']), 2):'&nbsp&nbsp N/A'?></label>
                                     </div>
+                                    <div class="text-left row">
+                                        <label class="descuento col-md-12" for="">Envío : $ <?php echo (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):'N/A') ?></label>
+                                    </div>
                                     <div class=" text-left row">
                                         <label class="total col-md-12" for="">Total : $ <?php echo round((($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0)), 2) ?> </label>
                                     </div>
@@ -216,7 +231,7 @@ $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
                         <?php
                         $total_envio = 0; 
                         foreach($lista_carrito as $carrito){ 
-                            $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0;
+                            $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0;
                         } 
                         echo $total_envio;
                         ?>
@@ -241,7 +256,7 @@ $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
                         <?php
                         $total_todos = 0; 
                         foreach($lista_carrito as $carrito){ 
-                            $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0) ;
+                            $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']+ obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0) ;
                         } 
                         echo round($total_todos, 2);
                         ?>
@@ -303,10 +318,10 @@ $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
         $subtotal_todos+= $carrito['Subtotal'] - (($carrito['DescuentoDecimal']!=0)?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) ;
 
         // calculo total
-        $total_todos+= ($carrito['Subtotal']) - (($carrito['DescuentoDecimal']!=0)?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0) ;
+        $total_todos+= ($carrito['Subtotal']) - (($carrito['DescuentoDecimal']!=0)?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']+ obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0) ;
        
         // calculo total envios
-        $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0;
+        $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0;
     } 
 ?>    
 
@@ -347,7 +362,7 @@ paypal.Button.render({
                 name: '<?php echo $carrito['NombreProducto'] ?>',
                 quantity: <?php echo $carrito['Cantidad'] ?>,
                 price: <?php echo $carrito['PrecioUnitario'] - ((isset($carrito['Descuento']))?(($carrito['PrecioUnitario'])/$carrito['DescuentoDecimal']):0)?>,
-                shipping: <?php echo ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0 ?>,
+                shipping: <?php echo ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0 ?>,
                 
                 currency: 'USD'
                 <?php $cont += 1; ?>

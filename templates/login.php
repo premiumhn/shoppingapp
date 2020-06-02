@@ -200,6 +200,8 @@ $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
                  toast("Faltan uno o más campos.");
             }else if(verificar_usuario == 0){
                 toast("Nombre de usuario o contraseña inválidos.");
+             }else if(verificar_usuario == 3){
+                toast("Ese usuario pertenece a una tienda, inicia sesión desde el login para tiendas.");
              }else{
                 $('#form_login').unbind('submit').submit();
              }

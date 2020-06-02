@@ -31,7 +31,7 @@ $select_colores->execute();
 $colores = $select_colores->fetchAll(PDO::FETCH_ASSOC);
 
 
-$select_producto = $pdo->prepare("SELECT p.Ranking, p.Adomicilio as 'pAdomicilio', p.PK_Producto, p.NombreProducto, t.NombreTienda, p.PrecioUnitario, p.Descuento, t.Adomicilio, p.PrecioEnvio, p.UnidadesDisponibles, p.Imagen, c.NombreCategoria, p.Descripcion FROM 
+$select_producto = $pdo->prepare("SELECT p.Ranking, p.Adomicilio as 'pAdomicilio', p.PK_Producto, p.NombreProducto, t.NombreTienda, p.PrecioUnitario, p.Descuento, t.Adomicilio, p.PrecioEnvio, p.UnidadesDisponibles, p.Imagen, c.NombreCategoria, p.Descripcion, t.PK_Tienda FROM 
                                 Productos p INNER JOIN Tiendas t 
                                 ON p.FK_Tienda = t.PK_Tienda INNER JOIN Categorias c
                                 ON c.PK_Categoria = p.FK_Categoria
@@ -40,7 +40,7 @@ $select_producto->bindParam(':PK_Producto', $pk_producto);
 $select_producto->execute();
 $productos = $select_producto->fetchAll(PDO::FETCH_ASSOC);
 
-$select_destinatarios = $pdo->prepare("SELECT  d.PK_Destinatario, u.PK_Usuario, d.NombresDestinatario, d.ApellidosDestinatario, d.Telefono, d.Departamento, d.Direccion1, d.Direccion2, d.CodigoPostal, ciu.NombreCiudad, p.NombrePais
+$select_destinatarios = $pdo->prepare("SELECT  d.PK_Destinatario, u.PK_Usuario, d.NombresDestinatario, d.ApellidosDestinatario, d.Telefono, d.Departamento, d.Direccion1, d.Direccion2, d.CodigoPostal, ciu.NombreCiudad, p.NombrePais, ciu.PK_Ciudad
                                     FROM Destinatarios d INNER JOIN Clientes cli
                                     ON d.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
                                     ON u.PK_Usuario = cli.FK_Usuario INNER JOIN Ciudades ciu
@@ -211,22 +211,21 @@ $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
                 <div class="col-md-12 card card-shipment">
                 <?php if($productos[0]['pAdomicilio'] == 1){ ?>
                         <div class="detail-cont row col-md-12">
-                            <div class=" col-md-4 no_padding_both text-left" id="box_destinatario">
+                            <div class=" col-md-12 no_padding_both text-left" id="box_destinatario">
                                 <div class=" no_padding_both form-group col-md-12">
-                                    <label for="">Destinatario:</label>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Seleccionar</button>
-                                    <label for="" id="inputDestinatario" class="output"></label>
-
+                                    <div class="col-md-12">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Seleccionar destinatario</button>
+                                    <label style="margin-left:10px" for="" id="inputDestinatario" class="output"></label>
+                                    </div>
+                                    <br>
                                     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class=" md-content col-md-12">
                                                 <label for=""><strong>Seleccione el destinatario</strong></label>
                                             <fieldset class="text-left form-group">
-                                                <?php 
-                                                foreach($destinatarios as $destinatario){
-                                                   
-                                                    ?>
+                                                <?php if(count($destinatarios) > 0){ ?>
+                                                <?php foreach($destinatarios as $destinatario){?>
                                                     <br>
                                                     <hr>
                                                 <div class="form-check">
@@ -239,10 +238,14 @@ $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
                                                         <div clas="row col-md-12" for=""><?php echo $destinatario['Telefono'] ?></div>
                                                     </label>
                                                 </div>
-                                                <?php 
-                                                        //} 
-                                                    } 
-                                                  ?>
+                                                <?php  } ?>
+                                                <?php }else{ ?>
+                                                    <div class="col-md-12">
+                                                        <br><br><br>
+                                                            No tienes destinatarios disponibles en las regiones a las que esta tienda hace envíos.
+                                                        <br><br><br>
+                                                    </div>
+                                                <?php } ?>    
                                             </fieldset>
                                             <!-- <button id="btn_aceptar" type="button" data-dismiss="modal" class="close btn btn-primary">Aceptar</button> -->
                                             
@@ -265,10 +268,9 @@ $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                             </div>
                         <label for="" class="text-left text-bold col-md-12 text_envios">Se hacen envíos a domicilio</label>
-                        <label for='' class='text-left col-md-12'>Precio del envío: $ <?php echo $productos[0]['PrecioEnvio']?></label>
+                        <label for='' class='text-left col-md-12'>Precio del envío:  <strong>$ <span id="precioEnvio"></span></strong></label>
                     <?php }else{ ?>
                         <label for="" class="text-left text-bold col-md-12">No se hacen envíos</label>
-                    
                     <?php } ?>
                 </div>
                 <br>
@@ -326,6 +328,8 @@ $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
 
 <script type="text/javascript">
 $('#box_destinatario').hide();
+
+
 
 $('#lbl-carrito').hide();
 
@@ -420,26 +424,45 @@ $('#lbl-carrito').hide();
         });
 
         // Check the radio button value. 
-        $('.close').on('click', function() { 
-            output =  
-              $('input[name=input_destinatario]:checked', 
-                '#form_detalle_producto').val(); 
+        <?php if(count($destinatarios) > 0){ ?>
+            $('.close').on('click', function() { 
+                output =  
+                $('input[name=input_destinatario]:checked', 
+                    '#form_detalle_producto').val(); 
 
-            var nombre_destinatario;
-            $.ajax({
-                    type:"POST",
-                    async: false,
-                    url:"<?php echo URL_SITIO ?>scripts/datos_ajax.php",
-                    data: {"request" : "obtenerNombreDestinatario", 
-                            "PK_Destinatario" : output},
-                    success:function(r){
-                        nombre_destinatario = r;
-                    }
-            });
+                if(output > 0){
+                    var nombre_destinatario;
+                    $.ajax({
+                            type:"POST",
+                            async: false,
+                            url:"<?php echo URL_SITIO ?>scripts/datos_ajax.php",
+                            data: {"request" : "obtenerNombreDestinatario", 
+                                    "PK_Destinatario" : output},
+                            success:function(r){
+                                nombre_destinatario = r;
+                            }
+                    });
 
-            document.querySelector( 
-              '.output').textContent ='Destinatario seleccionado: ' + nombre_destinatario; 
-        }); 
+                    document.querySelector('.output').textContent ='Destinatario seleccionado: ' + nombre_destinatario; 
+                     
+                    var precio_envio_total;
+                    $.ajax({
+                            type:"POST",
+                            async: false,
+                            url:"<?php echo URL_SITIO ?>scripts/datos_ajax.php",
+                            data: {"request" : "obtenerPrecioEnvio", 
+                                    "PK_Destinatario" : output,
+                                    "PK_Tienda" : <?php echo $productos[0]['PK_Tienda'] ?>},
+                            success:function(r){
+                                precio_envio_total = parseFloat(r);
+                            }
+                    }); 
+                    var precio_envio_producto = <?php echo $productos[0]['PrecioEnvio'] ?>;
+                    precio_envio_total += parseFloat(precio_envio_producto);
+                    $('#precioEnvio').html(precio_envio_total);
+                }
+            }); 
+        <?php } ?>
         
 
 

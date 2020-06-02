@@ -40,27 +40,28 @@ require ('../scripts/comprobaciones.php');
     <div class="container row col-md-10 offset-md-1 cont_menu">
 	
 		<div class="row ">
-			<a href="Pedidos-Tienda" class="card col-md-3 ">
-				<img style="width:100%;" src="<?php echo URL_SITIO ?>static/img/icon_pedidos.png" alt="">
-				<span class="text_menu">Pedidos</span>
+			<a href="Estadisticas-Categorias" class="card col-md-3 ">
+				<img class="" style="width:100%;" src="<?php echo URL_SITIO ?>static/img/graphic.png" alt="">
+				<span class=" text_menu">Ventas por categorias</span>
 			</a>
-			<a href="" class="card col-md-3 ">
-				<img style="width:100%;" src="<?php echo URL_SITIO ?>static/img/icon_productos.png" alt="">
-				<span class="text_menu">Productos</span>
+			<a href="Estadisticas-Productos" class="card col-md-3 ">
+				<img style="width:100%;" src="<?php echo URL_SITIO ?>static/img/graphic.png" alt="">
+				<span class="text_menu">Ventas por productos</span>
+            </a>
+            <a href="Estadisticas-Ventas" class="card col-md-3 ">
+				<img style="width:100%;" src="<?php echo URL_SITIO ?>static/img/graphic.png" alt="">
+				<span class="text_menu">Ventas general</span>
 			</a>
-			<a href="Registro-Datos?menu=ver_regionesEnvio" class="card col-md-3 ">
+			<!-- <a href="Registro-Datos?menu=ver_regionesEnvio" class="card col-md-3 ">
 				<img style="width:100%;" src="<?php echo URL_SITIO ?>static/img/icon_regiones_envio.png" alt="">
 				<span class="text_menu">Regiones de envío</span>
 			</a>
-			<a href="Estadisticas" class="card col-md-3 ">
+			<a href="" class="card col-md-3 ">
 				<img style="width:100%;" src="<?php echo URL_SITIO ?>static/img/icon_estadisticas.png" alt="">
 				<span class="text_menu">Estadísticas</span>
-			</a>
-		</div>
-
-	
-		
-		
+			</a> -->
+        </div>
+        
 	</div>
 </div>
 <br>

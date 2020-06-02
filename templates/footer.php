@@ -114,9 +114,39 @@ $paises = $select_paises->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </footer>
 <script type="text/javascript">
-function googleTranslateElementInit() {
-	new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'es,ca,eu,gl,en,fr,it,pt,de', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, gaTrack: true}, 'google_translate_element');
-        }
+  function googleTranslateElementInit() {
+	  new google.translate.TranslateElement({pageLanguage: 'es', includedLanguages: 'es,ca,eu,gl,en,fr,it,pt,de', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, gaTrack: true}, 'google_translate_element');
+  }
+
+  $('#google_translate_element').on("click", function () {
+
+// Change font family and color
+
+  $("iframe").contents().find(".goog-te-menu2-item div, .goog-te-menu2-item:link div, .goog-te-menu2-item:visited div, .goog-te-menu2-item:active div, .goog-te-menu2 *")
+      .css({
+          'font-family': 'tahoma',
+          'font-size': '15px',
+          'color': '#EA7731',
+          'background-color':'white',
+      });
+
+    // Change hover effects
+    $("iframe").contents().find(".goog-te-menu2-item div").hover(function () {
+        $(this).css('background-color', '#FFC108').find('span.text').css({'color': 'white', 'background-color':'#FFC108'})
+    }, function () {
+        $(this).css('background-color', 'white').find('span.text').css({'color': 'EA7731', 'background-color':'white'});
+    });
+
+    // Change Google's default blue border
+    $("iframe").contents().find('.goog-te-menu2').css('border', '1px solid #F38256');
+
+    // Change the iframe's box shadow
+    $(".goog-te-menu-frame").css({
+        '-moz-box-shadow': '0 3px 8px 2px #666666',
+        '-webkit-box-shadow': '0 3px 8px 2px #666',
+        'box-shadow': '0 3px 8px 2px #666'
+    });
+  });      
 </script>
 
 <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>

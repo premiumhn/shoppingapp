@@ -146,7 +146,7 @@ if(isset($_SESSION['categoria'])){
         <div class="cont_logo">
             <img class="logo" src="<?php echo URL_SITIO.'uploads/img/logos/'.$tienda[0]['Logo'] ?>" alt="">
         </div>
-        <h2 class="titulo_tienda" ><?php echo $tienda[0]['NombreTienda'] ?></h2>
+        <h2 class="titulo_tienda notranslate"  ><?php echo $tienda[0]['NombreTienda'] ?></h2>
         <div class="col-md-12 text-center">
             <div id="form" class="">
                         <?php if(count($avg_ranking_tienda)>0){ ?>

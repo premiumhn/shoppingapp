@@ -81,7 +81,7 @@ session_start();
                 
 
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $actualizar_cliente->execute();
+                echo $actualizar_cliente->execute();
                 header('Location: ../Inicio');
                 
     

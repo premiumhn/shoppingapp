@@ -1,0 +1,15 @@
+.contenedor{
+    margin-bottom: 50vh;
+}
+
+.card{
+    padding: 30px!important; 
+    margin-bottom: 30px;  
+}
+
+.btn-edit{
+    position: absolute;
+    right: 30px;
+    top: 30px;
+}
+

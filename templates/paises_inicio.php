@@ -73,7 +73,7 @@ if($busqueda!=''){
 <body>
 	<?php include './header.php'; ?>
 				<div class="col-md-12 text-center titulo">
-					<h2><?php echo $tpaises ?></h2>
+					<h2>Países</h2>
 				</div>	
 				<div class="alert col-md-12 alert-danger text-center"></div>
 				<br>

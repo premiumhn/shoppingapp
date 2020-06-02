@@ -10,7 +10,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
   
      // comprobar que el usuario no existe
-     $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario ");
+     $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario AND FK_TipoUsuario = 1");
      $buscar_usuario->bindParam(':nombreUsuario', $_POST['input_username']);
     //  $buscar_usuario->bindParam(':Contrasena', openssl_encrypt($_POST['input_password'], COD, KEY));
      $buscar_usuario->execute();

@@ -441,7 +441,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
             $fk_ciudad = (isset($_POST['input_ciudad'])) ? $_POST['input_ciudad'] : "";
             $fk_tienda = (isset($_POST['pk_tienda'])) ? $_POST['pk_tienda'] : "";
-            $precio = (isset($_POST['input_PrecioEnvio'])) ? $_POST['input_PrecioEnvio'] : "";
+            $precio = (isset($_POST['input_PrecioEnvio'])) ? $_POST['input_PrecioEnvio'] : 0;
 
            
             $insert_region = $pdo->prepare("INSERT INTO RegionesEnvio(FK_Tienda, FK_Ciudad, PrecioEnvio) 

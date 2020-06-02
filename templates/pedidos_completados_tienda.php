@@ -124,7 +124,9 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
                                         DATE_FORMAT(pe.FechaHoraCompra, '%d %m %Y ') as 'FechaCompra',
                                         DATE_FORMAT(pe.FechaHoraCompra, '%H:%i ') as 'HoraCompra',
                                         DATE_FORMAT(c.FechaHoraCompletado, '%d %m %Y ') as 'FechaCompletado',
-                                        DATE_FORMAT(c.FechaHoraCompletado, '%H:%i ') as 'HoraCompletado'
+                                        DATE_FORMAT(c.FechaHoraCompletado, '%H:%i ') as 'HoraCompletado',
+                                        ti.PK_Tienda,
+                                        (SELECT FK_Ciudad FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'FK_Ciudad'
 
                                         FROM DetallePedidos c INNER JOIN Productos p
                                         ON c.FK_Producto = p.PK_Producto INNER JOIN Clientes cli
@@ -156,6 +158,16 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
  //calculo el total de paginas
  $total_pages = ceil(count($lista_pedidos_total) / $items_por_pagina);
 
+ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
+    global $pdo;
+   $sql_precio = $pdo->prepare("SELECT * FROM RegionesEnvio WHERE FK_Tienda = :FK_Tienda and FK_Ciudad = :FK_Ciudad");
+   $sql_precio->bindParam(':FK_Tienda', $FK_Tienda);
+   $sql_precio->bindParam(':FK_Ciudad', $FK_Ciudad);
+   $sql_precio->execute();
+   $precio = $sql_precio->fetchAll(PDO::FETCH_ASSOC); 
+   
+   return $precio[0]['PrecioEnvio'];
+}
 
 ?>
 
@@ -292,11 +304,11 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
                                         </div>
                                         <?php if($detalle_pedido['FK_TipoPedido']==2){ ?>
                                             <div class="text-left row">
-                                                <label class=" subtotal col-md-12" for="">Precio envío &nbsp&nbsp&nbsp: $ <?php echo (($detalle_pedido['FK_TipoPedido']==2)?$detalle_pedido['PrecioEnvio']:'N/A') ?></label>
+                                                <label class=" subtotal col-md-12" for="">Precio envío &nbsp&nbsp&nbsp: $ <?php echo (($detalle_pedido['FK_TipoPedido']==2)?$detalle_pedido['PrecioEnvio'] + obtenerPrecioEnvio($detalle_pedido['PK_Tienda'], $detalle_pedido['FK_Ciudad']):'N/A') ?></label>
                                             </div>
                                         <?php } ?>
                                         <div class=" text-left row">
-                                            <label class="total text-bold col-md-12" for="">Total  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: $ <?php echo round((($detalle_pedido['Subtotal']) - ((isset($detalle_pedido['DescuentoDecimal']))?(($detalle_pedido['Subtotal'])/$detalle_pedido['DescuentoDecimal']):0) + (($detalle_pedido['FK_TipoPedido']==2)?$detalle_pedido['PrecioEnvio']:0)), 2)  ?> </label>
+                                            <label class="total text-bold col-md-12" for="">Total  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: $ <?php echo round((($detalle_pedido['Subtotal']) - ((isset($detalle_pedido['DescuentoDecimal']))?(($detalle_pedido['Subtotal'])/$detalle_pedido['DescuentoDecimal']):0) + (($detalle_pedido['FK_TipoPedido']==2)?$detalle_pedido['PrecioEnvio'] + obtenerPrecioEnvio($detalle_pedido['PK_Tienda'], $detalle_pedido['FK_Ciudad']):0)), 2)  ?> </label>
                                         </div>
                                         <hr>
                                         <div class="text-left row">

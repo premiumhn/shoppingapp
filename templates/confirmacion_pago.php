@@ -33,7 +33,9 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
                                         c.FK_Destinatario,
                                         c.FK_Producto,
                                         c.FK_Cliente,
-                                        p.FK_Tienda
+                                        p.FK_Tienda,
+                                        ti.PK_Tienda,
+                                        (SELECT FK_Ciudad FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'FK_Ciudad'
                                         FROM DetallePedidos c INNER JOIN Productos p
                                         ON c.FK_Producto = p.PK_Producto INNER JOIN Clientes cli
                                         ON c.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
@@ -45,6 +47,16 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
     $select_detalle_pedido->execute();
     $lista_detalle = $select_detalle_pedido->fetchAll(PDO::FETCH_ASSOC);
 
+    function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
+        global $pdo;
+       $sql_precio = $pdo->prepare("SELECT * FROM RegionesEnvio WHERE FK_Tienda = :FK_Tienda and FK_Ciudad = :FK_Ciudad");
+       $sql_precio->bindParam(':FK_Tienda', $FK_Tienda);
+       $sql_precio->bindParam(':FK_Ciudad', $FK_Ciudad);
+       $sql_precio->execute();
+       $precio = $sql_precio->fetchAll(PDO::FETCH_ASSOC); 
+       
+       return $precio[0]['PrecioEnvio'];
+    }
 
     $total_todos = 0; 
     $total_envio = 0; 
@@ -54,10 +66,10 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
     $subtotal_todos+= $detalle['Subtotal'] - (($detalle['DescuentoDecimal']!=0)?(($detalle['Subtotal'])/$detalle['DescuentoDecimal']):0) ;
 
     // calculo total
-    $total_todos+= ($detalle['Subtotal']) - (($detalle['DescuentoDecimal']!=0)?(($detalle['Subtotal'])/$detalle['DescuentoDecimal']):0) + (($detalle['FK_TipoPedido']==2)?$detalle['PrecioEnvio']:0) ;
+    $total_todos+= ($detalle['Subtotal']) - (($detalle['DescuentoDecimal']!=0)?(($detalle['Subtotal'])/$detalle['DescuentoDecimal']):0) + (($detalle['FK_TipoPedido']==2)?$detalle['PrecioEnvio'] + obtenerPrecioEnvio($detalle['PK_Tienda'], $detalle['FK_Ciudad']):0) ;
 
     // calculo total envios
-    $total_envio+= ($detalle['FK_TipoPedido']==2)?$detalle['PrecioEnvio']:0;
+    $total_envio+= ($detalle['FK_TipoPedido']==2)?$detalle['PrecioEnvio'] + obtenerPrecioEnvio($detalle['PK_Tienda'], $detalle['FK_Ciudad']):0;
     }   
         
 

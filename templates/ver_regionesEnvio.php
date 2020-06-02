@@ -71,7 +71,7 @@ $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
                             <!-- <th hidden>ID</th> -->
                             <th scope="col"><?php echo $re_pais ?></th>
                             <th scope="col"><?php echo $re_ciudad ?></th>
-                            <th scope="col"><?php echo $re_precio_envio ?></th>
+                            <th scope="col">Costo adicional de envío</th>
                             <th scope="col" style="color:white;" class="no_border-r"></th>
                             <th scope="col" style="color:white;" class="no_border-l"></th>
                         </tr>

@@ -11,6 +11,7 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $buscar_carrito->execute();
 $carrito = $buscar_carrito->fetchAll(PDO::FETCH_ASSOC);
 
+
 $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios
                                 WHERE PK_Usuario = :PK_Usuario");
 $buscar_usuario->bindParam('PK_Usuario', $_SESSION['login_user']);
@@ -32,7 +33,7 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
     <ul class="row offset-md-2 col-md-10 navbar-nav ml-auto mt-2 mt-lg-0">
     
     <?php if($usuario[0]['FK_TipoUsuario'] == 1 ){ ?> 
-        <li class="col-md-2  nav-item">
+        <li class="col-md-2 nav-item">
             <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Inicio"><i class="fas fa-home mr-2"></i><?php echo $hinicio ?></a>
           </li>
         <li   class="col-md-2 nav-item">
@@ -118,9 +119,9 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
             <?php } ?>
         </div>
       </li>
-			<li>
-          <div id="google_translate_element" class="google"></div>
-          </li>
+			  <li class="google_translate_element_li">
+           <div id="google_translate_element" class="google"></div>
+        </li>
     </ul>
     
   </div>

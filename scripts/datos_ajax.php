@@ -19,6 +19,9 @@ switch($request){
 	case "verificarLogin":
 		verificarLogin();
 	break;
+	case "verificarLoginTienda":
+		verificarLoginTienda();
+	break;
 	case "obtenerNombreDestinatario":
 		obtenerNombreDestinatario();
 	break;
@@ -48,6 +51,9 @@ switch($request){
 	break;
 	case "cambiarEstadoTienda":
 		cambiarEstadoTienda();
+	break;
+	case "obtenerPrecioEnvio":
+		obtenerPrecioEnvio();
 	break;
 }
 	function selectCiudades(){
@@ -90,13 +96,10 @@ switch($request){
 	function verificarLogin(){
 		global $pdo;
 		// comprobar que el usuario no existe
-        $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario ");
+        $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario AND FK_TipoUsuario = 1");
 		$buscar_usuario->bindParam(':nombreUsuario', $_POST['NombreUsuario']);
-		// $buscar_usuario->bindParam(':Contrasena', $_POST['Contrasena']);
 		$buscar_usuario->execute();
 		$cuenta_usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
-        
-		
 		
 		if(count($cuenta_usuario) > 0){
 			if (openssl_decrypt($cuenta_usuario[0]['Contrasena'], COD, KEY) == $_POST['Contrasena']){
@@ -105,12 +108,43 @@ switch($request){
 				echo 0;
 			}
 		}else{
-			echo 0;
-		}
-		
+			$buscar_usuario_t = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario AND FK_TipoUsuario = 2");
+			$buscar_usuario_t->bindParam(':nombreUsuario', $_POST['NombreUsuario']);
+			$buscar_usuario_t->execute();
+			$cuenta_usuario_t = $buscar_usuario_t->fetchAll(PDO::FETCH_ASSOC);
+			if(count($cuenta_usuario_t) > 0){
+				echo 3;
+			}else{
+				echo 0;
+			}
+		}	
+	}
 
-
+	function verificarLoginTienda(){
+		global $pdo;
+		// comprobar que el usuario no existe
+        $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario AND FK_TipoUsuario = 2");
+		$buscar_usuario->bindParam(':nombreUsuario', $_POST['NombreUsuario']);
+		$buscar_usuario->execute();
+		$cuenta_usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
 		
+		if(count($cuenta_usuario) > 0){
+			if (openssl_decrypt($cuenta_usuario[0]['Contrasena'], COD, KEY) == $_POST['Contrasena']){
+				echo 1;
+			}else{
+				echo 0;
+			}
+		}else{
+			$buscar_usuario_t = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario AND FK_TipoUsuario = 1");
+			$buscar_usuario_t->bindParam(':nombreUsuario', $_POST['NombreUsuario']);
+			$buscar_usuario_t->execute();
+			$cuenta_usuario_t = $buscar_usuario_t->fetchAll(PDO::FETCH_ASSOC);
+			if(count($cuenta_usuario_t) > 0){
+				echo 3;
+			}else{
+				echo 0;
+			}
+		}	
 	}
 
 	
@@ -342,6 +376,26 @@ switch($request){
 		
 		$actualizar_tienda->bindParam(':PK_Tienda', $pk_tienda);
 		echo $actualizar_tienda->execute();
+	}
+
+	function obtenerPrecioEnvio(){
+		global $pdo;
+
+		$pk_tienda = (isset($_POST['PK_Tienda']))?$_POST['PK_Tienda']:"";
+		$pk_destinatario = (isset($_POST['PK_Destinatario']))?$_POST['PK_Destinatario']:"";
+
+		$sql_destinatario = $pdo->prepare("SELECT * FROM Destinatarios WHERE PK_Destinatario = :PK_Destinatario");
+		$sql_destinatario->bindParam(':PK_Destinatario', $pk_destinatario);
+		$sql_destinatario->execute();
+		$destinatario = $sql_destinatario->fetchAll(PDO::FETCH_ASSOC); 
+
+		$sql_precio = $pdo->prepare("SELECT * FROM RegionesEnvio WHERE FK_Tienda = :FK_Tienda and FK_Ciudad = :FK_Ciudad");
+		$sql_precio->bindParam(':FK_Tienda', $pk_tienda);
+		$sql_precio->bindParam(':FK_Ciudad', $destinatario[0]['FK_Ciudad']);
+		$sql_precio->execute();
+		$precio = $sql_precio->fetchAll(PDO::FETCH_ASSOC); 
+
+		echo $precio[0]['PrecioEnvio'];
 	}
 
 

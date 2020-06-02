@@ -171,12 +171,11 @@ $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
                     type:"POST",
                     async: false,
                     url:"<?php echo URL_SITIO ?>scripts/datos_ajax.php",
-                    data: {"request" : "verificarLogin", 
+                    data: {"request" : "verificarLoginTienda", 
                             "Contrasena" : $('#inputPassword').val(),
                             "NombreUsuario" : $('#inputUsername').val()},
                     success:function(r){
                         verificar_usuario = r;
-                        console.log(r);
                     }
             });
             
@@ -186,6 +185,8 @@ $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
                  toast("Faltan campos.");
             }else if(verificar_usuario == 0){
                 toast("Correo o contraseña inválidos.");
+             }else if(verificar_usuario == 3){
+                toast("Esta correo pertenece a una cuenta de cliente, inicia sesión desde el login de clientes.");
              }else{
                 $('#form_login').unbind('submit').submit();
              }

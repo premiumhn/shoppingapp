@@ -40,18 +40,17 @@ if($usuario[0]['FK_TipoUsuario']!=3){
   <title id="titulo_pagina">Administración</title>
 
 
-
+     <script src="<?php echo URL_SITIO ?>static/js/jquery-3.5.1.min.js" ></script>
      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="
    sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css" rel="stylesheet">
    <link href="<?php echo URL_SITIO ?>static/css/header_admin.css"rel="stylesheet">
-   <link href="<?php echo URL_SITIO ?>static/css/toasts.css" rel="stylesheet" type="text/css" media="all" />
-    <script src="<?php echo URL_SITIO ?>static/js/jquery-3.5.0.min.js" ></script>
+    
     <script src="https://kit.fontawesome.com/b2dbb6a24d.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css"rel="stylesheet">
+    <!-- <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css"rel="stylesheet"> -->
     
     <?php include 'iconos.php' ?>
 
@@ -63,7 +62,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
   <nav class="navbar navbar-expand-lg static-top navbar-dark bg-per" >
     
       <a  class="navbar-brand" href="#">
-        <img style="width:180px;" src="<?php echo URL_SITIO ?>static/img/Logo_shoppingapp_v2_trazado.png" alt="">
+        <img class="logo" style="width:180px;" src="<?php echo URL_SITIO ?>static/img/Logo_shoppingapp_v2_trazado.png" alt="">
         <span class="text-modulo"><?php echo $tmodulo ?></span> 
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -125,13 +124,17 @@ if($usuario[0]['FK_TipoUsuario']!=3){
             </a>
             <span><?php echo $usuario[0]['NombreUsuario'] ?></span>
             <br>
-            <form action="Editar-Usuario-Admin" method="POST">
+            <form class="col-md-12" action="Editar-Usuario-Admin" method="get">
               <input type="hidden" name="PK_Usuario" value="<?php echo $usuario[0]['PK_Usuario']?>" />
-              <a style="color:white;font-size:13px;" class="" href="#" value="category" name="menu" onclick="this.parentNode.submit()" ><?php echo $heditperfil ?></a>
+              <a style="color:white;font-size:13px;" class="btn-menu col-md-12" href="#" value="category" name="menu" onclick="this.parentNode.submit()" ><?php echo $heditperfil ?></a>
             </form>
             <br>
+            <form action="Configuracion-Sitio" method="get">
+              <input type="hidden" name="PK_Usuario" value="<?php echo $usuario[0]['PK_Usuario']?>" />
+              <a style="color:white;font-size:13px;" class="btn-menu" href="#" value="category" name="menu" onclick="this.parentNode.submit()" >Configuración del sitio</a>
+            </form>
             <br>
-            <a style="color:white;font-size:13px;" href="<?php echo URL_SITIO ?>Login"><?php echo $hsalir ?></a>
+            <a class="btn-menu" style="color:white;font-size:13px;" href="<?php echo URL_SITIO ?>Login"><?php echo $hsalir ?></a>
             <br>
             <br>
           </li>
