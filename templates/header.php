@@ -43,7 +43,7 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
           <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Pedidos"><i class="fas fa-box mr-2"></i><?php echo $hpedido ?> </a>
         </li>
         <li   class="col-md-2 nav-item">
-          <a class="nav-link border-right" href="#"><i class="fas fa-phone mr-2"></i>2781 0000</a>
+          <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Destinatarios"><i class="fas fa-users"></i>Destinatarios</a>
         </li>
     <?php } ?>
       <?php if(!isset($_SESSION['login_user'])){ ?>

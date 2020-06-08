@@ -13,7 +13,7 @@ RewriteRule ^Agregar-Categoria/?$ templates/registro_categoria.php
 RewriteRule ^Ver-Categoria/?$ templates/ver_categorias.php
 RewriteRule ^Productos/?$ templates/productos.php
 RewriteRule ^Producto/?$ templates/producto.php
-RewriteRule ^Destinatarios/?$ templates/destinatarios.php
+RewriteRule ^Destinatarios/?$ templates/destinatario.php
 RewriteRule ^Producto-Detalle/?$ templates/detalle_producto.php
 RewriteRule ^Carrito/?$ templates/carrito.php
 RewriteRule ^Login/?$ templates/login.php
