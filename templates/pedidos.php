@@ -14,6 +14,10 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
     // header('Location: completar_perfil_tienda.php');
 }
 
+$select_config = $pdo->prepare("SELECT * FROM Configuracion");
+$select_config->execute();
+$configuracion = $select_config->fetchAll(PDO::FETCH_ASSOC);
+
 // seleccionar tipos de pedidos
 $buscar_tipo_pedidos = $pdo->prepare('SELECT * FROM TiposPedido');
 $buscar_tipo_pedidos->bindParam('FK_Usuario', $user);
@@ -25,16 +29,23 @@ $tipo_pedidos = $buscar_tipo_pedidos->fetchAll(PDO::FETCH_ASSOC);
 $busqueda = (isset($_REQUEST['input_busqueda']))?$_REQUEST['input_busqueda']:"";
 
 // filtros
-$filtro_tipo_pedido = (isset($_REQUEST['input_tipoPedido']))?$_REQUEST['input_tipoPedido']:"";
+$filtro_estado = (isset($_REQUEST['input_estado']))?$_REQUEST['input_estado']:3;
 $filtro_desde = (isset($_REQUEST['input_desde']))?$_REQUEST['input_desde']:"";
 $filtro_hasta = (isset($_REQUEST['input_hasta']))?$_REQUEST['input_hasta']:"";
 
-$str_filtro_tipo_pedido = ($filtro_tipo_pedido == 1 || $filtro_tipo_pedido == 2)?" AND c.FK_TipoPedido = :FK_TipoPedido":"" . "";
+if(isset($_REQUEST['input_estado']) AND $filtro_estado != 3){
+    $str_filtro_tipo_estado = " AND pe.Estado = :Estado";
+}else{
+    $str_filtro_tipo_estado = "";
+}
+
+
 $str_filtro_desde_hasta = ($filtro_desde != '' && $filtro_hasta != '')?" AND pe.FechaHoraCompra BETWEEN :FechaHoraDesde AND :FechaHoraHasta":"";
 $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda . "%'
                                     OR ti.NombreTienda LIKE '%" . $busqueda . "%'
                                     OR pe.NumeroPedido LIKE '%" . $busqueda . "%'
                                     OR c.CodigoDetallePedido LIKE '%" . $busqueda . "%') ":"";
+$str_busqueda_pedido = ($busqueda != '')?" AND pe.NumeroPedido LIKE '%" . $busqueda . "%'":"";
 
 date_default_timezone_set('America/Tegucigalpa');
 $fecha_actual = date("Y-m-d H:i:s");
@@ -42,7 +53,7 @@ $default_desde = date("Y-m-d",strtotime($fecha_actual." - 15 days")) . 'T08:00';
 $default_hasta = date("Y-m-d",strtotime($fecha_actual." + 15 days")) . 'T08:00'; 
 
 $pagina = false;
-$items_por_pagina = 4;
+$items_por_pagina = 5;
  
 //examino la pagina a mostrar y el inicio del registro a mostrar
 if (isset($_GET["pagina"])) {
@@ -57,30 +68,65 @@ if (!$pagina) {
 }
 
 // consulta para contar el total de los pedidos
-$select_detalle_pedidos_total = $pdo->prepare("SELECT c.PK_DetallePedido
-                                        FROM DetallePedidos c INNER JOIN Productos p
-                                        ON c.FK_Producto = p.PK_Producto INNER JOIN Clientes cli
-                                        ON c.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
-                                        ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Tiendas ti
-                                        ON p.FK_Tienda = ti.PK_Tienda INNER JOIN Pedidos pe
-                                        ON pe.PK_Pedido = c.FK_Pedido 
-                                        WHERE cli.FK_Usuario = :FK_Usuario AND c.Estado = 0
-                                        ". $str_filtro_tipo_pedido . $str_filtro_desde_hasta . $str_busqueda ."");
+// $select_detalle_pedidos_total = $pdo->prepare("SELECT c.PK_DetallePedido
+//                                         FROM DetallePedidos c INNER JOIN Productos p
+//                                         ON c.FK_Producto = p.PK_Producto INNER JOIN Clientes cli
+//                                         ON c.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
+//                                         ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Tiendas ti
+//                                         ON p.FK_Tienda = ti.PK_Tienda INNER JOIN Pedidos pe
+//                                         ON pe.PK_Pedido = c.FK_Pedido 
+//                                         WHERE cli.FK_Usuario = :FK_Usuario AND c.Estado = 0");
+//                                         // ". $str_filtro_tipo_pedido . $str_filtro_desde_hasta ."");
  
- $select_detalle_pedidos_total->bindParam(':FK_Usuario', $user);  
- if($filtro_tipo_pedido == 1 ){
-    $fk = 1;
-    $select_detalle_pedidos_total->bindParam(':FK_TipoPedido', $fk); 
- }elseif($filtro_tipo_pedido == 2 ){
-    $fk = 2;
-    $select_detalle_pedidos_total->bindParam(':FK_TipoPedido', $fk); 
- }
+//  $select_detalle_pedidos_total->bindParam(':FK_Usuario', $user);  
+
+//  if($filtro_desde != '' && $filtro_hasta != ''){
+//     $select_detalle_pedidos_total->bindParam(':FechaHoraDesde', $filtro_desde); 
+//     $select_detalle_pedidos_total->bindParam(':FechaHoraHasta', $filtro_hasta); 
+//  }
+//  $select_detalle_pedidos_total->execute();
+//  $lista_pedidos_total = $select_detalle_pedidos_total->fetchAll(PDO::FETCH_ASSOC);
+
+// consulta para los  pedidos
+$select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comision, pe.Estado, DATE_FORMAT(pe.FechaHoraCompra ,'%d-%m-%Y') as 'FechaHoraCompra' FROM Pedidos pe INNER JOIN Clientes c
+                                ON c.PK_Cliente = pe.FK_Cliente
+                                WHERE c.FK_Usuario = :FK_Usuario 
+                                " . $str_filtro_desde_hasta . $str_busqueda_pedido . $str_filtro_tipo_estado ."
+                                ORDER BY pe.PK_Pedido DESC LIMIT ". $inicio .", " . $items_por_pagina . "");
+ 
+ $select_pedidos->bindParam(':FK_Usuario', $user);  
+ 
  if($filtro_desde != '' && $filtro_hasta != ''){
-    $select_detalle_pedidos_total->bindParam(':FechaHoraDesde', $filtro_desde); 
-    $select_detalle_pedidos_total->bindParam(':FechaHoraHasta', $filtro_hasta); 
+    $select_pedidos->bindParam(':FechaHoraDesde', $filtro_desde); 
+    $select_pedidos->bindParam(':FechaHoraHasta', $filtro_hasta); 
  }
- $select_detalle_pedidos_total->execute();
- $lista_pedidos_total = $select_detalle_pedidos_total->fetchAll(PDO::FETCH_ASSOC);
+ if($str_filtro_tipo_estado != ""){
+    $select_pedidos->bindParam(':Estado', $filtro_estado); 
+ }
+
+
+
+ $select_pedidos->execute();
+ $pedidos = $select_pedidos->fetchAll(PDO::FETCH_ASSOC);
+
+// consulta para los total de pedidos
+$select_pedidos_total = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comision, pe.Estado, DATE_FORMAT(pe.FechaHoraCompra ,'%d-%m-%Y') as 'FechaHoraCompra' FROM Pedidos pe INNER JOIN Clientes c
+                                ON c.PK_Cliente = pe.FK_Cliente
+                                WHERE c.FK_Usuario = :FK_Usuario 
+                                " . $str_filtro_desde_hasta . $str_busqueda_pedido . $str_filtro_tipo_estado);
+ 
+ $select_pedidos_total->bindParam(':FK_Usuario', $user);  
+
+ if($filtro_desde != '' && $filtro_hasta != ''){
+    $select_pedidos_total->bindParam(':FechaHoraDesde', $filtro_desde); 
+    $select_pedidos_total->bindParam(':FechaHoraHasta', $filtro_hasta); 
+ }
+ if($str_filtro_tipo_estado != ""){
+    $select_pedidos_total->bindParam(':Estado', $filtro_estado); 
+ }
+ $select_pedidos_total->execute();
+ $lista_pedidos_total = $select_pedidos_total->fetchAll(PDO::FETCH_ASSOC);
+
 
  // Consulta para obtener pedidos por paginación
 $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto, 
@@ -103,6 +149,10 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
                                         c.Estado,
                                         pe.NumeroPedido,
                                         c.CodigoDetallePedido,
+                                        pe.PK_Pedido,
+                                        c.CodigoDetallePedido,
+                                        c.Precio,
+                                        c.Descuento,
                                         (SELECT NombresDestinatario FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'NombresDestinatario',
                                         (SELECT ApellidosDestinatario FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'ApellidosDestinatario',
                                         DATE_FORMAT(pe.FechaHoraCompra, '%d %m %Y ') as 'FechaCompra',
@@ -116,27 +166,18 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
                                         ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Tiendas ti
                                         ON p.FK_Tienda = ti.PK_Tienda INNER JOIN Pedidos pe
                                         ON pe.PK_Pedido = c.FK_Pedido 
-                                        WHERE cli.FK_Usuario = :FK_Usuario AND c.Estado = 0
-                                        ". $str_filtro_tipo_pedido . $str_filtro_desde_hasta . $str_busqueda ."
-                                        ORDER BY c.PK_DetallePedido DESC LIMIT ". $inicio .", " . $items_por_pagina . "");
+                                        WHERE cli.FK_Usuario = :FK_Usuario". $str_filtro_desde_hasta ."
+                                        ORDER BY pe.PK_Pedido DESC");
  $select_detalle_pedidos->bindParam(':FK_Usuario', $user); 
                                         
  
- if($filtro_tipo_pedido == 1 ){
-    $fk = 1;
-    $select_detalle_pedidos->bindParam(':FK_TipoPedido', $fk); 
- }elseif($filtro_tipo_pedido == 2 ){
-    $fk = 2;
-    $select_detalle_pedidos->bindParam(':FK_TipoPedido', $fk); 
- }
-
  if($filtro_desde != '' && $filtro_hasta != ''){
     $select_detalle_pedidos->bindParam(':FechaHoraDesde', $filtro_desde); 
     $select_detalle_pedidos->bindParam(':FechaHoraHasta', $filtro_hasta); 
  }
 
  $select_detalle_pedidos->execute();
- $lista_pedidos = $select_detalle_pedidos->fetchAll(PDO::FETCH_ASSOC);
+ $lista_detalle_pedidos = $select_detalle_pedidos->fetchAll(PDO::FETCH_ASSOC);
 
 //calculo el total de paginas
 $total_pages = ceil(count($lista_pedidos_total) / $items_por_pagina);
@@ -151,6 +192,7 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
    
    return $precio[0]['PrecioEnvio'];
 }
+
 
 ?>
 
@@ -183,25 +225,9 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
 <div class="alert alert-secondary">Inicio / Pedidos</div>
  <div class="row" style="width:100%;margin:0px;">
 
- <div class="col-md-2 ">
-            <div class="card card-left">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <form action="Pedidos" method="GET">
-                            <button type="submit" class="col-md-12 btn btn-primary">Pendientes</button>
-                        </form>
-                    </li>
-                    <li class="list-group-item">
-                        <form action="Pedidos-Completados" method="GET">
-                            <button type="submit" class="col-md-12 btn btn-primary">Completados</button>
-                        </form>
-                    </li>
-                </ul>
-         </div>
-         <br>
-</div>
 
-    <div style="height:100%;margin-bottom:60px;" class="col-md-9 ">
+
+    <div style="height:100%;margin-bottom:60px;" class="col-md-10 offset-md-1">
     <div id="mensaje-success" class="alert alert-success" role="alert"></div>
     <div id="mensaje-error" class="alert alert-danger" role="alert"></div>
     <div class="cont-filtros">
@@ -209,7 +235,7 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
         <div class="row col-md-12">
             
                 <div class="col-md-10">
-                    <input class="form-control" style="width:100%" type="text" placeholder="Búsqueda" value="<?php echo $busqueda ?>" name="input_busqueda">
+                    <input class="form-control" style="width:100%" type="text" placeholder="Búsqueda por código de pedido" value="<?php echo $busqueda ?>" name="input_busqueda">
                 </div>
                 <div class="col-md-2">
                     <input class="btn btn-primary btn-flat" style="width:100%" type="submit" value="Buscar" name="action">
@@ -220,15 +246,13 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
     <br>
         <form action="Pedidos" method="GET">
         <div class="row col-md-12">
-            
-            <div class="col-md-2">
-                Tipo de pedido
-                <select class="form-control" name="input_tipoPedido" id="inputTipoPedido">
-                <option value="0">Todos</option>
-                    <?php foreach($tipo_pedidos as $tipo_pedido){ ?>
-                    <option <?php echo ($filtro_tipo_pedido == $tipo_pedido['PK_TipoPedido'])?"selected":""; ?> value="<?php echo $tipo_pedido['PK_TipoPedido'] ?>"><?php echo $tipo_pedido['TipoPedido'] ?></option>
-                    <?php } ?>
-                </select>
+                <div class="col-md-2">
+                    Estado
+                    <select class="form-control" id="inputEstado" name="input_estado">
+                        <option <?php echo ($filtro_estado == 3)?"selected":""; ?>  value="3">Todos</option>    
+                        <option <?php echo ($filtro_estado == 1)?"selected":""; ?> value="1">Recibido</option>
+                        <option <?php echo ($filtro_estado == 0)?"selected":""; ?>  value="0">No recibido</option>
+                    </select>                
                 </div>
                 <div class="col-md-4">
                     Desde
@@ -245,10 +269,11 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
         </div>
         </form>
     </div>
-        <div class="text-center" ><?php echo (count($lista_pedidos) == 0) ? 'No hay productos pedidos.': ""; ?> </div>
+
+        <!--<div class="text-center" ><?php echo (count($lista_pedidos) == 0) ? 'No hay productos pedidos.': ""; ?> </div>
    
               
-                        <?php foreach($lista_pedidos as $detalle_pedido){ ?>
+                         <?php foreach($lista_pedidos as $detalle_pedido){ ?>
                             <?php if($detalle_pedido['Estado'] == 0){ ?>
                             <div class="card">
                             <div class="card-body">
@@ -335,33 +360,148 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
                     </div>
                         <br>
                         <?php } ?>
-                    <?php }?>
+                    <?php }?> -->
+
+                    <?php foreach($pedidos as $pedido){ ?>
+    
+    <div class="card card-detalle">
+            
+            <div class="row col-md-12 head-detalle">
+                <div class="col-md-6 text-left text-li text-bold" for=""><span class="text-li">Pedido:</span> <?php echo $pedido['NumeroPedido'] ?></div>
+                <div class="col-md-6 text-right text-li" for=""><span class="text-li">Fecha de pedido:</span> <?php echo $pedido['FechaHoraCompra'] ?></div>
+                <div class="col-md-6 text-left text-li" for="">
+                    <span   class="text-li">Estado:</span>
+                    <?php if($pedido['Estado'] == 1){ ?>
+                        <span class="lbl_verde" id="lbl_entregado_<?php echo $pedido['PK_Pedido'] ?>" >Recibido</span>
+                    <?php }else{ ?>
+                        <span class="lbl_rojo" id="lbl_noEntregado_<?php echo $pedido['PK_Pedido'] ?>" >No recibido</span>
+                    <?php } ?>    
+
+                </div>
+            </div>
+            <br>
+            <div class="row col-md-12">
+                <?php
+                    $total_todos = 0; 
+                    $total_envio = 0; 
+                    $subtotal_todos = 0;
+                    $descuentos_todos = 0;
+                ?>
+                <?php foreach($lista_detalle_pedidos as $detalle){ ?>
                     
-<?php 
+                    <?php if($detalle['FK_Pedido'] == $pedido['PK_Pedido']){ ?>
 
-echo '<nav class="col-md-12">';
-echo '<ul class="pagination" >';
+                    <?php 
+                         $subtotal_todos+= $detalle['Subtotal'] ;
+                         
+                            // calculo total
+                         if($configuracion[0]['CobrosPorEnvio'] == 1){ 
+                             $total_todos+= ($detalle['Subtotal']) - ($detalle['Descuento'] * $detalle['Cantidad']) + (($detalle['FK_TipoPedido']==2)?$detalle['PrecioEnvio'] + obtenerPrecioEnvio($detalle['PK_Tienda'], $detalle['FK_Ciudad']):0) ;
+                         }else{
+                             $total_todos+= ($detalle['Subtotal']) - ($detalle['Descuento'] * $detalle['Cantidad'])  ;
+                         }
+                        // calculo total envios
+                        $total_envio+= ($detalle['FK_TipoPedido']==2)?$detalle['PrecioEnvio'] + obtenerPrecioEnvio($detalle['PK_Tienda'], $detalle['FK_Ciudad']):0;
+                             
+                        if($detalle['Descuento']!=0){ 
+                            $descuentos_todos+= ($detalle['Descuento'] * $detalle['Cantidad']) ;
+                        }
+                    ?>
+                    
+                    <div onclick="verDetalle(<?php echo $detalle['PK_DetallePedido'] ?>)" data-toggle="modal" data-target=".modal-mostrar-detalle" class="block-detalle row col-md-12">
+                            <div class="  col-md-6 text-left text-li" for="">
+                                <div class="col-md-12 col-sin-pad-izquierdo">
+                                    <?php echo $detalle['Cantidad'] ?> x <?php echo $detalle['NombreProducto'] ?> 
+                                    <?php if($detalle['FK_TipoPedido'] == 2){ ?>
+                                        <span class="lbl-tipo-pedido"><i class="fa fa-truck"></i> a domicilio
+                                        </span>
+                                    <?php }else{ ?>
+                                        <span class="lbl-tipo-pedido"><i class="fa fa-home"></i> en tienda</span>
+                                    <?php } ?> 
+                                </div>
+                                <div class="col-sin-pad-izquierdo col-md-12 text-left text-li small" for=""> 
+                                    <span class="text-bold">tienda: </span><?php echo $detalle['NombreTienda'] ?>
+                                </div>
+                            </div>
+                            <div class="col-sin-pad-derecho  row col-md-6 text-right text-bold" for="">
+                                <div class="col-sin-pad-derecho col-md-12 text-right"> 
+                                    $ <?php echo round(($detalle['Cantidad'] * $detalle['Precio']), 2) ?> <span class="text-li small" >USD</span>
+                                </div>
+                                <?php if($detalle['DescuentoDecimal']!=0){ ?>
+                                    <div class="col-sin-pad-derecho col-md-12 text-right" for="">
+                                    <span class="text-li small" > </span> - $ <?php echo round($detalle['Descuento'] * $detalle['Cantidad'], 2) ?> <span class="text-li small" >USD</span>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                    </div>
+                   
+                    <br>
+                    <?php } ?>
+                <?php } ?> 
+            </div>
+            <br>
+            <div class="row col-md-12 totales">
+                    <div class="row col-md-12">
+                            <div class="col-md-6 text-left text-li" for="">Subtotal</div>
+                            <div class="col-md-6 text-right text-bold" for="">$ <?php echo round($subtotal_todos, 2) ?> <span class="text-li small" >USD</span></div>
+                    </div>
+                    <div class="row col-md-12">
+                            <div class="col-md-6 text-left text-li" for="">Descuentos</div>
+                            <div class="col-md-6 text-right text-bold" for="">- $ <?php echo round($descuentos_todos, 2) ?> <span class="text-li small" >USD</span></div>
+                    </div>
+                    <?php if($configuracion[0]['CobrosPorEnvio'] == 1){  ?>
+                    <div class="row col-md-12 border-b">
+                            <div class="col-md-6 text-left text-li" for="">Envío</div>
+                            <div class="col-md-6 text-right text-bold" for="">$ <?php echo round($total_envio, 2) ?> <span class="text-li small" >USD</span></div>
+                    </div>
+                    <?php } ?>
+                    <div class="row col-md-12">
+                            <div class="col-md-6 text-left text-li" for="">Comisión</div>
+                            <div class="col-md-6 text-right text-bold" for=""> $ <?php echo round($pedido['Comision'], 2) ?> <span class="text-li small" >USD</span></div>
+                    </div>
+                    <hr>
+                    <div class="row col-md-12 text-bold">
+                            <div class="col-md-6 text-left" for="">Total</div>
+                            <div class="col-md-6 text-right " for="">$ <?php echo round($total_todos + $pedido['Comision'], 2) ?> <span class="text-li small" >USD</span></div>
+                    </div>
+                    <br>
+                    
 
-if ($total_pages > 1) {
-    if ($pagina != 1) {
-        echo '<li class="page-item"><a class="page-link" href="Pedidos?pagina='.($pagina-1).'"><span aria-hidden="true">&laquo;</span></a></li>';
-    }
+                </div>
+               
+            
+        </div>
+        <br>
+<?php } ?>    
 
-    for ($i=1;$i<=$total_pages;$i++) {
-        if ($pagina == $i) {
-            echo '<li class="page-item active"><a class="page-link" href="#">'.$pagina.'</a></li>';
-        } else {
-            echo '<li class="page-item"><a class="page-link" href="Pedidos?pagina='.$i.'">'.$i.'</a></li>';
+
+
+
+
+                    
+<?php  
+    echo '<nav class="col-md-12">';
+    echo '<ul class="pagination" >';
+
+    if ($total_pages > 1) {
+        if ($pagina != 1) {
+            echo '<li class="page-item"><a class="page-link" href="Pedidos?pagina='.($pagina-1).'"><span aria-hidden="true">&laquo;</span></a></li>';
+        }
+
+        for ($i=1;$i<=$total_pages;$i++) {
+            if ($pagina == $i) {
+                echo '<li class="page-item active"><a class="page-link" href="#">'.$pagina.'</a></li>';
+            } else {
+                echo '<li class="page-item"><a class="page-link" href="Pedidos?pagina='.$i.'">'.$i.'</a></li>';
+            }
+        }
+
+        if ($pagina != $total_pages) {
+            echo '<li class="page-item"><a class="page-link" href="Pedidos?pagina='.($pagina+1).'"><span aria-hidden="true">&raquo;</span></a></li>';
         }
     }
-
-    if ($pagina != $total_pages) {
-        echo '<li class="page-item"><a class="page-link" href="Pedidos?pagina='.($pagina+1).'"><span aria-hidden="true">&raquo;</span></a></li>';
-    }
-}
-echo '</ul>';
-echo '</nav>';
-
+    echo '</ul>';
+    echo '</nav>';
 ?>   
     </div>
 
@@ -401,6 +541,84 @@ echo '</nav>';
                 </div>
                 </div>
             </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- modal para mostrar detalle -->
+<div class="modal fade modal-mostrar-detalle col-md-12" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class=" md-content col-md-12">
+                <br>
+                <div class="">
+                            <div class="card-body">
+                                
+                            <div class="row">
+                            <div class="col-md-4  container temp-border"> <img id="modal_imagen" class="crop col-md-12" src="" alt=""> </div>
+                            <div class="col-md-8 temp-border">
+                                <div class="detail_up col-md-12 temp-border">
+                                    
+                                    <h4 class="">
+                                        <span id="modal_nombreProducto"></span>  
+                                        <br>
+                                        <img id="modal_img_adomicilio" src="" class="info_tipo" alt=""><span id="modal_lbl_tipoPedido" class="info_tipo_letras"></span>
+                                    </h4>
+                                    <div class=" text-left row">
+                                        <label class="  col-md-12" for="">Tienda &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: <a href=""><span id="modal_nombreTienda"></span></a> </label>
+                                    </div>
+                                    <div class="text-left row">
+                                        <label class="  col-md-12" for="">Cantidad &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: <span id="modal_cantidad"></span></label>
+                                    </div>
+                                    <div class="text-left row">
+                                        <label class="  col-md-12" for="">Precio &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: $ <span id="modal_precioUnitario"></span></label>
+                                    </div>
+                                        <div class="text-left row">
+                                            <label class="subtotal col-md-12" for="">Subtotal  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: $ <span id="modal_subtotal"></span> </label>
+                                        </div>
+                                        <div class="text-left row">
+                                            <label class="descuento  col-md-12" for="">Descuento  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: <span id="modal_descuento"></span></label>
+                                        </div>
+                                            <div class="text-left row">
+                                                <label class=" subtotal col-md-12" for="">Precio envío &nbsp&nbsp&nbsp: $ <span id="modal_precioEnvio"></span></label>
+                                            </div>
+                                        <div class=" text-left row">
+                                            <label class="total text-bold col-md-12" for="">Total  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: $ <span id="modal_total"></span> </label>
+                                        </div>
+                                        <hr>
+                                        <div class="text-left row">
+                                            <label class="descuento  col-md-12" for="">Fecha de compra  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:&nbsp <span id="modal_fechaCompra"></span></label>
+                                       </div>
+                                        <!--  <div class="text-left row">
+                                            <label class="descuento  col-md-12" for="">Estado de pedido  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:
+                                                <span id="modal_estadoDetallePedido"></span>
+                                            </label>
+                                        </div> -->
+                                        <div class="text-left row">
+                                            <span id="modal_destinatario"></span>                                        
+                                        </div>
+                                        <br>
+                                        <div class="text-left row">
+                                                <label style="font-size:13px;color:gray;" class=" subtotal col-md-12" for="">ID de pago: <span id="modal_idPago"></span></span></label>
+                                        </div>
+                                        <div class="text-left row">
+                                                <label style="font-size:13px;color:gray;" class=" subtotal col-md-12" for="">Pago PayPal: <span id="modal_numeroPedido"></span></span></label>
+                                        </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                            <!-- <h4 class="col-md-2 offset-md-10">
+                                <button data-toggle="modal" data-target=".modal-confirmar" onClick="confirmar(<?php echo $detalle_pedido['PK_DetallePedido'] ?>)" type="button" class="btn btn_completado" > Recibido </button>
+                            </h4>  -->
+                        <br> 
+                    </div>
+            <br>
+            <button style="border-radius: 7px!important;" id="btnCancelar" type="" data-dismiss="modal" class=" btn-modal btn btn-secondary col-md-4 offset-md-4">Cerrar</button>
+            <br><br>
         </div>
         </div>
     </div>
@@ -455,6 +673,79 @@ echo '</nav>';
         
         $('#form-confirmar').submit();
     })
+
+    function verDetalle(pk_detalle_pedido){
+        var detalle_pedido;
+            $.ajax({
+                type:"POST",
+                async: false,
+                url:"<?php echo URL_SITIO ?>scripts/datos_ajax.php",
+                data: {"request" : "obtenerDetallePedido", 
+                        "PK_DetallePedido" : pk_detalle_pedido},
+                success:function(r){
+                    detalle_pedido = JSON.parse(r);
+                    console.log(detalle_pedido);
+                }  
+             });
+
+             var config;
+             $.ajax({
+                type:"POST",
+                async: false,
+                url:"<?php echo URL_SITIO ?>scripts/datos_ajax.php",
+                data: {"request" : "obtenerConfiguracion"},
+                success:function(r){
+                    config = JSON.parse(r);
+                    console.log(config);
+                }  
+             });
+        var subtotal = detalle_pedido[0].Precio * detalle_pedido[0].Cantidad;     
+        if(config[0].CobrosPorEnvio === 1){
+            var precio_envio = detalle_pedido[0].PrecioEnvio;
+            var total = subtotal - detalle_pedido[0].Descuento + precio_envio;
+        }else{
+            var precio_envio = 'N/A';
+            var total = subtotal - detalle_pedido[0].Descuento;
+        }   
+
+        if(detalle_pedido[0].Estado == 0){
+            var estado = 'No recibido';
+        }else if(detalle_pedido[0].Estado == 1){
+            var estado = 'Recibido';
+        }
+
+        $('#modal_nombreProducto').html(detalle_pedido[0].NombreProducto);
+        $('#modal_imagen').prop('src', detalle_pedido[0].Imagen);
+        $('#modal_nombreTienda').html(detalle_pedido[0].NombreTienda);
+        $('#modal_cantidad').html(detalle_pedido[0].Cantidad);
+        $('#modal_precioUnitario').html(detalle_pedido[0].Precio);
+        $('#modal_subtotal').html(subtotal);
+        $('#modal_descuento').html(detalle_pedido[0].Descuento);
+        $('#modal_precioEnvio').html(precio_envio);
+        $('#modal_total').html(total);
+        $('#modal_descuento').html(detalle_pedido[0].Descuento);
+        $('#modal_fechaCompra').html(detalle_pedido[0].FechaCompra);
+        //$('#modal_estadoDetallePedido').html(estado);
+
+        if(detalle_pedido[0].FK_TipoPedido == 2){
+            $('#modal_destinatario').html('<br><p class="col-md-12"><strong>Destinatario </strong><br>' +
+                                            '<span>' + detalle_pedido[0].NombresDestinatario + ' ' + detalle_pedido[0].ApellidosDestinatario + '</span><br>' +
+                                            '<span>' + detalle_pedido[0].Direccion1Destinatario + ', ' + detalle_pedido[0].Direccion2Destinatario + '</span><br>' +
+                                            '<span>' + detalle_pedido[0].DepartamentoDestinatario + ', ' + detalle_pedido[0].PaisDestinatario + '</span><br>' +
+                                            '<span>Código Postal: ' + detalle_pedido[0].CodigoPostalDestinatario +'</span><br>' +
+                                            '<span>Tel. ' + detalle_pedido[0].TelefonoDestinatario +'</span>' +
+                                            '<span></span>' +
+                                        '</p>');
+            $('#modal_img_adomicilio').prop('src', '<?php echo URL_SITIO ?>static/img/icon_adomicilio.png');
+            $('#modal_lbl_tipoPedido').html('A domicilio');
+        }else{
+            $('#modal_img_adomicilio').prop('src', '<?php echo URL_SITIO ?>static/img/icon_entienda.png');
+            $('#modal_lbl_tipoPedido').html('En tienda');
+        }                      
+        $('#modal_idPago').html(detalle_pedido[0].CodigoDetallePedido);    
+        $('#modal_numeroPedido').html(detalle_pedido[0].NumeroPedido);                      
+        
+    }
 
 
 </script>

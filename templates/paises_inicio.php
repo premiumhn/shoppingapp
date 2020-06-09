@@ -86,7 +86,9 @@ if($busqueda!=''){
 					<div id="new" class="card text-white bg-muted o-hidden h-100">
 						<div class="card-body">
 							<div class="card-body-icon">
-								<img src="<?php echo URL_SITIO ?>uploads/img/paises/<?php echo $pais["Logo"] ?>" alt="<?php echo $pais["NombrePais"] ?>" style="border-radius: 7px;">
+								<a href="<?php echo URL_SITIO ?>Tiendas?idPais=<?php echo $pais["PK_Pais"] ?>">
+									<img class="img-logo-pais" src="<?php echo URL_SITIO ?>uploads/img/paises/<?php echo $pais["Logo"] ?>" alt="<?php echo $pais["NombrePais"] ?>" style="border-radius: 7px;">
+								</a>
 							</div>
 							<div class="mr-5 text-center">
 							
@@ -103,6 +105,7 @@ if($busqueda!=''){
 					</div>
 				</div>
 			<?php } ?> 
+			
 		</div>	
 	</div>
 
@@ -119,6 +122,7 @@ if($busqueda!=''){
 
 <script type="text/javascript">
 	$('.alert-danger').hide();
+	$('#lbl-carrito').hide();
 
 	<?php if(isset($_GET['msj'])){ 
 			if($_GET['msj']=='nopais'){?>

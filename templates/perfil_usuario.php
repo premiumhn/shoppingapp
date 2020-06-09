@@ -239,7 +239,7 @@ $ciudades = $select_cuidades->fetchAll(PDO::FETCH_ASSOC);
 
 
 <script type="text/javascript">
-
+    $('#lbl-carrito').hide();
     $('#mensaje-success').hide();
     $('#mensaje-error').hide();
 

@@ -1,17 +1,6 @@
-body{
-    /* background: -webkit-linear-gradient(left, #e67e3d, #d45303);  */
-    background-image: url('../img/fon-min.png')!important;
-    /* background-color: rgba(240, 240, 240, 0.705); */
-    background-size: cover;
-    
-}
 
-#body-tienda{
-     /* background: -webkit-linear-gradient(left, #e67e3d, #d45303);  */
-     background-image: url('../img/fondo_login_tienda-min.png')!important;
-     /* background-color: rgba(240, 240, 240, 0.705); */
-     background-size: cover;
-}
+
+
 
 h2{
     font-family: 'Lato', sans-serif;
@@ -157,4 +146,9 @@ a:hover{
 
 #lbl-show-pass:hover{
     cursor: pointer;
+}
+
+.traductor{
+    position: absolute;
+    right: 10px;
 }

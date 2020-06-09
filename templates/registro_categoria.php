@@ -66,6 +66,8 @@
 
      $('.alert-warning').css("display", "none");
  
+     $('.h2-name').html('<?php echo $fcategorias ?>');
+     $('#titulo_pagina').html('Shoppingapp | <?php echo $fcategorias ?>');
 
     <?php 
         $msj = (isset($_GET['msj']))?$_GET['msj']:"";

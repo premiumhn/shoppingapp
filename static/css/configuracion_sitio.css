@@ -13,3 +13,27 @@
     top: 30px;
 }
 
+.containerPor {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    margin: 0px;
+    position: relative;
+    border: 5px solid #e86813d7;
+    padding: 0px;
+}
+.containerPor > .crop {
+    position:absolute;
+    left: -10%;
+    right: -10%;
+    top: -10%;
+    bottom: -10%;
+    margin: auto;
+    min-height: 10%;
+    min-width: 10%;
+}
+
+.img_por{
+    width: 100%;
+    object-fit: cover;
+}

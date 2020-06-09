@@ -9,7 +9,7 @@ include ("../global/conexion.php");
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 
-     $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario AND FK_TipoUsuario = 2");
+     $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario AND (FK_TipoUsuario = 2 OR FK_TipoUsuario = 3)");
      $buscar_usuario->bindParam(':nombreUsuario', $_POST['input_username']);
     //  $buscar_usuario->bindParam(':Contrasena', openssl_encrypt($_POST['input_password'], COD, KEY));
      $buscar_usuario->execute();

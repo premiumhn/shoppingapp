@@ -10,6 +10,8 @@
 
 .card{
     padding: 20px;
+    border: 1px solid #F1F1F1!important;
+    border-radius: 10px!important;
 }
 
 .gray_back{
@@ -20,6 +22,8 @@
     background-color: white;
     z-index: 100;
     padding: 10px!important;
+    border: 1px solid #F1F1F1!important;
+    border-radius: 10px!important;
 }
 
 .card_detail label {
@@ -28,6 +32,14 @@
 
 .btn-flat{
     margin:0px!important;
+}
+
+.alert_monto_minimo{
+    background-color: rgba(255, 0, 0, 0.692)!important;
+    padding: 20px!important;
+    margin:0px 20px 0px 20px;
+    color:white!important;
+    text-align:center;
 }
 
 

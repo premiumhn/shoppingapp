@@ -61,7 +61,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $insert_carrito->execute(); 
 
-        header('location: ../Carrito');
+        header('location: ../Detalle-Producto?producto=' . $pk_producto .'&msj=agregado');
       break;
 
       case 'comprar':

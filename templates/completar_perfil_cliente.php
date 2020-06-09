@@ -8,6 +8,9 @@ include '../global/const.php';
 session_start();
 
 
+$select_config = $pdo->prepare("SELECT * FROM Configuracion");
+$select_config->execute();
+$configuracion = $select_config->fetchAll(PDO::FETCH_ASSOC);
 
  //Consulta seleccionar paises
  $select_paises = $pdo->prepare("SELECT * FROM Paises");
@@ -60,10 +63,7 @@ session_start();
 </head>
 <body>
 <div role="alert" data-delay="5000" aria-live="assertive" aria-atomic="true" id="toast_mensaje" class="toast" data-autohide="true">
-        
-        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
+    
         <div class="toast-body">
             
         </div>
@@ -77,7 +77,7 @@ session_start();
  <div class="row" style="width:100%;margin:0px;">
 
     <div class="col-md-2">
-        <div class="card card-left">
+        <!-- <div class="card card-left">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <form action="" method="POST">
@@ -86,10 +86,10 @@ session_start();
                     </form>
                 </li>
             </ul>
-        </div>
+        </div> -->
     </div>
 
-    <div style="height:100%;margin-bottom:60px;" class="col-md-7 ">
+    <div style="height:100%;margin-bottom:60px;" class="col-md-8 ">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title text-right">Complete su perfil</h5>
@@ -155,6 +155,14 @@ session_start();
                     </div>
                     <br>
                     <br>
+                    <div class="col-md-12 cont-acuerdo">
+                        Shoppingapp cobrará una comisión de $<?php echo $configuracion[0]['Comision'] ?> por cada compra de $0 a $<?php echo $configuracion[0]['PorCada'] ?>
+                        <br><br>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="inputAcuerdo">
+                            <label class="form-check-label" for="inputAcuerdo"> Estoy de acuerdo</label>
+                        </div>
+                    </div>
                     <br>
                     <input type="hidden" name="action" value="completar" >
                     <button type="submit" class="btn-flat col-md-8 offset-md-2">Completar</button>
@@ -163,19 +171,15 @@ session_start();
             </div>
         </div>
     </div>
-    <div class="col-md-3 ">
-    <div class="card ">
-        <div class="card-body">
-            <h5 class="card-title text-right">Atajos</h5>
-        </div>
-    </div>
-    </div>
     
 </div>    
 
 
 
 <script type="text/javascript">
+
+    
+
     $("#mensaje_alert").css("visibility", "hidden");
 
     $('#inputPais').change(function(){
@@ -205,6 +209,8 @@ session_start();
 
         if( $('#inputPrimerNombre').val() == '' || $('#inputPrimerApellido').val() == '' || $('#inputTelefono').val() == '' || $('#inputDireccion1').val() == '' || $('#inputPais')[0].selectedIndex == 0 || $('#inputCiudad')[0].selectedIndex == 0 ){
             toast("Falta uno o más campos");
+        }else if($('#inputAcuerdo').prop("checked") == false){
+            toast("Debes aceptar el acuerdo de comisión");
         }else{
             $('#form_completar_cliente').unbind('submit').submit();
         }
@@ -240,6 +246,12 @@ session_start();
             $('.toast-body').html(msj);
             $('#toast_mensaje').toast('show');
     }
+
+    $('.nav-link').click(function(e){
+        e.preventDefault();
+    });
+    $('.dropdown-menu').hide()
+
 
       // Add the following code if you want the name of the file appear on select
       $(".custom-file-input").on("change", function() {

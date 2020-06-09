@@ -14,13 +14,16 @@ if (isset($_SESSION['login_user'])){ //Comprobar si ha iniciado sesión
     // header('Location: completar_perfil_tienda.php');
 }
 
+$select_config = $pdo->prepare("SELECT * FROM Configuracion");
+$select_config->execute();
+$configuracion = $select_config->fetchAll(PDO::FETCH_ASSOC);
+
 // Búsqueda
 $busqueda = (isset($_REQUEST['input_busqueda']))?$_REQUEST['input_busqueda']:"";
 $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda . "%'
                                     OR ti.NombreTienda LIKE '%" . $busqueda . "%'":"";
 
-
-    $select_carrito = $pdo->prepare("SELECT p.NombreProducto, 
+$select_carrito = $pdo->prepare("SELECT p.NombreProducto, 
                                     c.Cantidad, 
                                     p.PrecioUnitario, 
                                     p.Imagen, 
@@ -36,16 +39,19 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
                                     p.PrecioEnvio,
                                     c.FK_TipoPedido,
                                     c.PK_Carrito,
-                                    ti.PK_Tienda,
-                                    (SELECT FK_Ciudad FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'FK_Ciudad'
+                                    cli.PK_Cliente,
+                                    (SELECT FK_Ciudad FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'FK_Ciudad',
+                                    (SELECT CONCAT(NombresDestinatario, ' ', ApellidosDestinatario) FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'NombreDestinatario'
                                     FROM Carrito c INNER JOIN Productos p
                                     ON c.FK_Producto = p.PK_Producto INNER JOIN Clientes cli
                                     ON c.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
                                     ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Tiendas ti
                                     ON p.FK_Tienda = ti.PK_Tienda 
                                     WHERE cli.FK_Usuario = :FK_Usuario" . $str_busqueda ."
+                                    AND ti.PK_Tienda = :PK_Tienda
                                      ORDER BY c.PK_Carrito DESC");
- $select_carrito->bindParam(':FK_Usuario', $user);                           
+ $select_carrito->bindParam(':FK_Usuario', $user); 
+ $select_carrito->bindParam(':PK_Tienda', $_SESSION['tienda']);                           
  $select_carrito->execute();
  $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
 
@@ -59,6 +65,11 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
     
     return $precio[0]['PrecioEnvio'];
  }
+
+ $select_tienda = $pdo->prepare("SELECT * FROM Tiendas WHERE PK_Tienda = :PK_Tienda");
+ $select_tienda->bindParam(':PK_Tienda', $_SESSION['tienda']);
+ $select_tienda->execute();
+ $tienda = $select_tienda->fetchAll(PDO::FETCH_ASSOC);
  
 
 ?>
@@ -88,13 +99,46 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
 </head>
 <body>
 <?php require ('header.php') ?>
-<div class="alert alert-secondary">Inicio / Carrito</div>
+<div class="alert alert-secondary">
+    Inicio / Carrito de compras de la tienda <strong><?php echo $tienda[0]['NombreTienda'] ?></strong>
+    <a class="volver-tienda btn" href="<?php echo URL_SITIO ?>Home?Tienda=<?php echo $_SESSION['tienda'] ?>" class="text-right"> <i class="fa fa-arrow-left"></i> Volver a la tienda</a>
+</div>
+<?php 
+    $total_todos_monto = 0;
+    foreach($lista_carrito as $carrito){
+        if($configuracion[0]['CobrosPorEnvio'] == 1){ 
+            $total_todos_monto+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']  + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']) :0) ;
+        }else{
+            $total_todos_monto+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) ;
+        }
+    } 
+
+    $cliente = (count($lista_carrito)>0)?$lista_carrito[0]['PK_Cliente']:"";
+
+    $articulos_adomicilio = "";
+    if($cliente != ""){
+        $sql_articulos_adomicilio = $pdo->prepare("SELECT c.PK_Carrito FROM Carrito c INNER JOIN Productos p
+                                                ON c.FK_Producto = p.PK_Producto INNER JOIN Tiendas t
+                                                ON p.FK_Tienda = t.PK_Tienda INNER JOIN Usuarios u
+                                                WHERE t.PK_Tienda = :FK_Tienda AND c.FK_Cliente = :FK_Cliente AND c.FK_TipoPedido = 2
+                                                GROUP BY c.PK_Carrito");
+        $sql_articulos_adomicilio->bindParam(':FK_Tienda', $_SESSION['tienda']);
+        $sql_articulos_adomicilio->bindParam(':FK_Cliente', $cliente);
+        $sql_articulos_adomicilio->execute();
+        $articulos_adomicilio = $sql_articulos_adomicilio->fetchAll(PDO::FETCH_ASSOC); 
+    }
+?>
+
+<?php if(($total_todos_monto < $tienda[0]['MontoMinimoEnvio']) AND (count($articulos_adomicilio)>0)){ ?>
+    <div class="alert alert-danger alert_monto_minimo">No se enviarán tus productos a domicilio, el monto de los articulos deve ser mayor a $<?php echo $tienda[0]['MontoMinimoEnvio'] ?> </div>
+<?php } ?>
  <div class="row" style="width:100%;margin:0px;">
 
 
     <div style="height:100%;margin-bottom:60px;" class="col-md-9 bordered">
     <div id="mensaje-success" class="alert alert-success" role="alert"></div>
     <div id="mensaje-error" class="alert alert-danger" role="alert"></div>
+    
         <div class="text-center" ><?php echo (count($lista_carrito) == 0) ? 'No hay productos en el carrito de compras.': ""; ?> </div>
    
               
@@ -107,12 +151,12 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
                             <div class="col-md-8 temp-border">
                                 <div class="detail_up col-md-12 temp-border">
                                 
-                                    <h4 class="col-md-1 offset-md-11 ">
+                                    <h4 class=" btn-eliminar">
                                         <button onClick="eliminar(<?php echo $carrito['PK_Carrito'] ?>)" type="button" class="btn btn-eliminar" data-toggle="modal" data-target=".modal-eliminar"> <h4><i style="color:red;" class="fas fa-trash-alt mr-2"></i></h4> </button>
                                     </h4>
                                     <h4 class=""><?php echo $carrito['NombreProducto'] ?> <a href="">  </h4>
                                     <div class=" text-left row">
-                                        <label class="  col-md-12" for="">Tienda &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: <a href=""><?php echo $carrito['NombreTienda'] ?></a> </label>
+                                        <label class="  col-md-12" for="">Tienda &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: <a href="<?php echo URL_SITIO ?>Home?Tienda=<?php echo $_SESSION['tienda'] ?>"><?php echo $carrito['NombreTienda'] ?></a> </label>
                                     </div>
                                     <div class="text-left row">
                                         <label class="  col-md-12" for="">Cantidad &nbsp&nbsp&nbsp&nbsp&nbsp: <?php echo $carrito['Cantidad'] ?></label>
@@ -120,6 +164,14 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
                                     <div class="text-left row">
                                         <label class="  col-md-12" for="">Precio &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: $ <?php echo $carrito['PrecioUnitario'] ?></label>
                                     </div>
+                                    <div class="text-left row">
+                                        <label class="  col-md-12" for="">Tipo de pedido: <?php echo ($carrito['FK_TipoPedido'] == 1)?"En tienda":"A domicilio"; ?></label>
+                                    </div>
+                                    <?php if($carrito['FK_TipoPedido'] == 2){ ?>
+                                    <div class="text-left row">
+                                        <label class="  col-md-12" for="">Destinatario: <?php echo $carrito['NombreDestinatario']; ?></label>
+                                    </div>
+                                    <?php } ?>
                                 </div>
                                 <div class="detail_down col-md-12 temp-border">
                                     <div class="col-md-5 offset-md-7">
@@ -132,15 +184,23 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
                                             <label class="descuento col-md-12" for="">Descuento  &nbsp&nbsp&nbsp<?php echo (isset($carrito['DescuentoDecimal']))?"-&nbsp$ ".round((($carrito['Subtotal'])/$carrito['DescuentoDecimal']), 2):'&nbsp&nbsp N/A';  ?></label>
                                         </div>
                                         
-
-                                        <?php if($carrito['FK_TipoPedido']==2){ ?>
-                                            <div class="text-left row">
-                                                <label class=" subtotal col-md-12" for="">Precio envío &nbsp&nbsp&nbsp&nbsp$ <?php echo (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):'N/A') ?></label>
+                                        <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
+                                            <?php if($carrito['FK_TipoPedido']==2){ ?>
+                                                <div class="text-left row">
+                                                    <label class=" subtotal col-md-12" for="">Precio envío &nbsp&nbsp&nbsp&nbsp$ <?php echo (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):'N/A') ?></label>
+                                                </div>
+                                            <?php } ?>
+                                        <?php } ?>
+                                        
+                                        <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
+                                            <div class=" text-left row">
+                                                <label class="total col-md-12" for="">Total  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp$ <?php echo round((($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0)), 2)  ?> </label>
+                                            </div>
+                                        <?php }else{ ?>
+                                            <div class=" text-left row">
+                                                <label class="total col-md-12" for="">Total  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp$ <?php echo round((($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0)), 2)  ?> </label>
                                             </div>
                                         <?php } ?>
-                                        <div class=" text-left row">
-                                            <label class="total col-md-12" for="">Total  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp$ <?php echo round((($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0)), 2)  ?> </label>
-                                        </div>
                                     </div>
                                    
                                 </div>
@@ -175,18 +235,20 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
                         ?>
                         </span>
                     </label>
-                    <label for="" class="col-md-12 lbl-detail">
-                        Envios: 
-                        <span class="text-right"> $
-                        <?php
-                        $total_envio = 0; 
-                        foreach($lista_carrito as $carrito){ 
-                            $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0;
-                        } 
-                        echo $total_envio;
-                        ?>
-                        </span>
-                    </label>
+                    <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
+                        <label for="" class="col-md-12 lbl-detail">
+                            Envios: 
+                            <span class="text-right"> $
+                            <?php
+                            $total_envio = 0; 
+                            foreach($lista_carrito as $carrito){ 
+                                $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0;
+                            } 
+                            echo $total_envio;
+                            ?>
+                            </span>
+                        </label>
+                    <?php } ?>
                     <label for="" class="col-md-12 lbl-detail">
                         Descuentos: - 
                         <span class="text-right"> $
@@ -199,16 +261,42 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
                         ?>
                         </span>
                     </label>
+                    <label for="" class="col-md-12 lbl-detail">
+                        Comisión: 
+                        <span class="text-right"> $
+                        <?php
+                            $total_todos = 0; 
+                            foreach($lista_carrito as $carrito){
+                                if($configuracion[0]['CobrosPorEnvio'] == 1){ 
+                                    $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']  + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']) :0) ;
+                                }else{
+                                    $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) ;
+                                }
+                            } 
+                            if($total_todos > $configuracion[0]['PorCada']){
+                                $numero_cobros = (int)($total_todos/$configuracion[0]['PorCada']) + 1;
+                                $comision = $numero_cobros * $configuracion[0]['Comision'];
+                            }else{
+                                $comision = $configuracion[0]['Comision'];
+                            }
+                            echo round($comision, 2);
+                        ?>
+                        </span>
+                    </label>
                     <hr>
                     <label for="" class=" total col-md-12 Total">
                         Total:
                         <span class="text-right"> $
                         <?php
                         $total_todos = 0; 
-                        foreach($lista_carrito as $carrito){ 
-                            $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0) ;
+                        foreach($lista_carrito as $carrito){
+                            if($configuracion[0]['CobrosPorEnvio'] == 1){ 
+                                $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']  + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']) :0) ;
+                            }else{
+                                $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) ;
+                            }
                         } 
-                        echo round($total_todos, 2);
+                        echo round($total_todos + $comision, 2);
                         ?>
                         </span>
                     </label>
@@ -267,6 +355,8 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
 
     $('#mensaje-success').hide();
     $('#mensaje-error').hide();
+
+    $('#lbl-carrito').hide();
 
     <?php 
         $msj = (isset($_GET['msj']))?$_GET['msj']:"";

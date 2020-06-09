@@ -31,7 +31,7 @@ $select_colores->execute();
 $colores = $select_colores->fetchAll(PDO::FETCH_ASSOC);
 
 
-$select_producto = $pdo->prepare("SELECT p.Ranking, p.Adomicilio as 'pAdomicilio', p.PK_Producto, p.NombreProducto, t.NombreTienda, p.PrecioUnitario, p.Descuento, t.Adomicilio, p.PrecioEnvio, p.UnidadesDisponibles, p.Imagen, c.NombreCategoria, p.Descripcion, t.PK_Tienda FROM 
+$select_producto = $pdo->prepare("SELECT p.Ranking, p.Adomicilio as 'pAdomicilio', p.PK_Producto, p.NombreProducto, t.NombreTienda, t.MontoMinimoEnvio, p.PrecioUnitario, p.Descuento, t.Adomicilio, p.PrecioEnvio, p.UnidadesDisponibles, p.Imagen, c.NombreCategoria, p.Descripcion, t.PK_Tienda, t.Sitioweb FROM 
                                 Productos p INNER JOIN Tiendas t 
                                 ON p.FK_Tienda = t.PK_Tienda INNER JOIN Categorias c
                                 ON c.PK_Categoria = p.FK_Categoria
@@ -56,6 +56,20 @@ $select_destinatarios->bindParam(':PK_Usuario', $_SESSION['login_user']);
 $select_destinatarios->execute();
 $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
 
+$select_config = $pdo->prepare("SELECT * FROM Configuracion");
+$select_config->execute();
+$configuracion = $select_config->fetchAll(PDO::FETCH_ASSOC);
+
+$buscar_carrito = $pdo->prepare("SELECT * FROM Carrito c INNER JOIN Clientes cli
+                                    ON c.FK_Cliente = cli.PK_CLiente INNER JOIN Usuarios u
+                                    ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Productos p
+                                    ON c.FK_Producto = p.PK_Producto
+                                    WHERE u.PK_Usuario = :PK_Usuario AND p.FK_Tienda = :PK_Tienda");
+$buscar_carrito->bindParam('PK_Usuario', $_SESSION['login_user']);
+$buscar_carrito->bindParam('PK_Tienda', $_SESSION['tienda']);
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$buscar_carrito->execute();
+$carrito = $buscar_carrito->fetchAll(PDO::FETCH_ASSOC);
 
 
 
@@ -74,7 +88,7 @@ $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
     <link href="<?php URL_SITIO ?>static/css/detalle_producto.css" rel="stylesheet" type="text/css" media="all" />
     <link href="<?php URL_SITIO ?>static/css/toasts.css" rel="stylesheet" type="text/css" media="all" />
     
-    <script src="<?php URL_SITIO ?>static/js/jquery-3.5.0.min.js" ></script>
+    <script src="<?php URL_SITIO ?>static/js/jquery-3.5.1.min.js" ></script>
 	<script src="https://kit.fontawesome.com/b2dbb6a24d.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
@@ -109,8 +123,6 @@ $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
                             <?php 
                             $cont = 1;
                             $ranking = $productos[0]['Ranking'];
-
-                            
                             for($i = 1; $i <= 5; $i++){ 
                                 if($cont <= $ranking){
                                 ?>
@@ -130,12 +142,12 @@ $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
                 </div>
                 <hr>
                 <div class="row col-md-12">
-                    <label for="col-md-12">Tienda: <a href=""> <?php echo $productos[0]['NombreTienda'] ?></a> </label>
+                    <label for="col-md-12">Tienda: <a href="<?php echo URL_SITIO.'Home?Tienda='. $productos[0]['PK_Tienda'] ?>"> <?php echo $productos[0]['NombreTienda'] ?></a> </label>
                 </div>
                 <div class="row col-md-12">
-                    <div class="link no_padding_left right-border"> <a href="">Contactar tienda</a> </div>
-                    <div class="link right-border"> <a href=""> Visitar tienda </a> </div>
-                    <div class="link right-border"> <a href=""> Visitar sitio web de la tienda </a> </div>
+                    <div class="link no_padding_left right-border"> <a href="mailto:shoppingappworld@gmail.com">Contactar tienda</a> </div>
+                    <div class="link right-border"> <a href="<?php echo URL_SITIO.'Home?Tienda='. $productos[0]['PK_Tienda'] ?>"> Visitar tienda </a> </div>
+                    <div class="link right-border"> <a href="<?php echo (isset($productos[0]['Sitioweb'])?'http://'.$productos[0]['Sitioweb']:"#") ?>"> Visitar sitio web de la tienda </a> </div>
                 </div>
                 <br>
                 <div class="detail-cont row col-md-12">
@@ -166,7 +178,7 @@ $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
                     <?php } ?>
                     <div class="form-group col-md-4 text-left">
                         <label for="inputCantidad">Cantidad:</label><label class="text-bold unidades_disponibles" for="" >(<?php echo $productos[0]['UnidadesDisponibles'] ?> disponibles)</label>
-                        <input class="col-md-12 frm_ctrl form-control" type="number" id="inputCantidad" name="input_cantidad" min="1" max="<?php echo $productos[0]['UnidadesDisponibles'] ?>">
+                        <input required class="col-md-12 frm_ctrl form-control" type="number" id="inputCantidad" name="input_cantidad" min="1" max="<?php echo $productos[0]['UnidadesDisponibles'] ?>">
                     </div>
                     <?php if(count($colores)>0){ ?>
                         <div class="form-group col-md-4 no_padding_both  text-left">
@@ -268,7 +280,10 @@ $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                             </div>
                         <label for="" class="text-left text-bold col-md-12 text_envios">Se hacen envíos a domicilio</label>
-                        <label for='' class='text-left col-md-12'>Precio del envío:  <strong>$ <span id="precioEnvio"></span></strong></label>
+                        <span class="text-left col-md-12 text_envios">Monto minimo para envío: $<?php echo $productos[0]['MontoMinimoEnvio'] ?></span>
+                        <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
+                            <label for='' class='text-left col-md-12'>Precio del envío:  <strong>$ <span id="precioEnvio"></span></strong></label>
+                        <?php } ?>
                     <?php }else{ ?>
                         <label for="" class="text-left text-bold col-md-12">No se hacen envíos</label>
                     <?php } ?>
@@ -283,7 +298,7 @@ $destinatarios = $select_destinatarios->fetchAll(PDO::FETCH_ASSOC);
                         <button value="agregar_carrito"  name="action"  type="" id="btn-add-to-cart" class="btn col-md-12">Agregar al carrito</button>
                     </div>
                     <div class="carrito-btn col-md-4 text-left">
-                         <a style="text-decoration:none;font-size:20px;" href="<?php echo URL_SITIO ?>Carrito"> <li class="fa fa-shopping-cart"></li> Carrito</a>                   
+                         <a style="text-decoration:none;font-size:20px;" href="<?php echo URL_SITIO ?>Carrito"> <li class="fa fa-shopping-cart"></li> Carrito (<?php echo count($carrito) ?>)</a>                   
                     </div>
                 </div>
                 <br>
@@ -332,6 +347,13 @@ $('#box_destinatario').hide();
 
 
 $('#lbl-carrito').hide();
+    
+    <?php if(isset($_REQUEST['msj'])){ ?>
+        <?php if($_REQUEST['msj'] == 'agregado'){ ?>
+            $('.toast-body').html('Producto agregado al carrito');
+            $('#toast_mensaje').toast('show');
+        <?php } ?>
+    <?php } ?>
 
     $('#btn-buy').click(function(e){
         var unidades_disponibles;
@@ -457,9 +479,11 @@ $('#lbl-carrito').hide();
                                 precio_envio_total = parseFloat(r);
                             }
                     }); 
+                    <?php if($productos[0]['PrecioEnvio'] != ""){ ?>
                     var precio_envio_producto = <?php echo $productos[0]['PrecioEnvio'] ?>;
                     precio_envio_total += parseFloat(precio_envio_producto);
                     $('#precioEnvio').html(precio_envio_total);
+                    <?php } ?>
                 }
             }); 
         <?php } ?>

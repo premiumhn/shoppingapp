@@ -83,10 +83,16 @@ if($busqueda!=''){
                                                  
                 <div  class="col-xl-4 col-sm-6 mb-3 ">
                   <div id="new" class="card text-white bg-muted o-hidden h-100">
-                    <div class="card-body">
+                    <div class="card-body" >
 
                       <div class="card-body-icon">
-                        <img src="<?php echo URL_SITIO ?>uploads/img/logos/<?php echo $pais["logo"] ?>" alt="" style="border-radius: 7px; width: 70%; float: right;">
+                        <!-- <a class="containerPor" href="<?php echo URL_SITIO ?>Home?Tienda=<?php echo $pais["PK_Tienda"] ?>">
+                        <img class=" crop img_por img-logo-tienda" src="<?php echo URL_SITIO ?>uploads/img/logos/<?php echo $pais["logo"] ?>" alt="" style="border-radius: 7px; width: 100%; float: right;">  
+                      </a> -->
+                      <a style="position:absolute;width:100%;height:200px;z-index:100;" href="<?php echo URL_SITIO ?>Home?Tienda=<?php echo $pais["PK_Tienda"] ?>"></a>
+                      <div class="containerImg ">
+                            <img class="crop img_p" src="<?php echo URL_SITIO ?>uploads/img/logos/<?php echo $pais["logo"] ?>" />
+                      </div>
                       </div>
                       <div class="mr-5 text-center">
                         <br>
@@ -144,6 +150,9 @@ if($busqueda!=''){
   </html>
 
 <script type="text/javascript">
+
+  $('#lbl-carrito').hide();
+
   $('#btn-buscar-producto').click(function(e){
 			e.preventDefault()
 			$('#search-form').attr("action", "<?php URL_SITIO ?>Tiendas");

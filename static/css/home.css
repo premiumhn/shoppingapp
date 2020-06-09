@@ -2,6 +2,10 @@ body{
     background-color:#f8f8f8!important;
 }
 
+span > a{
+    color: white!important;
+}
+
 .cont_portada{
     height: 350px;
     overflow: hidden;
@@ -189,6 +193,18 @@ button:focus {
     min-height: 80vh;
 }
 
+.cargando{
+    background-color: white!important;
+    width: 100vw;
+    height: 100vh;
+    position: absolute!important;
+    z-index: 100;
+}
+
+.card-product{
+    border: 1px solid #F1F1F1!important;
+}
+
 
 /* ajuste a pantallas */
 @media (max-width: 600px) {
@@ -230,6 +246,11 @@ button:focus {
 
     .info_tienda_movil{
         display: inline;
+    }
+
+    .titulo_tienda{
+        font-size: 50px!important;
+        margin-top: 10px;
     }
 
 }

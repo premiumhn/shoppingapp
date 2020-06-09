@@ -18,7 +18,7 @@ if (!$pagina) {
 
 
 //Consulta seleccionar categorías
-$select_categorias = $pdo->prepare("SELECT * FROM Categorias");
+$select_categorias = $pdo->prepare("SELECT * FROM Categorias ORDER BY PK_Categoria DESC");
 $select_categorias->execute();
 $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
 
@@ -44,6 +44,8 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 <div class="col-md-10">
+<div id="mensaje-success" class="alert alert-success" role="alert"></div>
+<div id="mensaje-error" class="alert alert-warning"></div>
     <div class="card mb-3 ">
         <div class="card-header">
             <i class="fas fa-table"></i>
@@ -222,6 +224,9 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
     <?php } elseif( $msj == 'error_1'){ ?>
         $('#mensaje-error').html('No se puede eliminar la catagoría porque ya tiene productos asociados.');
         $('#mensaje-error').show();
+    <?php } elseif( $msj == 'registrada'){ ?>
+        $('#mensaje-success').html('Categoría registrada.');
+        $('#mensaje-success').show();
     <?php } ?>
 
     $('#btnEditar').click(function(e){

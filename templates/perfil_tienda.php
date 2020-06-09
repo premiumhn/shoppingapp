@@ -133,7 +133,15 @@ $ciudades = $select_cuidades->fetchAll(PDO::FETCH_ASSOC);
             <br>-->
             <div class="row form-group">
                 <label class="col-md-12 text-bold" for="">Servicio a domicilio</label>
-                <label class="col-md-12 onInfo" id="idClientePaypal" for=""><?php echo (($tienda[0]['Adomicilio'] == 1)?"Si":"No") ?></label>
+                <div class="col-md-12" id="adomicilio" WIDTH="10%"><?php echo ($tienda[0]['Adomicilio']==1)?'<label class="switch">
+                                                                                                    <input onClick="activarAdomicilio('. $tienda[0]['PK_Tienda'] .')" class="check" type="checkbox" checked>
+                                                                                                    <span class="slider round"></span>
+                                                                                                </label>':
+                                                                                                '<label class="switch">
+                                                                                                    <input onClick="activarAdomicilio('. $tienda[0]['PK_Tienda'] .')" class="check" type="checkbox">
+                                                                                                    <span class="slider round"></span>
+                                                                                                </label>'; ?></div>
+                <!-- <label class="col-md-12 onInfo" id="idClientePaypal" for=""><?php echo (($tienda[0]['Adomicilio'] == 1)?"Si":"No") ?></label>
                 <div class=" form-check onEdit">
                     <input <?php echo (($tienda[0]['Adomicilio'] == 1)?"checked":"") ?> class=" col-md-12 form-check-input" type="radio" name="input_adomicilio" id="inputRadioSi" value="1">
                     <label class="form-check-label" for="inputRadioSi">
@@ -145,7 +153,7 @@ $ciudades = $select_cuidades->fetchAll(PDO::FETCH_ASSOC);
                     <label class="form-check-label" for="inputRadioNo">
                         No
                     </label>
-                </div>
+                </div> -->
             </div>
             <br>
             <div class="row form-group">
@@ -434,6 +442,21 @@ $ciudades = $select_cuidades->fetchAll(PDO::FETCH_ASSOC);
 			}
 		});
 	}
+
+    function activarAdomicilio(pk_tienda){
+         // activar o desactivar usuario
+         var response;
+            $.ajax({
+                    type:"POST",
+                    async: false,
+                    url:"<?php echo URL_SITIO?>scripts/datos_ajax.php",
+                    data: {"request" : "activarAdomicilio",
+                           "PK_Tienda" : pk_tienda},
+                    success:function(r){
+                        console.log(r);
+                    }
+            });
+    };
 
 
     // 

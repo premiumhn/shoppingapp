@@ -55,7 +55,42 @@ body{
 .orange {
     color: orange!important;
   }
+
+.card-detalle{
+    /* padding: 20px!important; */
+    border: 1px solid rgb(241, 241, 241)!important;
+    border-radius: 10px!important;
+    background-color: rgb(255, 255, 255)!important;
+}
+
+.line{
+    border-bottom: 1px solid rgb(218, 218, 218);
+    margin-bottom: 15px!important;
+}
+
+.head-detalle{
+    background-color:rgb(241, 241, 241)!important;
+    padding: 20px;
+    border-top-right-radius: 10px!important;
+    border-top-left-radius: 10px!important;
+}
+
+.totales{
+    background-color:rgb(241, 241, 241)!important;
+    /* padding: 20px; */
+    border-bottom-right-radius: 10px!important;
+    border-bottom-left-radius: 10px!important;
+    padding: 10px 0px 10px 0px;
+}
  
+.col-sin-pad-derecho{
+    padding-right: 0px!important;
+}
+
+.col-sin-pad-izquierdo{
+    padding-left: 0px!important;
+}
+
 
   
 
@@ -169,10 +204,16 @@ body{
 }
 
 .cont-filtros{
-    background-color: white;
+    background-color: #F1F1F1;
     margin-bottom: 10px;
     padding: 15px;
     font-size: 13px;
+    border-radius: 10px;
+}
+
+.lbl-tipo-pedido{
+    color: rgb(182, 182, 182)!important;
+    font-size: 13px!important;
 }
 
 .cont-filtros hr{
@@ -184,7 +225,7 @@ body{
 }
 
 .card{
-    border: 0px!important;
+    border: 0px;
 }
 
 
@@ -202,9 +243,32 @@ body{
     padding: 0px;
 }
 
+.lbl-tipo-pedido{
+    color: rgb(182, 182, 182)!important;
+    font-size: 13px!important;
+}
+
+.block-detalle{
+    padding: 10px;
+    border-radius: 7px;
+}
+
+.block-detalle:hover{
+    background-color: rgba(9, 124, 201, 0.192);
+    cursor: pointer;
+}
 
 
-@media (max-width: 600px) {
+.lbl_verde{
+    color: rgba(42, 179, 0, 0.726)!important;
+}
+.lbl_rojo{
+    color: rgba(179, 12, 0, 0.726)!important;
+}
+
+
+
+@media (max-width: 700px) {
 
     .card_detail {
         bottom: 0;
@@ -221,7 +285,6 @@ body{
     .btn-flat{
         width: 100%;
         margin:0px!important;
-        padding: 20px!important;
     }
 
     #search-form{
@@ -248,5 +311,8 @@ body{
         width: 100%;
     }
 
+   .col-md-4, .col-md-8{
+        padding: 0px!important;
+   }
 
 }

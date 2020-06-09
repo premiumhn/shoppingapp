@@ -16,20 +16,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         
         case "confirmar_pedido":
 
-            $pk_detalle_pedido = (isset($_POST['pk_detallePedido'])) ? $_POST['pk_detallePedido'] : "";
+            $pk_pedido = (isset($_POST['pk_pedido'])) ? $_POST['pk_pedido'] : "";
             $fecha_hora_completado = date('Y-m-d H:i:s');
         
-                $actualizar_detallePedido = $pdo->prepare("UPDATE DetallePedidos
-                                                           SET Estado = 1,
-                                                           FechaHoraCompletado = :FechaHoraCompletado
-                                                           WHERE PK_DetallePedido = :PK_DetallePedido");
-                $actualizar_detallePedido->bindParam(':FechaHoraCompletado', $fecha_hora_completado);
-                $actualizar_detallePedido->bindParam(':PK_DetallePedido', $pk_detalle_pedido);
+                $actualizar_pedido = $pdo->prepare("UPDATE Pedidos
+                                                    SET Estado = 1,
+                                                    FechaHoraEntrega = :FechaHoraCompletado
+                                                    WHERE PK_Pedido = :PK_Pedido");
+                $actualizar_pedido->bindParam(':FechaHoraCompletado', $fecha_hora_completado);
+                $actualizar_pedido->bindParam(':PK_Pedido', $pk_pedido);
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $actualizar_detallePedido->execute();
-                header('location: ../Pedidos-Tienda?msj=pedido_confirmado');
+                echo $actualizar_pedido->execute();
             
-
         break;
         
     }

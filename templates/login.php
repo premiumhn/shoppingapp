@@ -1,9 +1,13 @@
 <?php
-include '../global/const.php';
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+include ("../global/config.php");
+include ("../global/conexion.php");
+include ("../global/const.php");
 
 session_start();
 
-$sesion = (isset($_POST['sesion']))?$_POST['sesion']:"";
+$sesion = (isset($_REQUEST['sesion']))?$_REQUEST['sesion']:"";
 
 
 if ($sesion = "cerrar"){
@@ -15,7 +19,9 @@ if ($sesion = "cerrar"){
 $p = (isset($_REQUEST['p']))?$_REQUEST['p']:"";
 $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
 
-
+$select_id = $pdo->prepare('SELECT * FROM Configuracion');
+$select_id->execute();
+$datos_config = $select_id->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -46,11 +52,20 @@ $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
 
     <?php include 'iconos.php' ?>
 
-
+<style>
+    body{
+        background-image: url(<?php echo URL_SITIO. 'uploads/img/configuracion/' . $datos_config[0]['FondoLoginCliente']?>)!important;
+        background-size: cover;
+        -webkit-box-shadow: inset 0px 0px 1000px 1000px rgba(0,0,0,0.50);
+        -moz-box-shadow: inset 0px 0px 1000px 1000px rgba(0,0,0,0.50);
+        box-shadow: inset 0px 0px 1000px 1000px rgba(0,0,0,0.50);
+    }
+</style>
     
 
 </head>
 <body>
+   
 <div class="cargando col-md-12">
     <br>
     <br>
@@ -72,10 +87,14 @@ $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
 </div> 
    
 <br>
+
+   
+
 <div class="row col-md-12">
     <div class="col-md-4 offset-md-4">
         <img src="<?php echo URL_SITIO ?>static/img/Logo_shoppingapp_v2_trazado.png" width="100%" alt="">
     </div>
+    
 </div>
 
 <div id="row">

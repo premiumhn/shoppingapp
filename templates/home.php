@@ -123,7 +123,7 @@ if(isset($_SESSION['categoria'])){
    
     <link href="<?php echo URL_SITIO ?>static/css/home.css" rel="stylesheet" type="text/css" media="all" />
     <link href="<?php echo URL_SITIO ?>static/css/styles.css" rel="stylesheet" type="text/css" media="all" />
-
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 	<script src="https://kit.fontawesome.com/b2dbb6a24d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
@@ -133,7 +133,9 @@ if(isset($_SESSION['categoria'])){
 	<?php include 'iconos.php' ?>
  
 </head>
+
 <body>
+
 
 <?php include '../templates/header.php'; ?>
 
@@ -173,8 +175,8 @@ if(isset($_SESSION['categoria'])){
             </div>
             <div class=" col-md-12 info_tienda">
                 <span><i class="  fa fa-receipt"></i> <?php echo $unidades_vendidas_tienda[0]['UnidadesVendidas'] ?> Artículos vendidos</span>
-                <span><i class="  fa fa-envelope"></i> Contacto</span>
-                <a href="<?php echo (isset($tienda[0]['Sitioweb'])?'http://'.$tienda[0]['Sitioweb']:"#") ?>"><span><i class="  fa fa-globe"></i> Sitio web</span></a> 
+                <span><a href="mailto:shoppingappworld@gmail.com"><span><i class="  fa fa-envelope"></i> Contacto</span></a></span>
+                <span><a href="<?php echo (isset($tienda[0]['Sitioweb'])?'http://'.$tienda[0]['Sitioweb']:"#") ?>"><span><i class="  fa fa-globe"></i> Sitio web</span></a> </span>
                 <span><i class="  fa fa-truck"></i> Servicio a domicilio</span>
                 <span><i class="  fa fa-phone-alt"></i> <?php echo $tienda[0]['Telefono'] ?></span>
             </div>
@@ -246,7 +248,7 @@ if(isset($_SESSION['categoria'])){
 <?php if(isset($_SESSION['categoria'])){ ?>
     <?php foreach($productos as $producto){ ?>
         <div class="col-md-3">
-            <form id="product_<?php echo $producto['PK_Producto'] ?>" method="get" action="Detalle-Producto">
+            <form id="product_<?php echo $producto['PK_Producto'] ?>" method="get" action="Detalle-Producto" class="">
             <input type="hidden" value="<?php echo $producto['PK_Producto'] ?>" name="producto">
             <figure onclick="verDetalle(<?php echo $producto['PK_Producto'] ?>)" class="text-left card card-product">
                 <div class="img-wrap">
@@ -328,6 +330,8 @@ if(isset($_SESSION['categoria'])){
 </html>
 
 <script type="text/javascript">
+   
+
 	function verDetalle(pk_producto){
 		console.log('#product_'+pk_producto);
 		$('#product_'+pk_producto).submit();

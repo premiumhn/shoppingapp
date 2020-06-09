@@ -68,6 +68,14 @@ $sql_precio->bindParam(':FK_Ciudad', $destinatario[0]['PK_Ciudad']);
 $sql_precio->execute();
 $precio = $sql_precio->fetchAll(PDO::FETCH_ASSOC); 
 
+$select_config = $pdo->prepare("SELECT * FROM Configuracion");
+$select_config->execute();
+$configuracion = $select_config->fetchAll(PDO::FETCH_ASSOC);
+
+$select_tienda = $pdo->prepare("SELECT * FROM Tiendas WHERE PK_Tienda = :PK_Tienda");
+$select_tienda->bindParam(':PK_Tienda', $_SESSION['tienda']);
+$select_tienda->execute();
+$tienda = $select_tienda->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -95,9 +103,6 @@ $precio = $sql_precio->fetchAll(PDO::FETCH_ASSOC);
     <?php include 'iconos.php' ?>
 </head>
 <body>
-
-
-
      <br>
 <div class="col-md-12 ">
     <div class="row col-md-10 offset-md-1  ">
@@ -105,6 +110,9 @@ $precio = $sql_precio->fetchAll(PDO::FETCH_ASSOC);
             <a href="./home.php"><div class=" logo_content" alt=""></div></a>
         </div>
     </div>
+    <?php if($producto[0]['FK_TipoPedido'] == 2 AND $producto[0]['Subtotal'] < $tienda[0]['MontoMinimoEnvio']){?>
+     <div class="alert alert-danger alert_monto_minimo">No se enviarán tus productos a domicilio, el monto de los articulos deve ser mayor a $<?php echo $tienda[0]['MontoMinimoEnvio'] ?> </div>
+     <?php } ?>
 </div>
 <br>
     <div class="gray_back col-md-12 ">
@@ -178,12 +186,18 @@ $precio = $sql_precio->fetchAll(PDO::FETCH_ASSOC);
                                     <div class="text-left row">
                                         <label class="descuento col-md-12" for="">Descuento : <?php echo (isset($producto[0]['DescuentoDecimal']))?"-&nbsp$ ".round((($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']), 2):'&nbsp&nbsp N/A'?></label>
                                     </div>
-                                    <div class="text-left row">
-                                        <label class="descuento col-md-12" for="">Envío : $ <?php echo ($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio'] + $precio[0]['PrecioEnvio']:0; ?></label>
-                                    </div>
-                                    <div class=" text-left row">
-                                        <label class="total col-md-12" for="">Total : $ <?php echo round((($producto[0]['Subtotal']) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio'] + $precio[0]['PrecioEnvio'] :0)), 2) ?> </label>
-                                    </div>
+                                    <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
+                                        <div class="text-left row">
+                                            <label class="descuento col-md-12" for="">Envío : $ <?php echo ($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio'] + $precio[0]['PrecioEnvio']:0; ?></label>
+                                        </div>
+                                        <div class=" text-left row">
+                                            <label class="total col-md-12" for="">Total : $ <?php echo round((($producto[0]['Subtotal']) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio'] + $precio[0]['PrecioEnvio'] :0)), 2) ?> </label>
+                                        </div>
+                                    <?php }else{ ?>
+                                        <div class=" text-left row">
+                                            <label class="total col-md-12" for="">Total : $ <?php echo round((($producto[0]['Subtotal']) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0)), 2) ?> </label>
+                                        </div>
+                                    <?php } ?> 
                                 </div>
                             </div>
                                    
@@ -209,16 +223,17 @@ $precio = $sql_precio->fetchAll(PDO::FETCH_ASSOC);
                         ?>
                         </span>
                     </label>
-
-                    <?php if($producto[0]['FK_TipoPedido'] == 2){ ?>
-                        <label for="" class="col-md-12 lbl-detail">
-                            Envío: 
-                            <span class="text-right"> $
-                            <?php
-                                echo ($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio'] + $precio[0]['PrecioEnvio']:0;
-                            ?>
-                            </span>
-                        </label>
+                    <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
+                        <?php if($producto[0]['FK_TipoPedido'] == 2){ ?>
+                            <label for="" class="col-md-12 lbl-detail">
+                                Envío: 
+                                <span class="text-right"> $
+                                <?php
+                                    echo ($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio'] + $precio[0]['PrecioEnvio']:0;
+                                ?>
+                                </span>
+                            </label>
+                        <?php } ?>
                     <?php } ?>
 
                     <label for="" class="col-md-12 lbl-detail">
@@ -229,13 +244,30 @@ $precio = $sql_precio->fetchAll(PDO::FETCH_ASSOC);
                         ?>
                         </span>
                     </label>
+                    <label for="" class="col-md-12 lbl-detail">
+                        Comisión: 
+                        <span class="text-right"> $
+                        <?php
+                            if($producto[0]['Subtotal'] > $configuracion[0]['PorCada']){
+                                $numero_cobros = (int)($producto[0]['Subtotal']/$configuracion[0]['PorCada']) + 1;
+                                $comision = $numero_cobros * $configuracion[0]['Comision'];
+                            }else{
+                                $comision = $configuracion[0]['Comision'];
+                            }
+                            echo round($comision, 2);
+                        ?>
+                        </span>
+                    </label>
                     <hr>
                     <label for="" class=" total col-md-12 Total">
                         Total:
                         <span class="text-right"> $
-                        <?php
-                            echo round((($producto[0]['Subtotal']) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio'] + $precio[0]['PrecioEnvio'] :0)), 2);
-                        ?>
+                        <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ 
+                            echo round((($producto[0]['Subtotal'] + $comision) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio'] + $precio[0]['PrecioEnvio'] :0)), 2);
+                        }else{
+                            echo round((($producto[0]['Subtotal'] + $comision) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0)), 2);
+                        }?>
+
                         </span>
                     </label>
                 </div>
@@ -289,22 +321,39 @@ paypal.Button.render({
 	  transactions: [{
 
 		amount: {
-		    total: <?php echo round((($producto[0]['Subtotal']) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']+ $precio[0]['PrecioEnvio']:0)), 2) ?>,
-		    currency: 'USD',
+            <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
+		    total: <?php echo round((($producto[0]['Subtotal'] + $comision) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0) + (($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']+ $precio[0]['PrecioEnvio']:0)), 2) ?>,
+            <?php }else{ ?>
+            total: <?php echo round((($producto[0]['Subtotal'] + $comision) - ((isset($producto[0]['DescuentoDecimal']))?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0)), 2) ?>,
+            <?php } ?>
+            currency: 'USD',
             details: {
-                subtotal: <?php echo round(($producto[0]['Subtotal'] - (($producto[0]['DescuentoDecimal']!=0)?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0)), 2) ?>,
-                shipping: <?php echo ($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']+ $precio[0]['PrecioEnvio']:0; ?>,
-        }
+                subtotal: <?php echo round((($producto[0]['Subtotal'] + $comision) - (($producto[0]['DescuentoDecimal']!=0)?(($producto[0]['Subtotal'])/$producto[0]['DescuentoDecimal']):0)), 2) ?>,
+                <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
+                shipping: <?php echo ($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']+ $precio[0]['PrecioEnvio']:0; ?>
+                <?php }else{ ?>
+                shipping: 0
+                <?php } ?>
+            }
 		},
         description: 'Pago de carrito de compras de Shoppingapp',
         item_list: {
         items: [  
             {
+                name: 'Comisión',
+                quantity: 1,
+                price: <?php echo $comision ?>,
+                currency: 'USD'
+            },
+            {
                 name: '<?php echo $producto[0]['NombreProducto'] ?>',
                 quantity: <?php echo $producto[0]['Cantidad'] ?>,
                 price: <?php echo round(($producto[0]['PrecioUnitario'] - ((isset($producto[0]['Descuento']))?(($producto[0]['PrecioUnitario'])/$producto[0]['DescuentoDecimal']):0)), 2)?>,
+                <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
                 shipping: <?php echo ($producto[0]['FK_TipoPedido']==2)?$producto[0]['PrecioEnvio']+ $precio[0]['PrecioEnvio']:0 ?>,
-                
+                <?php}else{?>
+                shipping: 0,
+                <?php } ?>
                 currency: 'USD'
             } 
         ]

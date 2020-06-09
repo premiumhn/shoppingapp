@@ -15,8 +15,8 @@ body{
 .card{
     font-size: 1em;
     width: 100%;
-    border-radius: 0px!important;
-    border:0px!important;
+    border-radius: 10px!important;
+    border:1px solid #F1F1F1!important;
 }
 
 .card-left{
@@ -66,6 +66,12 @@ body{
 .i-error{
     font-size: 35px;
     color: rgb(240, 45, 45);
+}
+
+.cont-acuerdo{
+    background-color: #F1F1F1;
+    padding: 30px 10px 30px 10px!important;
+    border-radius: 7px;
 }
 
 /* 

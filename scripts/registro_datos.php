@@ -50,7 +50,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             try{
                 
                 $insert_categoria->execute();
-                header('location: ../Registro-Datos?menu=registro_categoria&msj=registrada');
+                header('location: ../Registro-Datos?menu=ver_categorias&msj=registrada');
             }catch(PDOException $e){
                 echo "Error ". $e->getMessage() . $e->errorInfo();
                 header('location: ../Registro-Datos?menu=registro_categoria');
@@ -203,8 +203,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                                                      FK_Idioma = :FK_Idioma,
                                                      Foto = :Foto 
                                                  WHERE PK_Usuario = :PK_Usuario");
-
-                $editar_usuario->bindParam(':NombreUsuario', $nombre_usuario);
+                $pass_encrypt = openssl_encrypt($contrasena, COD, KEY);
+                $editar_usuario->bindParam(':NombreUsuario', $pass_encrypt);
                 $editar_usuario->bindParam(':Contrasena', $contrasena);
                 $editar_usuario->bindParam(':Correo', $correo);
                 $editar_usuario->bindParam(':FK_Idioma', $idioma);
@@ -242,9 +242,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                                                 Correo = :Correo, 
                                                 FK_Idioma = :FK_Idioma
                                                 WHERE PK_Usuario = :PK_Usuario");
-
+                $pass_encrypt = openssl_encrypt($contrasena, COD, KEY);
                 $editar_usuario->bindParam(':NombreUsuario', $nombre_usuario);
-                $editar_usuario->bindParam(':Contrasena', $contrasena);
+                $editar_usuario->bindParam(':Contrasena', $pass_encrypt);
                 $editar_usuario->bindParam(':Correo', $correo);
                 $editar_usuario->bindParam(':FK_Idioma', $idioma);
                 $editar_usuario->bindParam(':PK_Usuario', $_SESSION['login_user']);
@@ -364,9 +364,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                                                      FK_Idioma = :FK_Idioma".
                                                      $str_logo ."
                                                  WHERE PK_Usuario = :PK_Usuario");
-
+                $pass_encrypt = openssl_encrypt($contrasena, COD, KEY);
                 $editar_usuario->bindParam(':NombreUsuario', $correo);
-                $editar_usuario->bindParam(':Contrasena', $contrasena);
+                $editar_usuario->bindParam(':Contrasena', $pass_encrypt);
                 $editar_usuario->bindParam(':Correo', $correo);
                 $editar_usuario->bindParam(':FK_Idioma', $idioma);
                 $editar_usuario->bindParam(':PK_Usuario', $_SESSION['login_user']);
@@ -398,6 +398,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                                                      Direccion1 = :Direccion1,
                                                      Direccion2 = :Direccion2,
                                                      Telefono = :Telefono,
+                                                     Correo = :Correo,
                                                      FK_Ciudad = :FK_Ciudad" . 
                                                      $str_logo . 
                                                      $str_portada . 
@@ -414,6 +415,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $editar_tienda->bindParam(':Direccion2', $direccion2);
                 $editar_tienda->bindParam(':Telefono', $telefono);
                 $editar_tienda->bindParam(':FK_Ciudad', $ciudad);
+                $editar_tienda->bindParam(':Correo', $correo);
                 if($tmp_foto_logo != ""){
                     $editar_tienda->bindParam(':Logo', $nombre_archivo_logo);
                 }

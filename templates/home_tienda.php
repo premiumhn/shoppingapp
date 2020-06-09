@@ -9,6 +9,12 @@ session_start();
 
 require ('../scripts/comprobaciones.php');
 
+$sql_pedidos_nuevos = $pdo->prepare("SELECT COUNT(PK_Pedido) as NumeroPedidos FROM Pedidos
+									 WHERE FK_Tienda = :FK_Tienda AND Visto = 0");
+$sql_pedidos_nuevos->bindParam(":FK_Tienda", $_SESSION['PK_Tienda']);
+$sql_pedidos_nuevos->execute();
+$pedidos_nuevos = $sql_pedidos_nuevos->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>
 
@@ -41,10 +47,13 @@ require ('../scripts/comprobaciones.php');
 	
 		<div class="row ">
 			<a href="Pedidos-Tienda" class="card col-md-3 ">
+				<?php if($pedidos_nuevos[0]['NumeroPedidos'] > 0){ ?>
+				<div class="notificacion"><?php echo $pedidos_nuevos[0]['NumeroPedidos'] ?></div>
+				<?php } ?>
 				<img style="width:100%;" src="<?php echo URL_SITIO ?>static/img/icon_pedidos.png" alt="">
 				<span class="text_menu">Pedidos</span>
 			</a>
-			<a href="" class="card col-md-3 ">
+			<a href="Productos-Tienda" class="card col-md-3 ">
 				<img style="width:100%;" src="<?php echo URL_SITIO ?>static/img/icon_productos.png" alt="">
 				<span class="text_menu">Productos</span>
 			</a>

@@ -55,6 +55,18 @@ switch($request){
 	case "obtenerPrecioEnvio":
 		obtenerPrecioEnvio();
 	break;
+	case "cambiarEstadoCobrosEnvio":
+		cambiarEstadoCobrosEnvio();
+	break;
+	case "activarAdomicilio":
+		activarAdomicilio();
+	break;
+	case "obtenerDetallePedido":
+		obtenerDetallePedido();
+	break;
+	case "obtenerConfiguracion":
+		obtenerConfiguracion();
+	break;
 }
 	function selectCiudades(){
 		global $pdo;
@@ -96,7 +108,7 @@ switch($request){
 	function verificarLogin(){
 		global $pdo;
 		// comprobar que el usuario no existe
-        $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario AND FK_TipoUsuario = 1");
+        $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario AND (FK_TipoUsuario = 1 OR FK_TipoUsuario = 3)");
 		$buscar_usuario->bindParam(':nombreUsuario', $_POST['NombreUsuario']);
 		$buscar_usuario->execute();
 		$cuenta_usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
@@ -123,7 +135,7 @@ switch($request){
 	function verificarLoginTienda(){
 		global $pdo;
 		// comprobar que el usuario no existe
-        $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario AND FK_TipoUsuario = 2");
+        $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios WHERE NombreUsuario = :nombreUsuario AND (FK_TipoUsuario = 2 OR FK_TipoUsuario =3)");
 		$buscar_usuario->bindParam(':nombreUsuario', $_POST['NombreUsuario']);
 		$buscar_usuario->execute();
 		$cuenta_usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
@@ -398,6 +410,122 @@ switch($request){
 		echo $precio[0]['PrecioEnvio'];
 	}
 
+	function cambiarEstadoCobrosEnvio(){
+		global $pdo;
+
+		$config = $pdo->prepare("SELECT * FROM Configuracion");
+		$config->execute();
+		$datos = $config->fetchAll(PDO::FETCH_ASSOC); 
+
+		if($datos[0]['CobrosPorEnvio'] == 0){
+			$actualizar_config = $pdo->prepare("UPDATE Configuracion 
+											SET CobrosPorEnvio = 1");
+		}else{
+			$actualizar_config = $pdo->prepare("UPDATE Configuracion 
+												SET CobrosPorEnvio = 0");
+		}	
+		
+		echo $actualizar_config->execute();
+	}
+
+	function activarAdomicilio(){
+		global $pdo;
+
+		$pk_tienda = (isset($_POST['PK_Tienda']))?$_POST['PK_Tienda']:"";
+
+		$sql_tienda = $pdo->prepare("SELECT * FROM Usuarios WHERE PK_Usuario = :PK_Usuario");
+		$sql_tienda->bindParam(':PK_Usuario', $pk_usuario);
+		$sql_tienda->execute();
+		$tienda = $sql_tienda->fetchAll(PDO::FETCH_ASSOC); 
+
+		if($tienda[0]['Estado'] == 0){
+			$actualizar_tienda = $pdo->prepare("UPDATE Tiendas 
+											SET Adomicilio = 1
+											WHERE PK_Tienda = :PK_Tienda");
+		}else{
+			$actualizar_tienda = $pdo->prepare("UPDATE Tiendas 
+											SET Adomicilio = 0
+											WHERE PK_Tienda = :PK_Tienda");
+		}	
+		
+		$actualizar_tienda->bindParam(':PK_Tienda', $pk_tienda);
+		echo $actualizar_tienda->execute();
+	}
+
+	function obtenerDetallePedido(){
+		global $pdo;
+
+		$pk_detalle_pedido = (isset($_POST['PK_DetallePedido']))?$_POST['PK_DetallePedido']:"";
+
+		$sql_detalle_pedido = $pdo->prepare("SELECT p.NombreProducto, 
+											c.Cantidad, 
+											p.PrecioUnitario, 
+											p.Imagen, 
+
+											(SELECT Color From Colores WHERE PK_Color = c.FK_Color) as 'Color',
+											(SELECT Talla From Tallas WHERE PK_Talla = c.FK_Talla) as 'Talla',
+
+											p.Descuento, 
+											(p.PrecioUnitario * c.Cantidad) as 'Subtotal', 
+											(CAST(p.Descuento as DECIMAL(20,0)) ) as DescuentoDecimal, 
+											ti.NombreTienda,
+											p.PrecioEnvio,
+											c.FK_TipoPedido,
+											c.PK_DetallePedido,
+											c.FK_Pedido,
+											c.Estado,
+											cli.PrimerNombre,
+											cli.PrimerApellido,
+											pe.NumeroPedido,
+											c.CodigoDetallePedido,
+											c.Precio,
+											c.Descuento,
+											CONCAT(cli.PrimerNombre, ' ', cli.SegundoNombre, ' ', cli.PrimerApellido, ' ', cli.SegundoApellido) as 'NombreCliente',
+											(SELECT NombresDestinatario FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'NombresDestinatario',
+											(SELECT ApellidosDestinatario FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'ApellidosDestinatario',
+											(SELECT Departamento FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'DepartamentoDestinatario',
+											(SELECT Telefono FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'TelefonoDestinatario',
+											(SELECT Direccion1 FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'Direccion1Destinatario',
+											(SELECT Direccion2 FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'Direccion2Destinatario',
+											(SELECT CodigoPostal FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'CodigoPostalDestinatario',
+												(SELECT cius.NombreCiudad FROM DetallePedidos dps INNER JOIN Destinatarios ds
+												ON ds.PK_Destinatario = dps.FK_Destinatario INNER JOIN Ciudades cius
+												ON cius.PK_Ciudad = ds.FK_Ciudad
+												WHERE dps.PK_DetallePedido = c.PK_DetallePedido) as 'CiudadDestinatario',
+												(SELECT pais.NombrePais FROM DetallePedidos dps INNER JOIN Destinatarios ds
+												ON ds.PK_Destinatario = dps.FK_Destinatario INNER JOIN Ciudades cius
+												ON cius.PK_Ciudad = ds.FK_Ciudad INNER JOIN Paises pais
+												ON pais.PK_Pais = cius.FK_Pais
+												WHERE dps.PK_DetallePedido = c.PK_DetallePedido) as 'PaisDestinatario',
+											DATE_FORMAT(pe.FechaHoraCompra, '%d %m %Y ') as 'FechaCompra',
+											DATE_FORMAT(pe.FechaHoraCompra, '%H:%i ') as 'HoraCompra',
+											ti.PK_Tienda,
+											(SELECT FK_Ciudad FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'FK_Ciudad'
+
+
+											FROM DetallePedidos c INNER JOIN Productos p
+											ON c.FK_Producto = p.PK_Producto INNER JOIN Clientes cli
+											ON c.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
+											ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Tiendas ti
+											ON p.FK_Tienda = ti.PK_Tienda INNER JOIN Pedidos pe
+											ON pe.PK_Pedido = c.FK_Pedido 
+											WHERE c.PK_DetallePedido = :PK_DetallePedido");
+		$sql_detalle_pedido->bindParam(':PK_DetallePedido', $pk_detalle_pedido);									
+		$sql_detalle_pedido->execute();
+		$detalle_pedido = $sql_detalle_pedido->fetchAll(PDO::FETCH_ASSOC); 
+
+		echo json_encode($detalle_pedido);	
+	}
+
+	function obtenerConfiguracion(){
+		global $pdo;
+
+		$config = $pdo->prepare("SELECT * FROM Configuracion");
+		$config->execute();
+		$datos = $config->fetchAll(PDO::FETCH_ASSOC); 
+
+		echo json_encode($datos);	
+	}
 
 
 	

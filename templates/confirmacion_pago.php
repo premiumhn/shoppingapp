@@ -10,6 +10,9 @@ session_start();
 require ('../scripts/comprobaciones.php');
 
 
+$select_config = $pdo->prepare("SELECT * FROM Configuracion");
+$select_config->execute();
+$configuracion = $select_config->fetchAll(PDO::FETCH_ASSOC);
 
 if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid']) ){
     $IDPago = $_POST['IDPago'];
@@ -35,12 +38,15 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
                                         c.FK_Cliente,
                                         p.FK_Tienda,
                                         ti.PK_Tienda,
+                                        c.CodigoDetallePedido,
+                                        pe.Comision,
                                         (SELECT FK_Ciudad FROM Destinatarios WHERE PK_Destinatario = c.FK_Destinatario) as 'FK_Ciudad'
                                         FROM DetallePedidos c INNER JOIN Productos p
                                         ON c.FK_Producto = p.PK_Producto INNER JOIN Clientes cli
                                         ON c.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
                                         ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Tiendas ti
-                                        ON p.FK_Tienda = ti.PK_Tienda 
+                                        ON p.FK_Tienda = ti.PK_Tienda INNER JOIN Pedidos pe
+                                        ON c.FK_Pedido = pe.PK_Pedido
                                         WHERE c.FK_Cliente = :FK_Cliente AND c.FK_Pedido = :FK_Pedido");
     $select_detalle_pedido->bindParam(':FK_Cliente', $cid); 
     $select_detalle_pedido->bindParam(':FK_Pedido', $fk_pedido);                          
@@ -63,14 +69,24 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
     $subtotal_todos = 0;
     foreach($lista_detalle as $detalle){ 
     // calculo subtotal todos 
-    $subtotal_todos+= $detalle['Subtotal'] - (($detalle['DescuentoDecimal']!=0)?(($detalle['Subtotal'])/$detalle['DescuentoDecimal']):0) ;
-
+    $subtotal_todos+= ($detalle['Subtotal'] ) - (($detalle['DescuentoDecimal']!=0)?(($detalle['Subtotal'])/$detalle['DescuentoDecimal']):0) ;
+    
     // calculo total
-    $total_todos+= ($detalle['Subtotal']) - (($detalle['DescuentoDecimal']!=0)?(($detalle['Subtotal'])/$detalle['DescuentoDecimal']):0) + (($detalle['FK_TipoPedido']==2)?$detalle['PrecioEnvio'] + obtenerPrecioEnvio($detalle['PK_Tienda'], $detalle['FK_Ciudad']):0) ;
-
+    if($configuracion[0]['CobrosPorEnvio'] == 1){ 
+        $total_todos+= ($detalle['Subtotal'] ) - (($detalle['DescuentoDecimal']!=0)?(($detalle['Subtotal'])/$detalle['DescuentoDecimal']):0) + (($detalle['FK_TipoPedido']==2)?$detalle['PrecioEnvio'] + obtenerPrecioEnvio($detalle['PK_Tienda'], $detalle['FK_Ciudad']):0) ;
+    }else{
+        $total_todos+= ($detalle['Subtotal'] ) - (($detalle['DescuentoDecimal']!=0)?(($detalle['Subtotal'])/$detalle['DescuentoDecimal']):0) ;
+    }
     // calculo total envios
     $total_envio+= ($detalle['FK_TipoPedido']==2)?$detalle['PrecioEnvio'] + obtenerPrecioEnvio($detalle['PK_Tienda'], $detalle['FK_Ciudad']):0;
-    }   
+                     
+    if($total_todos > $configuracion[0]['PorCada']){
+        $numero_cobros = (int)($total_todos/$configuracion[0]['PorCada']) + 1;
+        $comision = $numero_cobros * $configuracion[0]['Comision'];
+    }else{
+        $comision = $configuracion[0]['Comision'];
+    }
+}   
         
 
 }
@@ -123,7 +139,7 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
                     <img src="<?php echo URL_SITIO?>static/img/checkmark.gif" width="100%" alt="">
                 </div>
                 <br>
-                <div class="col-md-12 text-center text-big">Ha realizado un pago de <span class="text-bold "> $ <?php echo round($total_todos, 2) ?></span></div>
+                <div class="col-md-12 text-center text-big">Ha realizado un pago de <span class="text-bold "> $ <?php echo round($total_todos + $comision, 2) ?></span></div>
                 <label class="text-center col-md-12 text-li" for="">a el comercio Shoppingapp</label>
                 <br>
                 <br>
@@ -134,7 +150,7 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
                             <div class="col-md-6 text-right text-bold" for="">$ <?php echo round(($detalle['Subtotal'] - (($detalle['DescuentoDecimal']!=0)?(($detalle['Subtotal'])/$detalle['DescuentoDecimal']):0)), 2) ?> <span class="text-li small" >USD</span></div>
                     </div>
                     <div class="row col-md-12">
-                            <div class="col-md-12 text-left text-li small" for=""> <span class="text-bold">N.º de artículo:</span> 1_2020-05-02_16:13:51_2</div>
+                            <div class="col-md-12 text-left text-li small" for=""> <span class="text-bold">Tienda: </span> <?php echo $detalle['NombreTienda'] ?></div>
                     </div>
                     <br>
                     <br>
@@ -147,14 +163,20 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
                         <div class="col-md-6 text-left text-li" for="">Subtotal</div>
                         <div class="col-md-6 text-right text-bold" for="">$ <?php echo round($subtotal_todos, 2) ?> <span class="text-li small" >USD</span></div>
                 </div>
-                <hr>
+                <?php if($configuracion[0]['CobrosPorEnvio'] == 1){  ?>
                 <div class="row col-md-12 border-b">
                         <div class="col-md-6 text-left text-li" for="">Envío</div>
                         <div class="col-md-6 text-right text-bold" for="">$ <?php echo round($total_envio, 2) ?> <span class="text-li small" >USD</span></div>
                 </div>
+                <?php } ?>
+                <div class="row col-md-12">
+                        <div class="col-md-6 text-left" for="">Comisión</div>
+                        <div class="col-md-6 text-right text-bold " for="">$ <?php echo round($comision, 2) ?> <span class="text-li small" >USD</span></div>
+                </div>
+                <br><br>
                 <div class="row col-md-12 text-bold">
                         <div class="col-md-6 text-left" for="">Total</div>
-                        <div class="col-md-6 text-right " for="">$ <?php echo round($total_todos, 2) ?> <span class="text-li small" >USD</span></div>
+                        <div class="col-md-6 text-right " for="">$ <?php echo round($total_todos + $comision, 2) ?> <span class="text-li small" >USD</span></div>
                 </div>
                 <br>
 
@@ -171,7 +193,7 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
                 </div>
                 <div class="row col-md-12">
                         <div class="col-md-6 text-left text-li" for="">Paypal</div>
-                        <div class="col-md-6 text-right text-bold" for="">$ <?php echo round($total_todos, 2) ?> <span class="text-li small" >USD</span> </div>
+                        <div class="col-md-6 text-right text-bold" for="">$ <?php echo round($total_todos + $comision, 2) ?> <span class="text-li small" >USD</span> </div>
                 </div>
                 <br>
                 <br>
@@ -207,6 +229,7 @@ if(!empty($_POST['IDPago']) && !empty($_POST['FK_Pedido']) && !empty($_POST['cid
 </html>
 
 <script>
+    $('#lbl-carrito').hide();
 if (window.performance) {
   console.info("window.performance works fine on this browser");
 }

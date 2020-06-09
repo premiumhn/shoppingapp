@@ -38,10 +38,14 @@
     font-size: 13px!important;
 }
 
+.cont-detalles{
+    text-align: center!important;
+}
 
 .block-detalle{
     padding: 10px;
     border-radius: 7px;
+    width: 100%!important;
 }
 
 .block-detalle:hover{
@@ -55,6 +59,26 @@
 }
 .lbl_rojo{
     color: rgba(179, 12, 0, 0.726)!important;
+}
+
+.card-detalle > .row{
+    margin: 0px!important;
+}
+.card-detalle > .row > .row{
+    margin: 0px!important;
+}
+.cont-detalles > .row{
+    margin: 0px!important;
+}
+
+.card-detalle{
+    border-radius: 10px!important;
+    border: 1px solid rgb(230, 230, 230)!important;
+}
+
+.cont-detalles{
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 @media (max-width: 600px) {

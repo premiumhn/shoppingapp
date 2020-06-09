@@ -1,0 +1,16 @@
+
+form{
+    margin: 0px;
+}
+
+.col-md-9 > .card{
+    padding: 20px;
+    margin-bottom: 20px!important;
+    border-radius: 10px!important;
+    font-size: 15px;
+}
+
+.btn-eliminar{
+    position: absolute;
+    right: 10px;
+}

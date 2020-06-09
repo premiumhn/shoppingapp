@@ -35,9 +35,10 @@ include '../scripts/comprobaciones.php';
                                     ON c.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
                                     ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Tiendas ti
                                     ON p.FK_Tienda = ti.PK_Tienda 
-                                    WHERE cli.FK_Usuario = :FK_Usuario
+                                    WHERE cli.FK_Usuario = :FK_Usuario AND ti.PK_Tienda = :PK_Tienda
                                     ORDER BY c.PK_Carrito DESC");
-$select_carrito->bindParam(':FK_Usuario', $_SESSION['login_user']);                           
+$select_carrito->bindParam(':FK_Usuario', $_SESSION['login_user']);
+$select_carrito->bindParam(':PK_Tienda', $_SESSION['tienda']);                            
 $select_carrito->execute();
 $lista_carrito = $select_carrito->fetchAll(PDO::FETCH_ASSOC);
 
@@ -70,6 +71,10 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
  $select_usuario->execute();
  $usuario = $select_usuario->fetchAll(PDO::FETCH_ASSOC);
 
+ $select_config = $pdo->prepare("SELECT * FROM Configuracion");
+ $select_config->execute();
+ $configuracion = $select_config->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>
 
@@ -100,7 +105,6 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
 
 
 
-     <br>
 <div class="col-md-12 ">
     <div class="row col-md-10 offset-md-1  ">
         <div class="row col-md-4">
@@ -164,7 +168,7 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
                         <label clas="row col-md-12" for="inputAddress2"><strong>Revisar artículos</strong> </label>
                         <hr>                               
                         <?php foreach($lista_carrito as $carrito){ ?>
-                            <div class="card">
+                            <div class="">
                             <div class="card-body">
                                 
                             <div class="row">
@@ -189,12 +193,18 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
                                     <div class="text-left row">
                                         <label class="descuento col-md-12" for="">Descuento : <?php echo (isset($carrito['DescuentoDecimal']))?"-&nbsp$ ".round((($carrito['Subtotal'])/$carrito['DescuentoDecimal']), 2):'&nbsp&nbsp N/A'?></label>
                                     </div>
-                                    <div class="text-left row">
-                                        <label class="descuento col-md-12" for="">Envío : $ <?php echo (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):'N/A') ?></label>
-                                    </div>
-                                    <div class=" text-left row">
-                                        <label class="total col-md-12" for="">Total : $ <?php echo round((($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0)), 2) ?> </label>
-                                    </div>
+                                    <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
+                                        <div class="text-left row">
+                                            <label class="descuento col-md-12" for="">Envío : $ <?php echo (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):'N/A') ?></label>
+                                        </div>
+                                        <div class=" text-left row">
+                                            <label class="total col-md-12" for="">Total : $ <?php echo round((($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']:0)), 2) ?> </label>
+                                        </div>
+                                    <?php }else{ ?>
+                                        <div class=" text-left row">
+                                            <label class="total col-md-12" for="">Total : $ <?php echo round((($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0)), 2) ?> </label>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                                    
@@ -217,26 +227,28 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
                         Subtotal:
                         <span class="text-right"> $
                         <?php
-                        $total_todos = 0; 
+                        $sub_total_todos = 0; 
                         foreach($lista_carrito as $carrito){ 
-                            $total_todos+= $carrito['Subtotal'] ;
+                            $sub_total_todos+= $carrito['Subtotal'];
                         } 
-                        echo $total_todos;
+                        echo $sub_total_todos;
                         ?>
                         </span>
                     </label>
-                    <label for="" class="col-md-12 lbl-detail">
-                        Envío: 
-                        <span class="text-right"> $
-                        <?php
-                        $total_envio = 0; 
-                        foreach($lista_carrito as $carrito){ 
-                            $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0;
-                        } 
-                        echo $total_envio;
-                        ?>
-                        </span>
-                    </label>
+                    <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
+                        <label for="" class="col-md-12 lbl-detail">
+                            Envío: 
+                            <span class="text-right"> $
+                            <?php
+                            $total_envio = 0; 
+                            foreach($lista_carrito as $carrito){ 
+                                $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0;
+                            } 
+                            echo $total_envio;
+                            ?>
+                            </span>
+                        </label>
+                    <?php } ?>   
                     <label for="" class="col-md-12 lbl-detail">
                         Descuentos: - 
                         <span class="text-right"> $
@@ -249,6 +261,28 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
                         ?>
                         </span>
                     </label>
+                    <label for="" class="col-md-12 lbl-detail">
+                        Comisión: 
+                        <span class="text-right"> $
+                        <?php
+                            $total_todos = 0; 
+                            foreach($lista_carrito as $carrito){
+                                if($configuracion[0]['CobrosPorEnvio'] == 1){ 
+                                    $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']  + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']) :0) ;
+                                }else{
+                                    $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) ;
+                                }
+                            } 
+                            if($total_todos > $configuracion[0]['PorCada']){
+                                $numero_cobros = (int)($total_todos/$configuracion[0]['PorCada']) + 1;
+                                $comision = $numero_cobros * $configuracion[0]['Comision'];
+                            }else{
+                                $comision = $configuracion[0]['Comision'];
+                            }
+                            echo round($comision, 2);
+                        ?>
+                        </span>
+                    </label>
                     <hr>
                     <label for="" class=" total col-md-12 Total">
                         Total:
@@ -256,9 +290,13 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
                         <?php
                         $total_todos = 0; 
                         foreach($lista_carrito as $carrito){ 
-                            $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']+ obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0) ;
+                            if($configuracion[0]['CobrosPorEnvio'] == 1){ 
+                                $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']+ obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0) ;
+                            }else{
+                                $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) ;  
+                            }
                         } 
-                        echo round($total_todos, 2);
+                        echo round($total_todos + $comision, 2);
                         ?>
                         </span>
                     </label>
@@ -318,10 +356,17 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
         $subtotal_todos+= $carrito['Subtotal'] - (($carrito['DescuentoDecimal']!=0)?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) ;
 
         // calculo total
-        $total_todos+= ($carrito['Subtotal']) - (($carrito['DescuentoDecimal']!=0)?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']+ obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0) ;
-       
+        if($configuracion[0]['CobrosPorEnvio'] == 1){ 
+            $total_todos+= ($carrito['Subtotal']) - (($carrito['DescuentoDecimal']!=0)?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']+ obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0) ;
+        }else{
+            $total_todos+= ($carrito['Subtotal']) - (($carrito['DescuentoDecimal']!=0)?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0);
+        }
         // calculo total envios
-        $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0;
+        if($configuracion[0]['CobrosPorEnvio'] == 1){
+            $total_envio+= ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0;
+        }else{
+            $total_envio+= 0;
+        }
     } 
 ?>    
 
@@ -347,23 +392,32 @@ paypal.Button.render({
 	  transactions: [{
 
 		amount: {
-		    total: <?php echo $total_todos ?>,
+		    total: <?php echo $total_todos + $comision ?>,
 		    currency: 'USD',
             details: {
-                subtotal: <?php echo $subtotal_todos ?>,
+                subtotal: <?php echo $subtotal_todos + $comision?>,
                 shipping: <?php echo $total_envio ?>,
         }
 		},
         description: 'Pago de carrito de compras de Shoppingapp',
         item_list: {
         items: [
+            {
+                name: 'Comisión',
+                quantity: 1,
+                price: <?php echo $comision ?>,
+                currency: 'USD'
+            },
         <?php $cont=0; foreach($lista_carrito as $carrito){ ?>    
             {
                 name: '<?php echo $carrito['NombreProducto'] ?>',
                 quantity: <?php echo $carrito['Cantidad'] ?>,
                 price: <?php echo $carrito['PrecioUnitario'] - ((isset($carrito['Descuento']))?(($carrito['PrecioUnitario'])/$carrito['DescuentoDecimal']):0)?>,
+                <?php if($configuracion[0]['CobrosPorEnvio'] == 1){ ?>
                 shipping: <?php echo ($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio'] + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']):0 ?>,
-                
+                <?php }else{ ?>
+                shipping: 0,
+                <?php } ?>
                 currency: 'USD'
                 <?php $cont += 1; ?>
             } <?php echo (count($lista_carrito) > $cont)?',':''; ?>

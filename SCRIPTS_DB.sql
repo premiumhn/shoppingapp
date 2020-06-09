@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:8889
--- Tiempo de generación: 02-06-2020 a las 20:03:38
+-- Tiempo de generación: 09-06-2020 a las 19:22:09
 -- Versión del servidor: 5.7.23
 -- Versión de PHP: 7.2.10
 
@@ -38,13 +38,9 @@ CREATE TABLE `Carrito` (
 --
 
 INSERT INTO `Carrito` (`PK_Carrito`, `Cantidad`, `FK_Producto`, `FK_Pedido`, `FK_Talla`, `FK_Color`, `FK_Cliente`, `FechaHoraAgregado`, `FK_TipoPedido`, `FK_Destinatario`) VALUES
-(37, 228, 2, NULL, 1, 1, 1, '2020-05-21 15:14:56', 1, NULL),
-(38, 1, 4, NULL, NULL, NULL, 1, '2020-05-28 16:18:44', 1, NULL),
-(39, 1, 3, NULL, NULL, NULL, 1, '2020-05-28 16:19:02', 1, NULL),
-(42, 1, 2, NULL, 1, 1, 1, '2020-05-29 20:43:22', 1, NULL),
-(44, 3, 4, NULL, NULL, NULL, 1, '2020-05-29 20:45:09', 1, NULL),
-(45, 2, 4, NULL, NULL, NULL, 1, '2020-05-29 20:49:00', 1, NULL),
-(47, 1, 2, NULL, 1, 1, 1, '2020-06-02 17:51:25', 2, 1);
+(1, 1, 2, NULL, 1, 1, 1, '2020-06-08 20:04:32', 1, NULL),
+(2, 1, 2, NULL, 1, 1, 1, '2020-06-08 21:26:32', 2, 1),
+(3, 1, 3, NULL, NULL, NULL, 1, '2020-06-08 22:40:57', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -67,7 +63,8 @@ CREATE TABLE `Categorias` (
 INSERT INTO `Categorias` (`PK_Categoria`, `NombreCategoria`, `Descripcion`, `Imagen`, `Estado`) VALUES
 (1, 'Calzado', 'Calzado general', 'Calzado_1590187771_blog_35.jpg', 1),
 (2, 'Tecnología', 'Tecnología', 'Tecnología_1590183253_mejores-gadgets-2019-z.jpg', 1),
-(5, 'Ropa', 'Ropa', 'Ropa_1590606955_ropa-medioambiente-t.jpg', 1);
+(5, 'Ropa', 'Ropa', 'Ropa_1590606955_ropa-medioambiente-t.jpg', 1),
+(7, 'Medicamentos', 'Medicamentos', 'Medicamentos_1591306623_intoxicacion-medicamentos.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -118,7 +115,8 @@ CREATE TABLE `Clientes` (
 INSERT INTO `Clientes` (`PK_Cliente`, `FK_Usuario`, `PrimerNombre`, `SegundoNombre`, `PrimerApellido`, `SegundoApellido`, `Direccion1`, `Direccion2`, `Telefono`, `FK_Ciudad`) VALUES
 (1, 3, 'Juan', '', 'Perez', '', 'barrio la cruz', 'calle del registro', '23443344', 5),
 (14, 28, '', '', '', '', '', NULL, '', NULL),
-(15, 50, 'Kevin', 'Noe', 'Canales', 'Montoya', 'Calle del registro', '', '4433223', 1);
+(15, 50, 'Kevin', 'Noe', 'Canales', 'Montoya', 'Calle del registro', '', '4433223', 1),
+(16, 51, 'Kevin', '', 'Canales', '', 'Barrio la cruz', '', '33712839', 2);
 
 -- --------------------------------------------------------
 
@@ -146,15 +144,20 @@ INSERT INTO `Colores` (`PK_Color`, `Color`) VALUES
 
 CREATE TABLE `Configuracion` (
   `PK_Configuracion` int(11) NOT NULL,
-  `IDClientePaypal` varchar(200) DEFAULT NULL
+  `IDClientePaypal` varchar(200) DEFAULT NULL,
+  `FondoLoginTienda` varchar(100) DEFAULT NULL,
+  `FondoLoginCliente` varchar(100) DEFAULT NULL,
+  `Comision` float DEFAULT NULL,
+  `PorCada` float DEFAULT NULL,
+  `CobrosPorEnvio` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `Configuracion`
 --
 
-INSERT INTO `Configuracion` (`PK_Configuracion`, `IDClientePaypal`) VALUES
-(1, 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk_');
+INSERT INTO `Configuracion` (`PK_Configuracion`, `IDClientePaypal`, `FondoLoginTienda`, `FondoLoginCliente`, `Comision`, `PorCada`, `CobrosPorEnvio`) VALUES
+(1, 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk_', 'fondo-login-tienda.jpg', 'fondo-login-cliente.jpg', 5, 100, 0);
 
 -- --------------------------------------------------------
 
@@ -226,18 +229,36 @@ CREATE TABLE `DetallePedidos` (
   `Estado` tinyint(4) DEFAULT NULL,
   `FechaHoraCompletado` date DEFAULT NULL,
   `Valoracion` int(11) DEFAULT '0',
-  `CodigoDetallePedido` varchar(100) DEFAULT NULL
+  `CodigoDetallePedido` varchar(100) DEFAULT NULL,
+  `Precio` float NOT NULL,
+  `Descuento` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `DetallePedidos`
 --
 
-INSERT INTO `DetallePedidos` (`PK_DetallePedido`, `Cantidad`, `FK_Producto`, `FK_Pedido`, `FK_Talla`, `FK_Color`, `FK_Cliente`, `FechaHoraAgregado`, `FK_TipoPedido`, `FK_Destinatario`, `Estado`, `FechaHoraCompletado`, `Valoracion`, `CodigoDetallePedido`) VALUES
-(55, 1, 2, 32, 1, 1, 1, '2020-06-01 17:07:30', 1, NULL, 0, NULL, 0, 'P3-2300617Y20D06019968\n'),
-(56, 2, 4, 33, NULL, NULL, 1, '2020-06-01 17:25:35', 1, NULL, 0, NULL, 0, 'P3-4350617Y20D06016112\n'),
-(57, 1, 2, 34, 1, 1, 15, '2020-06-01 18:28:07', 1, NULL, 0, NULL, 0, 'P50-2070618Y20D06012864\n'),
-(58, 1, 2, 35, 1, 1, 1, '2020-06-02 19:29:42', 2, 1, 1, '2020-06-02', 0, 'P3-2420619Y20D06022944\n');
+INSERT INTO `DetallePedidos` (`PK_DetallePedido`, `Cantidad`, `FK_Producto`, `FK_Pedido`, `FK_Talla`, `FK_Color`, `FK_Cliente`, `FechaHoraAgregado`, `FK_TipoPedido`, `FK_Destinatario`, `Estado`, `FechaHoraCompletado`, `Valoracion`, `CodigoDetallePedido`, `Precio`, `Descuento`) VALUES
+(55, 1, 2, 32, 1, 1, 1, '2020-06-01 17:07:30', 1, NULL, 0, NULL, 0, 'P3-2300617Y20D06019968\n', 2, 0.2),
+(56, 2, 4, 33, NULL, NULL, 1, '2020-06-01 17:25:35', 1, NULL, 0, NULL, 0, 'P3-4350617Y20D06016112\n', 12, 1.2),
+(57, 1, 2, 34, 1, 1, 15, '2020-06-01 18:28:07', 1, NULL, 0, NULL, 0, 'P50-2070618Y20D06012864\n', 2, 0.2),
+(60, 1, 2, 37, 1, 1, 1, '2020-06-03 20:35:40', 2, 1, 0, NULL, 0, 'P3-2400620Y20D06030976\n', 2, 0.2),
+(61, 1, 2, 38, 1, 1, 1, '2020-06-03 21:50:15', 1, NULL, 0, NULL, 0, 'P3-2150621Y20D06030848\n', 2, 0.2),
+(62, 1, 2, 38, 1, 1, 1, '2020-06-03 21:50:15', 1, NULL, 0, NULL, 0, 'P3-2150621Y20D06038992\n', 2, 0.2),
+(63, 1, 2, 38, 1, 1, 1, '2020-06-03 21:50:15', 2, 1, 0, NULL, 0, 'P3-2150621Y20D06039904\n', 2, 0.2),
+(64, 1, 4, 38, NULL, NULL, 1, '2020-06-03 21:50:15', 1, NULL, 0, NULL, 0, 'P3-4150621Y20D06032992\n', 12, 1.2),
+(65, 3, 4, 38, NULL, NULL, 1, '2020-06-03 21:50:15', 1, NULL, 0, NULL, 0, 'P3-4150621Y20D06032832\n', 12, 1.2),
+(66, 2, 4, 38, NULL, NULL, 1, '2020-06-03 21:50:15', 1, NULL, 0, NULL, 0, 'P3-4150621Y20D06038176\n', 12, 1.2),
+(67, 1, 3, 39, NULL, NULL, 1, '2020-06-04 15:12:05', 1, NULL, 0, NULL, 0, 'P3-3050615Y20D06045936\n', 10, 0),
+(68, 1, 2, 39, 1, 1, 1, '2020-06-04 15:12:05', 2, 1, 0, NULL, 0, 'P3-2050615Y20D06041024\n', 2, 0.2),
+(69, 1, 3, 45, NULL, NULL, 1, '2020-06-04 15:16:21', 1, NULL, 0, NULL, 0, 'P3-3210615Y20D06045056\n', 10, 0),
+(72, 1, 2, 49, 1, 1, 1, '2020-06-04 18:27:13', 1, NULL, 0, NULL, 0, 'P3-2130618Y20D06045808\n', 2, 0.2),
+(73, 1, 4, 56, NULL, NULL, 1, '2020-06-04 19:19:22', 1, NULL, 0, NULL, 0, 'P3-4220619Y20D06045056\n', 12, 1.2),
+(90, 2, 2, 61, 1, 1, 1, '2020-06-05 20:03:44', 1, NULL, 0, NULL, 0, 'P3-2440620Y20D06056864\n', 2, 0.4),
+(91, 1, 3, 61, NULL, NULL, 1, '2020-06-05 20:03:44', 1, NULL, 0, NULL, 0, 'P3-3440620Y20D06058080\n', 10, 0),
+(92, 1, 2, 62, 1, 1, 1, '2020-06-05 20:27:39', 1, NULL, 0, NULL, 0, 'P3-2390620Y20D06059072\n', 2, 0.2),
+(93, 1, 2, 63, 1, 1, 1, '2020-06-08 14:22:38', 2, 1, 0, NULL, 0, 'P3-2380614Y20D06089008\n', 2, 0.2),
+(94, 2, 7, 64, NULL, NULL, 1, '2020-06-08 17:33:20', 1, NULL, 0, NULL, 0, 'P3-7200617Y20D06080784\n', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -344,7 +365,12 @@ INSERT INTO `Pago_solouno_temp` (`PK_Pago`, `Cantidad`, `FK_Producto`, `FK_Pedid
 ('1_2020-06-02_17:20:26_2', 1, 2, NULL, 1, 1, 1, '2020-06-02 17:20:26', 2, 1),
 ('1_2020-06-02_17:34:58_2', 1, 2, NULL, 1, 1, 1, '2020-06-02 17:34:58', 2, 1),
 ('1_2020-06-02_17:44:38_2', 1, 2, NULL, 1, 1, 1, '2020-06-02 17:44:38', 2, 1),
-('1_2020-06-02_17:46:03_2', 1, 2, NULL, 1, 1, 1, '2020-06-02 17:46:03', 2, 1);
+('1_2020-06-02_17:46:03_2', 1, 2, NULL, 1, 1, 1, '2020-06-02 17:46:03', 2, 1),
+('1_2020-06-03_00:37:51_2', 3, 2, NULL, 1, 1, 1, '2020-06-03 00:37:51', 1, NULL),
+('1_2020-06-08_21:26:22_2', 1, 2, NULL, 1, 1, 1, '2020-06-08 21:26:22', 2, 1),
+('1_2020-06-08_22:41:43_2', 1, 2, NULL, 1, 1, 1, '2020-06-08 22:41:43', 1, NULL),
+('1_2020-06-08_22:46:14_2', 1, 2, NULL, 1, 1, 1, '2020-06-08 22:46:14', 2, 1),
+('1_2020-06-08_22:54:15_2', 3, 2, NULL, 1, 1, 1, '2020-06-08 22:54:15', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -363,8 +389,8 @@ CREATE TABLE `Paises` (
 --
 
 INSERT INTO `Paises` (`PK_Pais`, `NombrePais`, `Logo`) VALUES
-(1, 'Honduras', NULL),
-(2, 'Nicaragua', NULL);
+(1, 'Honduras', 'banderaHonduras.jpg'),
+(2, 'Nicaragua', 'banderaNicaragua.jpg');
 
 -- --------------------------------------------------------
 
@@ -381,18 +407,30 @@ CREATE TABLE `Pedidos` (
   `FechaHoraCompra` datetime DEFAULT NULL,
   `FechaHoraEnvio` datetime DEFAULT NULL,
   `FechaHoraEntrega` datetime DEFAULT NULL,
-  `Estado` tinyint(1) DEFAULT NULL
+  `Estado` tinyint(1) DEFAULT NULL,
+  `Comision` float NOT NULL,
+  `Visto` tinyint(4) NOT NULL DEFAULT '0',
+  `VistoAdmin` tinyint(4) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `Pedidos`
 --
 
-INSERT INTO `Pedidos` (`PK_Pedido`, `FK_Cliente`, `FK_Tienda`, `NumeroPedido`, `FechaHoraOrden`, `FechaHoraCompra`, `FechaHoraEnvio`, `FechaHoraEntrega`, `Estado`) VALUES
-(32, 1, 1, 'PAYID-L3KTH5Y82170380BD223691J', '2020-06-01 17:07:30', '2020-06-01 17:07:30', NULL, NULL, 0),
-(33, 1, 1, 'PAYID-L3KTT7A5Y456350YK847043A', '2020-06-01 17:25:35', '2020-06-01 17:25:35', NULL, NULL, 0),
-(34, 15, 1, 'PAYID-L3KURJI43V30202D3111634T', '2020-06-01 18:28:07', '2020-06-01 18:28:07', NULL, NULL, 0),
-(35, 1, 1, 'PAYID-L3LKPYY0KC10093UC291421P', '2020-06-02 19:29:42', '2020-06-02 19:29:42', NULL, NULL, 0);
+INSERT INTO `Pedidos` (`PK_Pedido`, `FK_Cliente`, `FK_Tienda`, `NumeroPedido`, `FechaHoraOrden`, `FechaHoraCompra`, `FechaHoraEnvio`, `FechaHoraEntrega`, `Estado`, `Comision`, `Visto`, `VistoAdmin`) VALUES
+(32, 1, 1, 'PAYID-L3KTH5Y82170380BD223691J', '2020-06-01 17:07:30', '2020-06-01 17:07:30', NULL, NULL, 0, 0, 1, 1),
+(33, 1, 1, 'PAYID-L3KTT7A5Y456350YK847043A', '2020-06-01 17:25:35', '2020-06-01 17:25:35', NULL, NULL, 0, 0, 1, 1),
+(34, 15, 1, 'PAYID-L3KURJI43V30202D3111634T', '2020-06-01 18:28:07', '2020-06-01 18:28:07', NULL, NULL, 0, 0, 1, 1),
+(37, 1, 1, 'PAYID-L3MASKI35T76676H7220925F', '2020-06-03 20:35:40', '2020-06-03 20:35:40', NULL, NULL, 0, 0, 1, 1),
+(38, 1, 1, 'PAYID-L3MBVNA9UR69063F7209352F', '2020-06-03 21:50:15', '2020-06-03 21:50:15', NULL, NULL, 0, 0, 1, 1),
+(39, 1, 1, 'PAYID-L3MQ35Y94B56636UA844535E', '2020-06-04 15:06:53', '2020-06-04 15:06:53', NULL, NULL, 0, 0, 1, 1),
+(45, 1, 1, 'PAYID-L3MRADY2V557416333478213', '2020-06-04 15:15:57', '2020-06-04 15:15:57', NULL, NULL, 0, 0, 1, 1),
+(49, 1, 1, 'PAYID-L3MTZDI1DG6252624475474J', '2020-06-04 18:25:29', '2020-06-04 18:25:29', NULL, NULL, 0, 0, 1, 1),
+(56, 1, 1, 'PAYID-L3MUSIQ7ET45272CG298035S', '2020-06-04 19:19:22', '2020-06-04 19:19:22', NULL, NULL, 0, 0, 1, 1),
+(61, 1, 1, 'PAYID-L3NKJPI8DE93321YS175361U', '2020-06-05 20:03:44', '2020-06-05 20:03:44', NULL, '2020-06-05 22:50:05', 1, 5, 1, 1),
+(62, 1, 1, 'PAYID-L3NKS4I6AT16054344455946', '2020-06-05 20:27:39', '2020-06-05 20:27:39', NULL, '2020-06-05 22:49:51', 1, 5, 1, 1),
+(63, 1, 1, 'PAYID-L3PETEI01D6706726865323B', '2020-06-08 14:22:38', '2020-06-08 14:22:38', NULL, NULL, 0, 5, 1, 1),
+(64, 1, 4, 'PAYID-L3PHL7Q4PP84675GV371874B', '2020-06-08 17:33:20', '2020-06-08 17:33:20', NULL, '2020-06-08 17:34:26', 1, 5, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -416,18 +454,20 @@ CREATE TABLE `Productos` (
   `Nota` varchar(400) DEFAULT NULL,
   `FK_Tienda` int(11) NOT NULL,
   `FK_Categoria` int(11) NOT NULL,
-  `Adomicilio` tinyint(4) DEFAULT NULL
+  `Adomicilio` tinyint(4) DEFAULT NULL,
+  `PrecioAnterior` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `Productos`
 --
 
-INSERT INTO `Productos` (`PK_Producto`, `NombreProducto`, `Descripcion`, `CantidadPorUnidad`, `PrecioUnitario`, `PrecioEnvio`, `Descuento`, `UnidadesDisponibles`, `UnidadesVendidas`, `Estado`, `Imagen`, `Ranking`, `Nota`, `FK_Tienda`, `FK_Categoria`, `Adomicilio`) VALUES
-(2, 'Sandalias de colores', '\r\nManufacturer Model: CoDrone\r\nFun and educational drone\r\nPerfect for beginners learning programming\r\nArduino Compatible controller\r\nUse your Apple or Android smart phone to fly, battle, voice control CoDrone\r\nEasily removable/replaceable motors\r\nDescription\r\nLearning to code is fast and simple with CoDrone, a fully programmable drone. Simply unbox your CoDrone, watch our tutorials, and start coding within minutes. Then watch your code take flight! Start from introductory basics to gaining hands-on experience with real world programming for hardware.\r\n\r\n', 1, 2, 1, 10, 224, 3, 1, 'uploads/img/productos/product.jpg', 1, 'Nuevas', 1, 1, 1),
-(3, 'Zapatillas para hombre de cuero genuino', 'Características del artículo\r\nEstado: \r\nNuevo en caja: Un artículo completamente nuevo, que no fue utilizado ni tiene desgaste (incluidos los hechos a mano) en su envase original (como la caja o la bolsa originales) y/o con las etiquetas originales. Ver todas las definiciones de estado  Estado del artículo:  Nuevo en caja\r\nMens Moccasin Shoes: Mens Moccasin Shoes Material de la plantilla: EVA\r\nCasual Shoes:  Casual Shoes  Genuine Leather S:  Genuine Leather Shoes\r\nMen Flats: Men Flats Nombre del departamento:  Adulto\r\nSupervisión materiales: Cuero geniuno Talla de calzado (USA): hombre: 4\r\nLoafers: Loafers Marca:  Sin marca\r\nEstilo:  Baseball Shoes  Material del revestimiento: Sintético\r\nTipo de artículo:  Varios zapatos', 1, 10, NULL, NULL, 5, 0, 1, 'uploads/img/productos/product2.jpg', NULL, 'nada', 1, 1, 0),
-(4, 'Robolink CoDrone Pro programables', 'Robolink CoDrone Pro programables', 1, 12, 10, 10, 298, 2, 1, 'uploads/img/productos/dron.jpg', 2, NULL, 1, 2, 1),
-(6, 'Camiseta De Manga Larga Calavera ', 'Camiseta De Manga Larga Calavera ', 1, 3, 2, NULL, 20, 0, 1, 'uploads/img/productos/camisa.jpg', 4, NULL, 7, 5, 1);
+INSERT INTO `Productos` (`PK_Producto`, `NombreProducto`, `Descripcion`, `CantidadPorUnidad`, `PrecioUnitario`, `PrecioEnvio`, `Descuento`, `UnidadesDisponibles`, `UnidadesVendidas`, `Estado`, `Imagen`, `Ranking`, `Nota`, `FK_Tienda`, `FK_Categoria`, `Adomicilio`, `PrecioAnterior`) VALUES
+(2, 'Sandalias de colores', '\r\nManufacturer Model: CoDrone\r\nFun and educational drone\r\nPerfect for beginners learning programming\r\nArduino Compatible controller\r\nUse your Apple or Android smart phone to fly, battle, voice control CoDrone\r\nEasily removable/replaceable motors\r\nDescription\r\nLearning to code is fast and simple with CoDrone, a fully programmable drone. Simply unbox your CoDrone, watch our tutorials, and start coding within minutes. Then watch your code take flight! Start from introductory basics to gaining hands-on experience with real world programming for hardware.\r\n\r\n', 1, 2, 1, 10, 202, 7, 1, 'uploads/img/productos/product.jpg', 1, 'Nuevas', 1, 1, 1, NULL),
+(3, 'Zapatillas para hombre de cuero genuino', 'Características del artículo\r\nEstado:	\r\nNuevo en caja: Un artículo completamente nuevo, que no fue utilizado ni tiene desgaste (incluidos los hechos a mano) en su envase original (como la caja o la bolsa originales) y/o con las etiquetas originales. Ver todas las definiciones de estado	Estado del artículo:	Nuevo en caja\r\nMens Moccasin Shoes:	Mens Moccasin Shoes	Material de la plantilla:	EVA\r\nCasual Shoes:	Casual Shoes	Genuine Leather S:	Genuine Leather Shoes\r\nMen Flats:	Men Flats	Nombre del departamento:	Adulto\r\nSupervisión materiales:	Cuero geniuno	Talla de calzado (USA): hombre:	4\r\nLoafers:	Loafers	Marca:	Sin marca\r\nEstilo:	Baseball Shoes	Material del revestimiento:	Sintético\r\nTipo de artículo:	Varios zapatos', 1, 10, NULL, NULL, 1, 1, 1, 'uploads/img/productos/product2.jpg', NULL, 'nada', 1, 1, 0, NULL),
+(4, 'Robolink CoDrone Pro programables', 'Robolink CoDrone Pro programables', 1, 12, 10, 10, 291, 3, 1, 'uploads/img/productos/dron.jpg', 2, NULL, 1, 2, 1, NULL),
+(6, 'Camiseta De Manga Larga Calavera ', 'Camiseta De Manga Larga Calavera ', 1, 3, 2, NULL, 20, 0, 1, 'uploads/img/productos/camisa.jpg', 4, NULL, 7, 5, 1, NULL),
+(7, 'Panadol', 'Panadol', 1, 1, 1, NULL, 797, NULL, 1, 'uploads/img/productos/Panadol.jpg', NULL, NULL, 4, 7, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -501,18 +541,19 @@ CREATE TABLE `Tiendas` (
   `FK_Usuario` int(11) NOT NULL,
   `Telefono` varchar(20) DEFAULT NULL,
   `Portada` varchar(100) DEFAULT NULL,
-  `Estado` tinyint(4) NOT NULL DEFAULT '1'
+  `Estado` tinyint(4) NOT NULL DEFAULT '1',
+  `MontoMinimoEnvio` float NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `Tiendas`
 --
 
-INSERT INTO `Tiendas` (`PK_Tienda`, `NombreTienda`, `NombreContacto`, `ApellidoContacto`, `Direccion1`, `Direccion2`, `SitioWeb`, `Correo`, `IDClientePaypal`, `Logo`, `Adomicilio`, `FK_Ciudad`, `FK_Usuario`, `Telefono`, `Portada`, `Estado`) VALUES
-(1, 'Mi Tienda', 'kevin ', 'canales TEMP', '2fre TEMP', 'erf TEMP', 'opticadelrey.ml', 'noe@noe.com', 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk_', 'tienda_2_logo.jpg', NULL, 1, 2, '234444', 'tienda_2_portada.jpg', 1),
-(4, 'Tienda de prueba', 'Noe', 'Montoya', 'dire', 'dire 2', '', 'test@test.com', 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk', 'tienda_2_logo.jpg', 1, 1, 8, '345', 'tienda_8_portada.jpg', 1),
-(7, 'tienda_test', 'kevin', 'canales', 'feriofjerf', 'erferferfref', '', 'noe_k@outlook.com', 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk_', 'tienda_14_20200515224038.jpg', NULL, 4, 14, '3455345', 'tienda_14_20200515221833.jpg', 0),
-(9, 'nuevatienda', 'nuevocontacto', 'apellidonuevocontacto', 'NA', 'NA', 'fdsfsd', 'nueva@nuevatienda.com', '', '', 0, 1, 39, '23423423423', '', 1);
+INSERT INTO `Tiendas` (`PK_Tienda`, `NombreTienda`, `NombreContacto`, `ApellidoContacto`, `Direccion1`, `Direccion2`, `SitioWeb`, `Correo`, `IDClientePaypal`, `Logo`, `Adomicilio`, `FK_Ciudad`, `FK_Usuario`, `Telefono`, `Portada`, `Estado`, `MontoMinimoEnvio`) VALUES
+(1, 'Japishop', 'kevin ', 'canales ', '2fre TEMP', 'erf TEMP', 'opticadelrey.ml', 'japishop@gmail.com', '', 'tienda_2_20200604202608.jpg', 1, 1, 2, '234444', 'tienda_2_20200604202713.jpg', 1, 5),
+(4, 'Farmacia', 'Noe', 'Montoya', 'dire', 'dire 2', '', 'farmacia@gmail.com', '', 'tienda_8_20200604211856.jpg', NULL, 1, 8, '345', 'tienda_8_20200604211939.jpg', 1, 0),
+(7, 'tienda_test', 'kevin', 'canales', 'feriofjerf', 'erferferfref', '', 'noe_k@outlook.com', 'AfD5UDBgvoCWjA2v1oEmxVJgBUqDo_bSB6ywQcs71MG6NTe64DTomwuf9Obw35BgjsmPsZQM_hUPMPk_', 'tienda_14_20200515224038.jpg', NULL, 4, 14, '3455345', 'tienda_14_20200515221833.jpg', 0, 0),
+(9, 'nuevatienda', 'nuevocontacto', 'apellidonuevocontacto', 'NA', 'NA', 'fdsfsd', 'nueva@nuevatienda.com', '', '', 0, 1, 39, '23423423423', '', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -600,19 +641,20 @@ CREATE TABLE `Usuarios` (
 --
 
 INSERT INTO `Usuarios` (`PK_Usuario`, `NombreUsuario`, `Contrasena`, `Correo`, `Estado`, `FK_TipoUsuario`, `FK_Idioma`, `Foto`, `CodigoConfirmacion`, `EstadoCorreo`, `CodRestContrasena`) VALUES
-(2, 'mitienda@gmail.com', 'eNxbTbYbHFCdi36ieolpyg==', 'noe@noe.com TEMP', 1, 2, 2, 'tienda_2_logo.jpg', NULL, 1, NULL),
-(3, 'cliente1', 'eNxbTbYbHFCdi36ieolpyg==', 'cliente@cliente.com', 1, 1, 1, 'user_3_20200517182451.jpg', NULL, 1, 'U3C150636d20200526'),
-(8, 'test@test.com', 'eNxbTbYbHFCdi36ieolpyg==', 'test@test.com', 1, 2, 1, 'tienda_8_logo.jpg', NULL, 0, NULL),
+(2, 'japishop@gmail.com', 'eNxbTbYbHFCdi36ieolpyg==', 'japishop@gmail.com', 1, 2, 2, 'tienda_2_20200604202608.jpg', NULL, 1, NULL),
+(3, 'cliente1', 'eNxbTbYbHFCdi36ieolpyg==', 'cliente@cliente.com', 1, 1, 1, 'user_3_20200605180940.jpg', NULL, 1, 'U3C150636d20200526'),
+(8, 'farmacia@gmail.com', 'eNxbTbYbHFCdi36ieolpyg==', 'farmacia@gmail.com', 1, 2, 1, 'tienda_8_20200604211856.jpg', NULL, 0, NULL),
 (14, 'noe_k@outlook.com', '0tmsk97Jd3Q86Tef5cwRSA==', 'noe_k@ou.com', 1, 2, 1, 'tienda_14_20200515224038.jpg', 'C012224d20200510', 1, 'U14C221131d20200516'),
 (28, 'test', 'eNxbTbYbHFCdi36ieolpyg==', 'kncm.js@gmail.com', 1, 1, 1, '', 'C195834d20200526', 0, 'U28C210004d20200526'),
 (32, 'admin', 'eNxbTbYbHFCdi36ieolpyg==', 'hola@fioef.com', 1, 3, 1, 'user_admin_foto_perfil.jpg', 'C161905d20200527', 0, NULL),
 (36, 'nuevoadmin', 'eNxbTbYbHFCdi36ieolpyg==', 'nuevo@nuevo.com', 1, 3, 1, '', 'C183641d20200527', 0, NULL),
-(37, 'admin2', 'eNxbTbYbHFCdi36ieolpyg==', 'admin@gmail.com', 1, 3, 1, 'user_admin2_foto_perfil.jpg', 'C183836d20200527', 0, NULL),
-(38, 'prueba_admin', 'eNxbTbYbHFCdi36ieolpyg==', 'prueba@gmail.com', 1, 3, 1, '', 'C184408d20200527', 0, NULL),
+(37, 'admin2', 'eNxbTbYbHFCdi36ieolpyg==', 'admin@gmail.com', 0, 3, 1, 'user_admin2_foto_perfil.jpg', 'C183836d20200527', 0, NULL),
+(38, 'prueba_admin', 'eNxbTbYbHFCdi36ieolpyg==', 'prueba@gmail.com', 0, 3, 1, '', 'C184408d20200527', 0, NULL),
 (39, 'nueva@nuevatienda.com', 'eNxbTbYbHFCdi36ieolpyg==', 'nueva@nuevatienda.com', 1, 2, 1, '', 'C220246d20200528', 0, NULL),
 (48, 'ef@oirefjfr.com', 'eNxbTbYbHFCdi36ieolpyg==', 'ef@oirefjfr.com', 1, 2, 1, 'tienda_48_logo.jpg', 'C225058d20200528', 0, NULL),
 (49, 'erferf@fjerfr,.com', 'eNxbTbYbHFCdi36ieolpyg==', 'erferf@fjerfr,.com', 1, 2, 1, 'tienda_49_logo.jpg', 'C023221d20200529', 0, NULL),
-(50, 'kevin', 'eNxbTbYbHFCdi36ieolpyg==', 'noe_k@ymail.com', 1, 1, 1, 'user_50_foto_perfil.jpg', 'C182610d20200601', 1, NULL);
+(50, 'kevin', 'eNxbTbYbHFCdi36ieolpyg==', 'noe_k@ym.com', 1, 1, 1, 'user_50_foto_perfil.jpg', 'C182610d20200601', 1, NULL),
+(51, 'usuario_prueba', '4rICKntZvoAw4stBo9P7ZQ==', 'noe_k@ymail.com', 1, 1, 1, 'user_51_foto_perfil.jpg', 'C011750d20200603', 1, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -820,13 +862,13 @@ ALTER TABLE `Usuarios`
 -- AUTO_INCREMENT de la tabla `Carrito`
 --
 ALTER TABLE `Carrito`
-  MODIFY `PK_Carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `PK_Carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `Categorias`
 --
 ALTER TABLE `Categorias`
-  MODIFY `PK_Categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `PK_Categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `Ciudades`
@@ -838,7 +880,7 @@ ALTER TABLE `Ciudades`
 -- AUTO_INCREMENT de la tabla `Clientes`
 --
 ALTER TABLE `Clientes`
-  MODIFY `PK_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `PK_Cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `Colores`
@@ -862,13 +904,13 @@ ALTER TABLE `Correos`
 -- AUTO_INCREMENT de la tabla `Destinatarios`
 --
 ALTER TABLE `Destinatarios`
-  MODIFY `PK_Destinatario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PK_Destinatario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `DetallePedidos`
 --
 ALTER TABLE `DetallePedidos`
-  MODIFY `PK_DetallePedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `PK_DetallePedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT de la tabla `DetalleProducto`
@@ -898,13 +940,13 @@ ALTER TABLE `Paises`
 -- AUTO_INCREMENT de la tabla `Pedidos`
 --
 ALTER TABLE `Pedidos`
-  MODIFY `PK_Pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `PK_Pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT de la tabla `Productos`
 --
 ALTER TABLE `Productos`
-  MODIFY `PK_Producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `PK_Producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `RegionesEnvio`
@@ -952,7 +994,7 @@ ALTER TABLE `TipoUsuario`
 -- AUTO_INCREMENT de la tabla `Usuarios`
 --
 ALTER TABLE `Usuarios`
-  MODIFY `PK_Usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `PK_Usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- Restricciones para tablas volcadas

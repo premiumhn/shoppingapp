@@ -1,8 +1,12 @@
 <?php
-include '../global/const.php';
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+include ("../global/config.php");
+include ("../global/conexion.php");
+include ("../global/const.php");
 session_start();
 
-$sesion = (isset($_POST['sesion']))?$_POST['sesion']:"";
+$sesion = (isset($_REQUEST['sesion']))?$_REQUEST['sesion']:"";
 
 
 if ($sesion = "cerrar"){
@@ -13,6 +17,10 @@ if ($sesion = "cerrar"){
 
 $p = (isset($_REQUEST['p']))?$_REQUEST['p']:"";
 $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
+
+$select_id = $pdo->prepare('SELECT * FROM Configuracion');
+$select_id->execute();
+$datos_config = $select_id->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -40,6 +48,16 @@ $u = (isset($_REQUEST['u']))?$_REQUEST['u']:"";
    
     <link href="<?php echo URL_SITIO ?>static/css/login.css" rel="stylesheet" type="text/css" media="all" />
     <?php include 'iconos.php' ?>
+
+    <style>
+        body{
+            background-image: url(<?php echo URL_SITIO. 'uploads/img/configuracion/' . $datos_config[0]['FondoLoginTienda']?>)!important;
+            background-size: cover;
+            -webkit-box-shadow: inset 0px 0px 1000px 1000px rgba(0,0,0,0.50);
+            -moz-box-shadow: inset 0px 0px 1000px 1000px rgba(0,0,0,0.50);
+            box-shadow: inset 0px 0px 1000px 1000px rgba(0,0,0,0.50);
+        }
+    </style>
 
 </head>
 <body id="body-tienda">

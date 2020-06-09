@@ -6,6 +6,10 @@ include '../global/conexion.php';
 
 session_start();
 
+$select_config = $pdo->prepare("SELECT * FROM Configuracion");
+$select_config->execute();
+$configuracion = $select_config->fetchAll(PDO::FETCH_ASSOC);
+
 
     if(!empty($_POST['PamentID']) && !empty($_POST['cid']) && !empty($_POST['tc']) ){
         $IDPago = $_POST['PamentID'];
@@ -60,8 +64,24 @@ session_start();
                 $fecha_hora_entrega = NULL;
                 $estado = 0;
 
-                $insert_pedido = $pdo->prepare("INSERT INTO `Pedidos` (`PK_Pedido`, `FK_Cliente`, `FK_Tienda`, `NumeroPedido`, `FechaHoraOrden`, `FechaHoraCompra`, `FechaHoraEnvio`, `FechaHoraEntrega`, `Estado`) 
-                        VALUES (NULL, :FK_Cliente, :FK_Tienda, :NumeroPedido, :FechaHoraOrden, :FechaHoraCompra, :FechaHoraEnvio, :FechaHoraEntrega, :Estado);");
+                $total_todos = 0; 
+                foreach($lista_carrito as $carrito){
+                    if($configuracion[0]['CobrosPorEnvio'] == 1){ 
+                        $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) + (($carrito['FK_TipoPedido']==2)?$carrito['PrecioEnvio']  + obtenerPrecioEnvio($carrito['PK_Tienda'], $carrito['FK_Ciudad']) :0) ;
+                    }else{
+                        $total_todos+= ($carrito['Subtotal']) - ((isset($carrito['DescuentoDecimal']))?(($carrito['Subtotal'])/$carrito['DescuentoDecimal']):0) ;
+                    }
+                } 
+                if($total_todos > $configuracion[0]['PorCada']){
+                    $numero_cobros = (int)($total_todos/$configuracion[0]['PorCada']) + 1;
+                    $comision = $numero_cobros * $configuracion[0]['Comision'];
+                }else{
+                    $comision = $configuracion[0]['Comision'];
+                }
+
+
+                $insert_pedido = $pdo->prepare("INSERT INTO `Pedidos` (`PK_Pedido`, `FK_Cliente`, `FK_Tienda`, `NumeroPedido`, `FechaHoraOrden`, `FechaHoraCompra`, `FechaHoraEnvio`, `FechaHoraEntrega`, `Estado`, `Comision`) 
+                        VALUES (NULL, :FK_Cliente, :FK_Tienda, :NumeroPedido, :FechaHoraOrden, :FechaHoraCompra, :FechaHoraEnvio, :FechaHoraEntrega, :Estado, :Comision);");
 
                 $insert_pedido->bindParam(':FK_Cliente', $fk_cliente);
                 $insert_pedido->bindParam(':FK_Tienda', $fk_tienda);
@@ -71,6 +91,8 @@ session_start();
                 $insert_pedido->bindParam(':FechaHoraEnvio', $fecha_hora_envio);
                 $insert_pedido->bindParam(':FechaHoraEntrega', $fecha_hora_entrega);
                 $insert_pedido->bindParam(':Estado', $estado);
+                $insert_pedido->bindParam(':Comision', $comision);
+
 
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $insert_pedido->execute();
@@ -82,50 +104,65 @@ session_start();
                 $pedido = $buscar_pedido->fetchAll(PDO::FETCH_ASSOC);
 
                 // insertar detalle de pedido
+                
                 foreach($lista_carrito as $carrito){
-                $cantidad = $carrito['Cantidad'];
-                $pk_producto = $carrito['FK_Producto'];
-                $talla = $carrito['FK_Talla'];
-                $color = $carrito['FK_Color'];
-                $fecha_hora_agregado = date('Y-m-d H:i:s');
-                $tipo_pedido = $carrito['FK_TipoPedido'];
-                $destinatario = $carrito['FK_Destinatario'];
-                $fk_pedido = $pedido[0]['PK_Pedido'];
-                $estado_detalle_pedido = 0;
+                    $cantidad = $carrito['Cantidad'];
+                    $pk_producto = $carrito['FK_Producto'];
+                    $talla = $carrito['FK_Talla'];
+                    $color = $carrito['FK_Color'];
+                    $fecha_hora_agregado = date('Y-m-d H:i:s');
+                    $tipo_pedido = $carrito['FK_TipoPedido'];
+                    $destinatario = $carrito['FK_Destinatario'];
+                    $fk_pedido = $pedido[0]['PK_Pedido'];
+                    $precio = $carrito['PrecioUnitario'];
+                    $estado_detalle_pedido = 0;
+                    if($carrito['DescuentoDecimal']!=0){
+                        $descuento = $carrito['Subtotal'] * ($carrito['DescuentoDecimal']/100);
+                    }else{
+                        $descuento = 0;
+                    }
 
-                // MILLISECONDS
-                $currentNanoSecond = (int) (microtime(true) * 1000000000);
-                $nano = $currentNanoSecond.PHP_EOL;
+                    // MILLISECONDS
+                    $currentNanoSecond = (int) (microtime(true) * 1000000000);
+                    $nano = $currentNanoSecond.PHP_EOL;
 
-                $cod_detalle_pedido = 'P' . $_SESSION['login_user'] . '-' . $pk_producto . date('smH') . 'Y' . substr(date('Y'), -2) . 'D' . date('md') . substr($nano, -5);
-
-
-
-                $insert_detalle_pedido = $pdo->prepare("INSERT INTO `DetallePedidos` (`PK_DetallePedido`, `FK_Pedido`, `Cantidad`, `FK_Producto`, `FK_Talla`, `FK_Color`, `FechaHoraAgregado`, `FK_Cliente`, `FK_TipoPedido`, `FK_Destinatario`, `Estado`, `CodigoDetallePedido`) 
-                        VALUES (NULL, :FK_Pedido, :Cantidad, :FK_Producto, :FK_Talla, :FK_Color, :FechaHoraAgregado, :FK_Cliente, :FK_TipoPedido, :FK_Destinatario, :Estado, :CodigoDetallePedido);");
-
-                $insert_detalle_pedido->bindParam(':FK_Pedido', $fk_pedido);
-                $insert_detalle_pedido->bindParam(':Cantidad', $cantidad);
-                $insert_detalle_pedido->bindParam(':FK_Producto', $pk_producto);
-                $insert_detalle_pedido->bindParam(':FK_Talla', $talla);
-                $insert_detalle_pedido->bindParam(':FK_Color', $color);
-                $insert_detalle_pedido->bindParam(':FechaHoraAgregado', $fecha_hora_agregado);
-                $insert_detalle_pedido->bindParam(':FK_Cliente', $cid);
-                $insert_detalle_pedido->bindParam(':FK_TipoPedido', $tipo_pedido);
-                $insert_detalle_pedido->bindParam(':FK_Destinatario', $destinatario);
-                $insert_detalle_pedido->bindParam(':Estado', $estado_detalle_pedido);
-                $insert_detalle_pedido->bindParam(':CodigoDetallePedido', $cod_detalle_pedido);
+                    $cod_detalle_pedido = 'P' . $_SESSION['login_user'] . '-' . $pk_producto . date('smH') . 'Y' . substr(date('Y'), -2) . 'D' . date('md') . substr($nano, -5);
 
 
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                    $insert_detalle_pedido = $pdo->prepare("INSERT INTO `DetallePedidos` (`PK_DetallePedido`, `FK_Pedido`, `Cantidad`, `FK_Producto`, `FK_Talla`, `FK_Color`, `FechaHoraAgregado`, `FK_Cliente`, `FK_TipoPedido`, `FK_Destinatario`, `Estado`, `CodigoDetallePedido`, `Precio`, `Descuento`) 
+                            VALUES (NULL, :FK_Pedido, :Cantidad, :FK_Producto, :FK_Talla, :FK_Color, :FechaHoraAgregado, :FK_Cliente, :FK_TipoPedido, :FK_Destinatario, :Estado, :CodigoDetallePedido, :Precio, :Descuento);");
+
+                    $insert_detalle_pedido->bindParam(':FK_Pedido', $fk_pedido);
+                    $insert_detalle_pedido->bindParam(':Cantidad', $cantidad);
+                    $insert_detalle_pedido->bindParam(':FK_Producto', $pk_producto);
+                    $insert_detalle_pedido->bindParam(':FK_Talla', $talla);
+                    $insert_detalle_pedido->bindParam(':FK_Color', $color);
+                    $insert_detalle_pedido->bindParam(':FechaHoraAgregado', $fecha_hora_agregado);
+                    $insert_detalle_pedido->bindParam(':FK_Cliente', $cid);
+                    $insert_detalle_pedido->bindParam(':FK_TipoPedido', $tipo_pedido);
+                    $insert_detalle_pedido->bindParam(':FK_Destinatario', $destinatario);
+                    $insert_detalle_pedido->bindParam(':Estado', $estado_detalle_pedido);
+                    $insert_detalle_pedido->bindParam(':CodigoDetallePedido', $cod_detalle_pedido);
+                    $insert_detalle_pedido->bindParam(':Precio', $precio);
+                    $insert_detalle_pedido->bindParam(':Descuento', $descuento);
+
+
+                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     $insert_detalle_pedido->execute(); 
                 }
 
 
                 //    eliminar carrito
-                $eliminar_carrito = $pdo->prepare("DELETE FROM Carrito WHERE FK_Cliente = :FK_Cliente");
+                $eliminar_carrito = $pdo->prepare("DELETE c FROM Carrito c JOIN Productos p
+                                                  ON c.FK_Producto = p.PK_Producto JOIN Tiendas t
+                                                  ON p.FK_Tienda = t.PK_Tienda
+                                                  WHERE c.FK_Cliente = :FK_Cliente AND t.PK_Tienda = :FK_Tienda");
                 $eliminar_carrito->bindParam(':FK_Cliente', $cid);
+                $eliminar_carrito->bindParam(':FK_Tienda', $fk_tienda);
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                
                 $eliminar_carrito->execute(); 
 
                 //reducir del inventario
@@ -190,9 +227,17 @@ session_start();
                 $fecha_hora_envio = NULL;
                 $fecha_hora_entrega = NULL;
                 $estado = 0;
+                if($producto[0]['subtotal'] > $configuracion[0]['PorCada']){
+                    $numero_cobros = (int)($producto[0]['subtotal']/$configuracion[0]['PorCada']) + 1;
+                    $comision = $numero_cobros * $configuracion[0]['Comision'];
+                }else{
+                    $comision = $configuracion[0]['Comision'];
+                }
 
-                $insert_pedido = $pdo->prepare("INSERT INTO `Pedidos` (`PK_Pedido`, `FK_Cliente`, `FK_Tienda`, `NumeroPedido`, `FechaHoraOrden`, `FechaHoraCompra`, `FechaHoraEnvio`, `FechaHoraEntrega`, `Estado`) 
-                        VALUES (NULL, :FK_Cliente, :FK_Tienda, :NumeroPedido, :FechaHoraOrden, :FechaHoraCompra, :FechaHoraEnvio, :FechaHoraEntrega, :Estado);");
+
+
+                $insert_pedido = $pdo->prepare("INSERT INTO `Pedidos` (`PK_Pedido`, `FK_Cliente`, `FK_Tienda`, `NumeroPedido`, `FechaHoraOrden`, `FechaHoraCompra`, `FechaHoraEnvio`, `FechaHoraEntrega`, `Estado`, `Comision`) 
+                        VALUES (NULL, :FK_Cliente, :FK_Tienda, :NumeroPedido, :FechaHoraOrden, :FechaHoraCompra, :FechaHoraEnvio, :FechaHoraEntrega, :Estado, :Comision);");
 
                 $insert_pedido->bindParam(':FK_Cliente', $fk_cliente);
                 $insert_pedido->bindParam(':FK_Tienda', $fk_tienda);
@@ -202,6 +247,7 @@ session_start();
                 $insert_pedido->bindParam(':FechaHoraEnvio', $fecha_hora_envio);
                 $insert_pedido->bindParam(':FechaHoraEntrega', $fecha_hora_entrega);
                 $insert_pedido->bindParam(':Estado', $estado);
+                $insert_pedido->bindParam(':Comision', $comision);
 
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $insert_pedido->execute();
@@ -214,6 +260,7 @@ session_start();
 
                 // insertar detalle de pedido
                 $cantidad = $producto[0]['Cantidad'];
+                $precio = $producto[0]['PrecioUnitario'];
                 $pk_producto = $producto[0]['FK_Producto'];
                 $talla = $producto[0]['FK_Talla'];
                 $color = $producto[0]['FK_Color'];
@@ -222,6 +269,11 @@ session_start();
                 $destinatario = $producto[0]['FK_Destinatario'];
                 $fk_pedido = $pedido[0]['PK_Pedido'];
                 $estado_detalle_pedido = 0;
+                if($producto[0]['DescuentoDecimal']!=0){
+                    $descuento = $producto[0]['Subtotal'] * ($producto[0]['DescuentoDecimal']/100);
+                }else{
+                    $descuento = 0;
+                }
 
                 // MILLISECONDS
                 $currentNanoSecond = (int) (microtime(true) * 1000000000);
@@ -229,8 +281,8 @@ session_start();
 
                 $cod_detalle_pedido = 'P' . $_SESSION['login_user'] . '-' . $pk_producto . date('smH') . 'Y' . substr(date('Y'), -2) . 'D' . date('md') . substr($nano, -5);
 
-                $insert_detalle_pedido = $pdo->prepare("INSERT INTO `DetallePedidos` (`PK_DetallePedido`, `FK_Pedido`, `Cantidad`, `FK_Producto`, `FK_Talla`, `FK_Color`, `FechaHoraAgregado`, `FK_Cliente`, `FK_TipoPedido`, `FK_Destinatario`, `Estado`, `CodigoDetallePedido`) 
-                        VALUES (NULL, :FK_Pedido, :Cantidad, :FK_Producto, :FK_Talla, :FK_Color, :FechaHoraAgregado, :FK_Cliente, :FK_TipoPedido, :FK_Destinatario, :Estado, :CodigoDetallePedido);");
+                $insert_detalle_pedido = $pdo->prepare("INSERT INTO `DetallePedidos` (`PK_DetallePedido`, `FK_Pedido`, `Cantidad`, `FK_Producto`, `FK_Talla`, `FK_Color`, `FechaHoraAgregado`, `FK_Cliente`, `FK_TipoPedido`, `FK_Destinatario`, `Estado`, `CodigoDetallePedido`, `Precio`, `Descuento`) 
+                        VALUES (NULL, :FK_Pedido, :Cantidad, :FK_Producto, :FK_Talla, :FK_Color, :FechaHoraAgregado, :FK_Cliente, :FK_TipoPedido, :FK_Destinatario, :Estado, :CodigoDetallePedido, :Precio, :Descuento);");
 
                 $insert_detalle_pedido->bindParam(':FK_Pedido', $fk_pedido);
                 $insert_detalle_pedido->bindParam(':Cantidad', $cantidad);
@@ -243,6 +295,8 @@ session_start();
                 $insert_detalle_pedido->bindParam(':FK_Destinatario', $destinatario);
                 $insert_detalle_pedido->bindParam(':Estado', $estado_detalle_pedido);
                 $insert_detalle_pedido->bindParam(':CodigoDetallePedido', $cod_detalle_pedido);
+                $insert_detalle_pedido->bindParam(':Precio', $precio);
+                $insert_detalle_pedido->bindParam(':Descuento', $descuento);
 
 
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

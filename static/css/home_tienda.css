@@ -29,6 +29,23 @@ a{
     margin-top: 5px;
 }
 
+.notificacion{
+    background-color: rgb(255, 0, 0)!important;
+    color:white!important;
+    border-radius: 100px;
+    padding: 15px 0px 15px 0px;
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    right: 15%;
+    top: 15%;
+    font-size: 13px;
+    -webkit-box-shadow: 0px 0px 19px -4px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 19px -4px rgba(0,0,0,0.75);
+box-shadow: 0px 0px 19px -4px rgba(0,0,0,0.75);
+font-weight: bold;
+}
+
 
 @media (max-width: 600px) {
 

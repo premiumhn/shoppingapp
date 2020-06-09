@@ -7,10 +7,11 @@ include '../global/const.php';
 
 session_start();
 
+require './language/requirelanguage.php';
+
 $actualizar_vistos = $pdo->prepare("UPDATE Pedidos
-                                    SET Visto = 1
-									WHERE FK_Tienda = :FK_Tienda AND Visto = 0");
-$actualizar_vistos->bindParam(":FK_Tienda", $_SESSION['PK_Tienda']);
+                                    SET VistoAdmin = 1
+									WHERE VistoAdmin = 0");
 $actualizar_vistos->execute();
 
 $select_config = $pdo->prepare("SELECT * FROM Configuracion");
@@ -38,20 +39,8 @@ if(isset($_REQUEST['input_estado']) AND $filtro_estado != 3){
     $str_filtro_tipo_estado = "";
 }
 
-// buscar tienda
-$buscar_tienda = $pdo->prepare('SELECT * FROM Tiendas
-                                WHERE FK_Usuario = :FK_Usuario');
-$buscar_tienda->bindParam('FK_Usuario', $user);
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$buscar_tienda->execute();
-$tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
 
-// seleccionar tipos de pedidos
-$buscar_tipo_pedidos = $pdo->prepare('SELECT * FROM TiposPedido');
-$buscar_tipo_pedidos->bindParam('FK_Usuario', $user);
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-$buscar_tipo_pedidos->execute();
-$tipo_pedidos = $buscar_tipo_pedidos->fetchAll(PDO::FETCH_ASSOC);
+
 
 date_default_timezone_set('America/Tegucigalpa');
 $fecha_actual = date("Y-m-d H:i:s");
@@ -73,8 +62,6 @@ $str_busqueda = ($busqueda != '')?" AND (p.NombreProducto LIKE '%" . $busqueda .
 $str_busqueda_pedido = ($busqueda != '')?" AND pe.NumeroPedido LIKE '%" . $busqueda . "%'":"";
 
 
-
-
 $pagina = false;
 $items_por_pagina = 5;
  
@@ -90,27 +77,8 @@ if (!$pagina) {
     $inicio = ($pagina - 1) * $items_por_pagina;
 }
 
-// consulta para contar el total de los pedidos
-$select_detalle_pedidos_total = $pdo->prepare("SELECT c.PK_DetallePedido
-                                        FROM DetallePedidos c INNER JOIN Productos p
-                                        ON c.FK_Producto = p.PK_Producto INNER JOIN Clientes cli
-                                        ON c.FK_Cliente = cli.PK_Cliente INNER JOIN Usuarios u
-                                        ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Tiendas ti
-                                        ON p.FK_Tienda = ti.PK_Tienda INNER JOIN Pedidos pe
-                                        ON pe.PK_Pedido = c.FK_Pedido 
-                                        WHERE ti.PK_Tienda = :PK_Tienda 
-                                        ". $str_filtro_desde_hasta . $str_busqueda ."");
- 
- $select_detalle_pedidos_total->bindParam(':PK_Tienda', $tienda[0]['PK_Tienda']);   
- 
- if($filtro_desde != '' && $filtro_hasta != ''){
-    $select_detalle_pedidos_total->bindParam(':FechaHoraDesde', $filtro_desde); 
-    $select_detalle_pedidos_total->bindParam(':FechaHoraHasta', $filtro_hasta); 
- }
- //$select_detalle_pedidos_total->execute();
- //$lista_pedidos_total = $select_detalle_pedidos_total->fetchAll(PDO::FETCH_ASSOC);
 
-// Consulta para obtener pedidos por paginación
+// Consulta para obtener detalles de pedidos
 $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto, 
                                         c.Cantidad, 
                                         p.PrecioUnitario, 
@@ -149,10 +117,8 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
                                         ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Tiendas ti
                                         ON p.FK_Tienda = ti.PK_Tienda INNER JOIN Pedidos pe
                                         ON pe.PK_Pedido = c.FK_Pedido 
-                                        WHERE ti.PK_Tienda = :PK_Tienda 
                                         " . $str_filtro_desde_hasta . $str_busqueda);
  
- $select_detalle_pedidos->bindParam(':PK_Tienda', $tienda[0]['PK_Tienda']);   
 
  if($filtro_desde != '' && $filtro_hasta != ''){
     $select_detalle_pedidos->bindParam(':FechaHoraDesde', $filtro_desde); 
@@ -168,10 +134,8 @@ $select_detalle_pedidos = $pdo->prepare("SELECT p.NombreProducto,
 // consulta para los total de pedidos
 $select_pedidos_total = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comision, pe.Estado, DATE_FORMAT(pe.FechaHoraCompra ,'%d-%m-%Y') as 'FechaHoraCompra' FROM Pedidos pe INNER JOIN Tiendas t
                                 ON t.PK_Tienda = pe.FK_Tienda
-                                WHERE t.PK_Tienda = :PK_Tienda
                                 " . $str_filtro_desde_hasta . $str_busqueda_pedido . $str_filtro_tipo_estado);
  
- $select_pedidos_total->bindParam(':PK_Tienda', $_SESSION['PK_Tienda']);  
  
  //if($filtro_desde != '' && $filtro_hasta != ''){
     $select_pedidos_total->bindParam(':FechaHoraDesde', $filtro_desde); 
@@ -201,11 +165,9 @@ $select_pedidos_total = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.
 // consulta para los  pedidos
 $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comision, pe.Estado, DATE_FORMAT(pe.FechaHoraCompra ,'%d-%m-%Y') as 'FechaHoraCompra' FROM Pedidos pe INNER JOIN Tiendas t
                                 ON t.PK_Tienda = pe.FK_Tienda
-                                WHERE t.PK_Tienda = :PK_Tienda
                                 " . $str_filtro_desde_hasta . $str_busqueda_pedido . $str_filtro_tipo_estado ."
                                 ORDER BY pe.PK_Pedido DESC LIMIT ". $inicio .", " . $items_por_pagina . "");
  
- $select_pedidos->bindParam(':PK_Tienda', $_SESSION['PK_Tienda']);  
  
  //if($filtro_desde != '' && $filtro_hasta != ''){
     $select_pedidos->bindParam(':FechaHoraDesde', $filtro_desde); 
@@ -226,13 +188,12 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Pedidos</title>
+    <title id="titulo_pagina">Pedidos</title>
 
    <!-- Imports -->
    
-    <link href="<?php echo URL_SITIO ?>static/css/pedidos.css" rel="stylesheet" type="text/css" media="all" />
-    <link href="<?php echo URL_SITIO ?>static/css/pedidos_tienda.css" rel="stylesheet" type="text/css" media="all" />
-    <link href="<?php echo URL_SITIO ?>static/css/styles.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="<?php echo URL_SITIO ?>static/css/pedidos.css" rel="stylesheet" type="text/css" media="all" /> 
+    <link href="<?php echo URL_SITIO ?>static/css/pedidos_admin.css" rel="stylesheet" type="text/css" media="all" />
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 	<script src="https://kit.fontawesome.com/b2dbb6a24d.js" crossorigin="anonymous"></script>
@@ -245,8 +206,7 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
 
 </head>
 <body>
-<?php require ('header.php') ?>
-<div class="alert alert-secondary">Inicio / Pedidos</div>
+<?php require ('header_admin.php') ?>
  <div class="row" style="width:100%;margin:0px;">
 
  <!-- <div class="col-md-2">
@@ -266,9 +226,8 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
             </div>
             <br>
 </div> -->
-    <div style="height:100%;margin-bottom:60px;" class="col-md-10 offset-md-1 bordered">
-    <div class="cont-filtros">
-    <form action="Pedidos-Tienda" method="GET">
+<div class="cont-filtros col-md-12">
+    <form action="Pedidos-Admin" method="GET">
         <div class="row col-md-12">
             
                 <div class="col-md-10">
@@ -281,12 +240,12 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
         </div>
     </form>
     <br>
-        <form action="Pedidos-Tienda" method="get">
+        <form action="Pedidos-Admin" method="get">
         <div class="row col-md-12">
                 <div class="col-md-2">
                     Estado
                     <select class="form-control" id="inputEstado" name="input_estado">
-                        <option <?php echo ($filtro_estado == 3)?"selected":""; ?>  value="3">Todos</option>    
+                        <option <?php echo ($filtro_estado == 3)?"selected":"";?>  value="3">Todos</option>    
                         <option <?php echo ($filtro_estado == 1)?"selected":""; ?> value="1">Entregado</option>
                         <option <?php echo ($filtro_estado == 0)?"selected":""; ?>  value="0">No entregado</option>
                     </select>                
@@ -306,6 +265,8 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
         </div>
         </form>
     </div>
+    <div style="height:100%;margin-bottom:60px;" class="col-md-10 offset-md-1 bordered">
+    
     <div id="mensaje-success" class="alert alert-success" role="alert"></div>
     <div id="mensaje-error" class="alert alert-danger" role="alert"></div>
         <div class="text-center" ><?php echo (count($pedidos) == 0) ? 'No hay productos pedidos.': ""; ?> </div>
@@ -313,7 +274,7 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
 
 <?php foreach($pedidos as $pedido){ ?>
     
-    <div class="card card-detalle">
+    <div class="row  card-detalle">
             
             <div class="row col-md-12 head-detalle">
                 <div class="col-md-6 text-left text-li text-bold" for=""><span class="text-li">Pedido:</span> <?php echo $pedido['NumeroPedido']?></div>
@@ -330,7 +291,8 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
                 </div>
             </div>
             <br>
-            <div class="row col-md-12">
+            <div class="row col-md-12 cont-detalles">
+     
                 <?php
                     $total_todos = 0; 
                     $total_envio = 0; 
@@ -357,9 +319,8 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
                             $descuentos_todos+= ($detalle['Descuento'] * $detalle['Cantidad']) ;
                         }
                     ?>
-                    
                     <div onclick="verDetalle(<?php echo $detalle['PK_DetallePedido'] ?>)" data-toggle="modal" data-target=".modal-mostrar-detalle" class="block-detalle row col-md-12">
-                            <div class="  col-md-6 text-left text-li" for="">
+                            <div class="  col-md-8 text-left text-li" for="">
                                 <div class="col-md-12 col-sin-pad-izquierdo">
                                     <?php echo $detalle['Cantidad'] ?> x <?php echo $detalle['NombreProducto'] ?> 
                                     <?php if($detalle['FK_TipoPedido'] == 2){ ?>
@@ -370,10 +331,11 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
                                     <?php } ?> 
                                 </div>
                                 <div class="col-sin-pad-izquierdo col-md-12 text-left text-li small" for=""> 
+                                    <span class="text-bold">tienda: </span><?php echo $detalle['NombreTienda'] ?>
                                     <span class="text-bold">comprador: </span><?php echo $detalle['PrimerNombre'] . ' ' . $detalle['PrimerApellido'] ?>
                                 </div>
                             </div>
-                            <div class="col-sin-pad-derecho  row col-md-6 text-right text-bold" for="">
+                            <div class="col-sin-pad-derecho  row col-md-4 text-right text-bold" for="">
                                 <div class="col-sin-pad-derecho col-md-12 text-right"> 
                                     $ <?php echo round(($detalle['Cantidad'] * $detalle['Precio']), 2) ?> <span class="text-li small" >USD</span>
                                 </div>
@@ -384,7 +346,6 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
                                 <?php } ?>
                             </div>
                     </div>
-                   
                     <br>
                     <?php } ?>
                 <?php } ?> 
@@ -538,19 +499,19 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
 
     if ($total_pages > 1) {
         if ($pagina != 1) {
-            echo '<li class="page-item"><a class="page-link" href="Pedidos-Tienda?pagina='.($pagina-1).'"><span aria-hidden="true">&laquo;</span></a></li>';
+            echo '<li class="page-item"><a class="page-link" href="Pedidos-Admin?pagina='.($pagina-1).'"><span aria-hidden="true">&laquo;</span></a></li>';
         }
 
         for ($i=1;$i<=$total_pages;$i++) {
             if ($pagina == $i) {
                 echo '<li class="page-item active"><a class="page-link" href="#">'.$pagina.'</a></li>';
             } else {
-                echo '<li class="page-item"><a class="page-link" href="Pedidos-Tienda?pagina='.$i.'">'.$i.'</a></li>';
+                echo '<li class="page-item"><a class="page-link" href="Pedidos-Admin?pagina='.$i.'">'.$i.'</a></li>';
             }
         }
 
         if ($pagina != $total_pages) {
-            echo '<li class="page-item"><a class="page-link" href="Pedidos-Tienda?pagina='.($pagina+1).'"><span aria-hidden="true">&raquo;</span></a></li>';
+            echo '<li class="page-item"><a class="page-link" href="Pedidos-Admin?pagina='.($pagina+1).'"><span aria-hidden="true">&raquo;</span></a></li>';
         }
     }
     echo '</ul>';
@@ -621,6 +582,9 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
                                         <img id="modal_img_adomicilio" src="" class="info_tipo" alt=""><span id="modal_lbl_tipoPedido" class="info_tipo_letras"></span>
                                     </h4>
                                     <div class=" text-left row">
+                                        <label class="  col-md-12" for="">Tienda &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: <a href=""><span id="modal_nombreTienda"></span></a> </label>
+                                    </div>
+                                    <div class=" text-left row">
                                         <label class="  col-md-12" for="">Comprador &nbsp&nbsp&nbsp&nbsp: <a href=""><span id="modal_nombreComprador"></span></a> </label>
                                     </div>
                                     <div class="text-left row">
@@ -681,6 +645,10 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
 
 
 <script type="text/javascript">
+
+    $('.h2-name').html('Pedidos');
+    $('#titulo_pagina').html('Shoppingapp | Pedidos');
+
     $("#mensaje_alert").css("visibility", "hidden");
 
     $('#mensaje-success').hide();
@@ -779,6 +747,7 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
         $('#modal_nombreProducto').html(detalle_pedido[0].NombreProducto);
         $('#modal_imagen').prop('src', detalle_pedido[0].Imagen);
         $('#modal_nombreComprador').html(detalle_pedido[0].NombreCliente);
+        $('#modal_nombreTienda').html(detalle_pedido[0].NombreTienda);
         $('#modal_cantidad').html(detalle_pedido[0].Cantidad);
         $('#modal_precioUnitario').html(detalle_pedido[0].Precio);
         $('#modal_subtotal').html(subtotal);
@@ -814,6 +783,6 @@ $select_pedidos = $pdo->prepare("SELECT pe.PK_Pedido, pe.NumeroPedido, pe.Comisi
 
 </script>
 
-<?php require ('footer.php') ?>
+<?php require ('footer_admin.php') ?>
 </body>
 </html>
