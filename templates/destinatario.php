@@ -14,7 +14,6 @@ $sql_pais->execute();
 $listPais=$sql_pais->fetchAll(PDO::FETCH_ASSOC);
 
 
-<<<<<<< HEAD
     
     // Buscar cliente
     $buscar_cliente = $pdo->prepare("SELECT * FROM Clientes WHERE FK_Usuario = :PK_Usuario");
@@ -24,65 +23,13 @@ $listPais=$sql_pais->fetchAll(PDO::FETCH_ASSOC);
    
 
 
-=======
-	$txtID=(isset($_POST['PK_Ciudad']))?$_POST["PK_Ciudad"]:"";
-	$accion=(isset($_POST['accion']))?$_POST["accion"]:"";
-
-
-	$txtNombres=(isset($_POST['NombresDestinatario']))?$_POST["NombresDestinatario"]:"";
-	$txtApellidos=(isset($_POST['ApellidosDestinatario']))?$_POST["ApellidosDestinatario"]:"";
-	$txtTelefono=(isset($_POST['Telefono']))?$_POST["Telefono"]:"";
-	$txtDepartamento=(isset($_POST['Departamento']))?$_POST["Departamento"]:"";
-	$txtDireccion1=(isset($_POST['Direccion']))?$_POST["Direccion"]:"";
-	$txtDireccion2=(isset($_POST['Direccion2']))?$_POST["Direccion2"]:"";
-	$txtCodigoPostal=(isset($_POST['CP']))?$_POST["CP"]:"";
-	$txtCliente=(isset($_POST['Cliente']))?$_POST["Cliente"]:"";
-	$txtCiudad=(isset($_POST['input_ciudad']))?$_POST["input_ciudad"]:"";
-
-	
-
-	switch ($accion) {
-		case 'agregar':
-					
-					$sentencia=$pdo->prepare("INSERT into destinatarios(NombresDestinatario,ApellidosDestinatario,Telefono,Departamento,Direccion1,Direccion2,CodigoPostal,FK_Cliente,FK_Ciudad) values(:NombresDestinatario,:ApellidosDestinatario,:Telefono,:Departamento,:Direccion1,:Direccion2,:CodigoPostal,:FK_Cliente,:FK_Ciudad) ");
-					$sentencia->bindParam(':NombresDestinatario',$txtNombres);
-					$sentencia->bindParam(':ApellidosDestinatario',$txtApellidos);
-					$sentencia->bindParam(':Telefono',$txtTelefono);
-					$sentencia->bindParam(':Departamento',$txtDepartamento);
-					$sentencia->bindParam(':Direccion1',$txtDireccion1);
-					$sentencia->bindParam(':Direccion2',$txtDireccion2);
-					$sentencia->bindParam(':CodigoPostal',$txtCodigoPostal);
-					$sentencia->bindParam(':FK_Cliente',$txtCliente);
-					$sentencia->bindParam(':FK_Ciudad',$txtCiudad);
-					$sentencia->execute();
-				break;
-		case 'editar':
-					
-			break;
-		case 'eliminar':
-					
-			break;
-		case 'cancelar':
-		
-			break;
-		
-		default:
-			# code...
-			break;
-	}
-
->>>>>>> c8ecc498a4df677e1716285a2fbb237acaeb25de
 ?> 
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-<<<<<<< HEAD
 	<title>Shoppingapp | Destinatario</title>
-=======
-	<title>Document</title>
->>>>>>> c8ecc498a4df677e1716285a2fbb237acaeb25de
 
 	<link href="<?php echo URL_SITIO ?>static/css/styles.css" rel="stylesheet" type="text/css" media="all" />
     <link href="<?php echo URL_SITIO ?>static/css/pedidos.css" rel="stylesheet" type="text/css" media="all" />
@@ -93,7 +40,6 @@ $listPais=$sql_pais->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="<?php echo URL_SITIO ?>static/js/jquery-3.5.0.min.js" ></script>
-<<<<<<< HEAD
 	<?php include './iconos.php' ?>
 </head>
 <body>
@@ -117,23 +63,11 @@ $listPais=$sql_pais->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 		<div class="col-md-9 ">
-=======
-	
-</head>
-<body>
-	<?php include "header.php" ?>
-	<div class="row">
-		<div class="col-md-4">
->>>>>>> c8ecc498a4df677e1716285a2fbb237acaeb25de
 			<div class="card">
 			  <div class="card-header">
 			  	Registro de destinatario
 			  </div>
-<<<<<<< HEAD
 			<form action="<?php echo URL_SITIO ?>scripts/destinatarios.php" class="form-line" id="frmRegistro" method="post" enctype="multipart/form-data">
-=======
-			 	<form class="form-line" id="frmRegistro" method="post" enctype="multipart/form-data">
->>>>>>> c8ecc498a4df677e1716285a2fbb237acaeb25de
 			  <div class="card-body">
 					<div class="form-group">
 				  		<div class="form-row">
@@ -189,11 +123,7 @@ $listPais=$sql_pais->fetchAll(PDO::FETCH_ASSOC);
 				  			
 				  		</div>
 			  		</div>
-<<<<<<< HEAD
 					<input type="hidden"  name="Cliente" value="<?php echo $cliente[0]['PK_Cliente']?>">	
-=======
-					<input type="text"  name="Cliente" value="1">	
->>>>>>> c8ecc498a4df677e1716285a2fbb237acaeb25de
 			  		<div class="form-group">
 				  		<div class="form-row">
 				  			<div class="col-md-6">
@@ -244,21 +174,14 @@ $listPais=$sql_pais->fetchAll(PDO::FETCH_ASSOC);
 	
 
 	</div>
-<<<<<<< HEAD
 <br>
-=======
-
->>>>>>> c8ecc498a4df677e1716285a2fbb237acaeb25de
 
 <?php include 'footer.php' ?>
 </body>
 </html>
 
 <script>
-<<<<<<< HEAD
     $('#lbl-carrito').hide();
-=======
->>>>>>> c8ecc498a4df677e1716285a2fbb237acaeb25de
 	$(document).ready(function(){
 		$('#inputPais').change(function(){
 		    recargarListaCiudad();
