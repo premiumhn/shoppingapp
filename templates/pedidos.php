@@ -631,6 +631,8 @@ function obtenerPrecioEnvio($FK_Tienda, $FK_Ciudad){
     $('#mensaje-success').hide();
     $('#mensaje-error').hide();
 
+    $('#lbl-carrito').hide();
+
     <?php 
         $msj = (isset($_GET['msj']))?$_GET['msj']:"";
         if( $msj == 'pedido_confirmado'){ 
