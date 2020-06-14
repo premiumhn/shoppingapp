@@ -14,6 +14,7 @@ RewriteRule ^Ver-Categoria/?$ templates/ver_categorias.php
 RewriteRule ^Productos/?$ templates/productos.php
 RewriteRule ^Producto/?$ templates/producto.php
 RewriteRule ^Destinatarios/?$ templates/destinatario.php
+RewriteRule ^Ver-Destinatarios/?$ templates/ver_destinatarios.php
 RewriteRule ^Producto-Detalle/?$ templates/detalle_producto.php
 RewriteRule ^Carrito/?$ templates/carrito.php
 RewriteRule ^Login/?$ templates/login.php
@@ -45,3 +46,10 @@ RewriteRule ^Tiendas-Admin/?$ templates/tiendas_admin.php
 RewriteRule ^Nueva-Tienda/?$ templates/nueva_tienda.php
 RewriteRule ^Visualizar-Tienda/?$ templates/visualizar_tienda.php
 RewriteRule ^Inicio/?$ templates/paises_inicio.php
+RewriteRule ^Configuracion-Sitio/?$ templates/configuracion_sitio.php
+RewriteRule ^Estadisticas/?$ templates/estadisticas.php
+RewriteRule ^Estadisticas-Categorias/?$ templates/estadisticas_categorias.php
+RewriteRule ^Estadisticas-Productos/?$ templates/estadisticas_productos.php
+RewriteRule ^Estadisticas-Ventas/?$ templates/estadisticas_ventas.php
+RewriteRule ^Productos-Tienda/?$ templates/productos_tienda.php
+RewriteRule ^Pedidos-Admin/?$ templates/pedidos_admin.php
