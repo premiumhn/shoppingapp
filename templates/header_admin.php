@@ -11,10 +11,6 @@ if(!isset($pdo)){
   require 'language/requirelanguage.php';
 }
 
-
-
-
-
 $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios
                                 WHERE PK_Usuario = :PK_Usuario");
 $buscar_usuario->bindParam('PK_Usuario', $_SESSION['login_user']);
@@ -46,7 +42,8 @@ if($usuario[0]['FK_TipoUsuario']!=3){
 
    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css" rel="stylesheet">
    <link href="<?php echo URL_SITIO ?>static/css/header_admin.css"rel="stylesheet">
-    <link href="<?php echo URL_SITIO ?>static/css/usuarios_admin.css" rel="stylesheet" type="text/css" media="all" />
+   <link href="<?php echo URL_SITIO ?>static/css/usuarios_admin.css" rel="stylesheet" type="text/css" media="all" />
+
     <script src="https://kit.fontawesome.com/b2dbb6a24d.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
@@ -70,9 +67,6 @@ if($usuario[0]['FK_TipoUsuario']!=3){
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
-          <li>
-          <div id="google_translate_element" class="google"></div>
-          </li>
             <li class="nav-item " id="paises">
             <a class="nav-link " href="<?php echo URL_SITIO?>Admin" ><?php echo $hinicio ?>
             </a>
@@ -96,10 +90,32 @@ if($usuario[0]['FK_TipoUsuario']!=3){
               <a class="nav-link" href="Registro-Datos?menu=ver_categorias" value="category" name="menu"  ><?php echo $tcategorias ?></a>
             </form>
           </li>
-          <li class="nav-item" id="Producto">
-            <a class="nav-link" href="<?php echo URL_SITIO ?>Producto" >Producto</a>
+          <li class="nav-item" id="pedidosAdmin">
+            <a class="nav-link" href="<?php echo URL_SITIO ?>Pedidos-Admin" >Pedidos</a>
           </li>
-          <li class="nav-item dropdown">
+          <div id="menu_movil">
+            <li class="nav-item">
+            <form class="" action="Editar-Usuario-Admin" method="get">
+                <input type="hidden" name="PK_Usuario" value="<?php echo $usuario[0]['PK_Usuario']?>" />
+                <a class="nav-link" href="#" value="category" name="menu" onclick="this.parentNode.submit()" ><?php echo $heditperfil ?></a>
+              </form>
+            </li>
+            <li class="nav-item">
+            <form class="" action="Configuracion-Sitio" method="get">
+                <input type="hidden" name="PK_Usuario" value="<?php echo $usuario[0]['PK_Usuario']?>" />
+                <a class="nav-link" href="#" value="category" name="menu" onclick="this.parentNode.submit()" >Configuración del sitio</a>
+              </form>
+            </li>
+            <li class="nav-item">
+            <form class="" action="Login" method="get">
+                <a class="nav-link" href="#" value="category" name="menu" onclick="this.parentNode.submit()" >Cerrar sesión</a>
+              </form>
+            </li>
+          </div>
+          <li>
+          <div id="google_translate_element" class="google"></div>
+          </li>
+          <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <?php echo $fidioma ?>
           </a>
@@ -108,7 +124,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="templates/language/changelanguage.php?language=en"><?php echo $english ?></a>
           </div>
-        </li>
+        </li> -->
       </ul>
       </div>
     
@@ -150,7 +166,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2 h2-name">Dashboard</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
+        <!-- <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group mr-2">
             <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
             <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
@@ -159,7 +175,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
             <span data-feather="calendar"></span>
             This week
           </button>
-        </div>
+        </div> -->
       </div>
 
     

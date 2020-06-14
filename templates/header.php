@@ -4,9 +4,11 @@ require 'language/requirelanguage.php';
 
 $buscar_carrito = $pdo->prepare("SELECT * FROM Carrito c INNER JOIN Clientes cli
                                     ON c.FK_Cliente = cli.PK_CLiente INNER JOIN Usuarios u
-                                    ON cli.FK_Usuario = u.PK_Usuario 
-                                    WHERE u.PK_Usuario = :PK_Usuario");
+                                    ON cli.FK_Usuario = u.PK_Usuario INNER JOIN Productos p
+                                    ON c.FK_Producto = p.PK_Producto
+                                    WHERE u.PK_Usuario = :PK_Usuario AND p.FK_Tienda = :PK_Tienda");
 $buscar_carrito->bindParam('PK_Usuario', $_SESSION['login_user']);
+$buscar_carrito->bindParam('PK_Tienda', $_SESSION['tienda']);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $buscar_carrito->execute();
 $carrito = $buscar_carrito->fetchAll(PDO::FETCH_ASSOC);
@@ -33,7 +35,7 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
     <ul class="row offset-md-2 col-md-10 navbar-nav ml-auto mt-2 mt-lg-0">
     
     <?php if($usuario[0]['FK_TipoUsuario'] == 1 ){ ?> 
-        <li class="col-md-2 nav-item">
+        <li class="col-md-2 offset-md-2 nav-item">
             <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Inicio"><i class="fas fa-home mr-2"></i><?php echo $hinicio ?></a>
           </li>
         <li   class="col-md-2 nav-item">
@@ -41,9 +43,6 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
         </li>
         <li   class="col-md-2  nav-item">
           <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Pedidos"><i class="fas fa-box mr-2"></i><?php echo $hpedido ?> </a>
-        </li>
-        <li   class="col-md-2 nav-item">
-          <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Destinatarios"><i class="fas fa-users"></i>Destinatarios</a>
         </li>
     <?php } ?>
       <?php if(!isset($_SESSION['login_user'])){ ?>
@@ -96,6 +95,9 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
               <input type="hidden" name="menu" value="perfil_usuario" />
               <a class="dropdown-item" href="#" value="category" name="menu" onclick="this.parentNode.submit()" >Mi cuenta</a>
             </form>
+            <form action="Ver-Destinatarios" method="get">
+              <a class="dropdown-item" href="#" value="category" name="menu" onclick="this.parentNode.submit()" >Mis destinatarios</a>
+            </form>
         <?php }else if($usuario[0]['FK_TipoUsuario'] == 2 ){ ?>
             <form action="Registro-Datos" method="POST">
               <input type="hidden" name="menu" value="perfil_tienda" />
@@ -107,12 +109,12 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
           <div class="dropdown-divider"></div>
 
           <?php if($usuario[0]['FK_TipoUsuario'] == 1 || $usuario[0]['FK_TipoUsuario'] == 3 ){ ?>
-            <form action="Login" method="POST">
+            <form action="Login" method="get">
               <input type="hidden" name="sesion" value="cerrar" />
               <a class="dropdown-item salir" href="#" value="salir" name="menu" onclick="this.parentNode.submit()" ><?php echo $hsalir ?></a>
             </form>
           <?php }else if($usuario[0]['FK_TipoUsuario'] == 2 ){ ?>
-            <form action="Login-Tienda" method="POST">
+            <form action="Login-Tienda" method="get">
               <input type="hidden" name="sesion" value="cerrar" />
               <a class="dropdown-item salir" href="#" value="salir" name="menu" onclick="this.parentNode.submit()" ><?php echo $hsalir ?></a>
             </form>
@@ -136,13 +138,13 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
 	</div>
 	<div class="col-md-6" >
 			<form class="form-inline" id="search-form" action="#" method="get">
-					<input id="busqueda" name="busqueda" class="input-flat col-md-9 form-control" type="search" placeholder="<?php echo $hbuscar ?>" aria-label="Search" value="<?php echo (isset($_POST['busqueda'])) ? $_POST['busqueda'] : "" ?>">
-					<button class="col-md-2 btn-flat" id="btn-buscar-producto" type="submit"><?php echo $hbuscar ?></button>
+					<input id="busqueda" name="busqueda" class="input-flat col-md-9 form-control" type="search" placeholder="Búsqueda" aria-label="Search" value="<?php echo (isset($_POST['busqueda'])) ? $_POST['busqueda'] : "" ?>">
+					<button class="col-md-2 btn-flat" id="btn-buscar-producto" type="submit">Buscar</button>
 			</form>
 	</div>
 	<div class="col-md-2">
-    <div style="display:flex;">
-      <a id="lbl-carrito" href="Carrito"> <i class="fas fa-shopping-cart"></i> <?php echo $hcarrito ?> ( <?php echo count($carrito) ?> )</a>
+    <div style="display:block;margin-top:30px">
+      <a id="lbl-carrito" href="Carrito"> <i class="fas fa-shopping-cart"></i> <?php echo $hcarrito ?> (<?php echo count($carrito) ?>)</a>
 		</div>
 		
 	</div>
