@@ -25,13 +25,13 @@ $paises = $select_paises->fetchAll(PDO::FETCH_ASSOC);
     <div class="row">
       
       <div class="col-lg-4 col-md-6">
-        <h3><?php echo $flink ?></h3>
+        <h3>Enlaces</h3>
         <ul class="list-unstyled three-column">
-        <li><a href="<?php echo ($usuario[0]['FK_TipoUsuario']==2)?'./home_tienda.php':'./home.php'; ?>"><?php echo $finicio ?></a> </li>
-          <li><?php echo $fservicio ?></li>
-          <li><?php echo $fcompania ?></li>
-          <li><?php echo $fubicacion ?></li>
-          <li><?php echo $fcontactar ?></li>
+        <li><a href="<?php echo ($usuario[0]['FK_TipoUsuario']==2)?'./home_tienda.php':'./home.php'; ?>">Inicio</a> </li>
+          <li>Servicios</li>
+          <li>Compañia</li>
+          <li>Ubicación</li>
+          <li>Contactar</li>
         </ul>
         <ul style="padding:0px;" class="">
           <a href="">
@@ -47,7 +47,7 @@ $paises = $select_paises->fetchAll(PDO::FETCH_ASSOC);
       </div>
       
       <div class="col-lg-4 col-md-6">
-        <h3><?php echo $fcontacto ?></h3>
+        <h3>Contacto</h3>
 
         <div class="media">
           <a href="#" class="pull-left">
@@ -81,7 +81,7 @@ $paises = $select_paises->fetchAll(PDO::FETCH_ASSOC);
       </div>
       
       <div class="col-lg-2">
-        <h3><?php echo $fpaises ?></h3>
+        <h3>Paises</h3>
         <ul class="list-unstyled">
           <?php foreach($paises as $pais){ ?>
             <li><?php echo $pais['NombrePais'] ?></li>
@@ -89,23 +89,6 @@ $paises = $select_paises->fetchAll(PDO::FETCH_ASSOC);
         </ul>
       </div>
 
-      <div class="col-lg-2">
-        <h3><?php echo $fidioma ?></h3>
-        <ul class="list-unstyled">
-          <li>
-            <a href="templates/language/changelanguage.php?language=es">
-            <?php echo $spanish; ?>
-          </a>
-          </li>
-          <li>
-            <a href="templates/language/changelanguage.php?language=en">
-            <?php echo $english; ?>
-          </a>
-          </li>
-          
-          
-        </ul>
-      </div>
       
     </div>
   </div>

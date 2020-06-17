@@ -199,7 +199,7 @@ if(isset($_SESSION['categoria'])){
 <?php if(isset($_SESSION['categoria'])){ ?>
     <h2>Artículos de <?php echo $categoria_seleccionada[0]['NombreCategoria'] ?></h2>
 <?php }else{?>
-    <h2><?php echo $tcategorias ?></h2>
+    <h2>Categorías</h2>
 <?php } ?> 
 
 </div>	

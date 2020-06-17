@@ -96,7 +96,7 @@ if($busqueda!=''){
 						</div>
 						<a class="card-footer  clearfix small z-1" href="<?php echo URL_SITIO ?>Tiendas?idPais=<?php echo $pais["PK_Pais"] ?>" >
 							<span class="float-left" style="font-size: 1rem;">
-							<?php echo $tiendasde ?><strong class="text-uppercase"><?php echo $pais["NombrePais"] ?></strong>  
+							Tiendas de <strong class="text-uppercase"><?php echo $pais["NombrePais"] ?></strong>  
 							</span>
 							<span class="float-right">
 								<i class="fas fa-angle-right"></i>

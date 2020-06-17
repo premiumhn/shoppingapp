@@ -7,7 +7,7 @@ include '../global/config_paypal.php';
 include '../global/const.php';
 
 session_start();
-require 'language/requirelanguage.php';
+
 require ('../scripts/comprobaciones.php');
 
 $cantidad = (isset($_POST['input_cantidad'])) ? $_POST['input_cantidad'] : "";

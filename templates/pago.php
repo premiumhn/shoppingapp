@@ -7,7 +7,6 @@ include '../global/config_paypal.php';
 include '../global/const.php';
 
 session_start();
-require 'language/requirelanguage.php';
 include '../scripts/comprobaciones.php';
 
   //Consulta seleccionar carrito

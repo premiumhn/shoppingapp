@@ -55,7 +55,7 @@ include 'header_admin.php';
 		<div class="col-md-4">
 			<div class="card">
 			  <div class="card-header">
-			    <?php echo $rciudades ?>
+			    Registro de Ciudades
 			  </div>
 			 	<form class="form-line" id="frmRegistro" method="post">
 			  <div class="card-body">
@@ -63,13 +63,13 @@ include 'header_admin.php';
 					
 					<input class="form-control" hidden type="text" name="PK_Ciudad" value="<?php echo $txtID ?>"  placeholder="Primary Key" id="inputPK_Ciudad" readonly >
 					<br>
-					<label class="" for=""><?php echo $nciudad ?>:</label>
+					<label class="" for="">Ciudad:</label>
 					<input class="form-control" type="text" name="NombreCiudad" maxlength="80" id="inputNombreCiudad" required value="<?php echo $txtNombre ?>">
 					<br>
 
 					<div class="">
                         <select name="FK_Pais" id="" class="form-control" required>
-                        	<option value="">--<?php echo $btnSeleccionar ?>--</option>
+                        	<option value="">--Seleccione--</option>
                         	<?php foreach ($listPais as $paisL ) {?>
                         		<option value="<?php echo $paisL['PK_Pais'] ?>"><?php  echo $paisL['NombrePais'] ?></option>
                         	<?php } ?>
@@ -77,16 +77,16 @@ include 'header_admin.php';
                     </div>
 			  	</div>
 				<div class="card-footer text-muted text-center">
-				  	<button class="btn btn-primary" value="agregar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnGuardar ?>">
+				  	<button class="btn btn-primary" value="agregar" type="submit" name="accion" data-toggle="tooltip" title="Guardar">
 				  		<i class="fas fa-save fas-faw"></i>
 				  	</button>
-					<button class="btn btn-success" value="editar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnEditar ?>">
+					<button class="btn btn-success" value="editar" type="submit" name="accion" data-toggle="tooltip" title="Editar">
 						<i class="fas fa-edit fas-faw"></i>
 					</button>
-					<button class="btn btn-danger" value="eliminar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnEliminar ?>">
+					<button class="btn btn-danger" value="eliminar" type="submit" name="accion" data-toggle="tooltip" title="Eliminar">
 						<i class="fas fa-trash-alt fas-faw"></i>
 					</button>
-					<button class="btn btn-warning" value="cancelar" type="reset" name="accion" data-toggle="tooltip" title="<?php echo $btnCancelar ?>">
+					<button class="btn btn-warning" value="cancelar" type="submit" name="accion" data-toggle="tooltip" title="Cancelar">
 						<i class="fas fa-ban fas-faw"></i>
 					</button>
 				</div>
@@ -97,7 +97,7 @@ include 'header_admin.php';
 			<div class="card mb-3 ">
 	          	<div class="card-header">
 	             	<i class="fas fa-table"></i>
-	            	<?php echo $lciudad ?>
+	            	Listado de Ciudades
 	          	</div>
             	<div class="card-body">
               		<div class="table-responsive">
@@ -105,10 +105,10 @@ include 'header_admin.php';
                   			<thead class="text-center">
 			                    <tr>
 									<th hidden>IDCIUDAD</th>
-									<th><?php echo $nciudad ?></th>
+									<th>Ciudad</th>
 									<th hidden>IDPAIS</th>
-									<th ><?php echo $npais ?></th>
-									<th><?php echo $naccion ?></th>
+									<th >País</th>
+									<th>Acción</th>
 								</tr>
 			                </thead>
                 			<tbody> 
@@ -123,7 +123,7 @@ include 'header_admin.php';
 												<input hidden type="text" name="PK_Ciudad" value="<?php echo $pais["PK_Ciudad"]; ?>">
 												<input hidden type="text" name="NombreCiudad" value="<?php echo $pais["NombreCiudad"]; ?>">
 												<input hidden type="text" name="FK_Pais" value="<?php echo $pais["FK_Pais"]; ?>">
-												<button type="submit" class="btn btn-primary" data-toggle="tooltip" title="<?php echo $btnSeleccionar ?>"><i class="fas fa-check"></i></button>
+												<button type="submit" class="btn btn-primary" data-toggle="tooltip" title="Seleccionar"><i class="fas fa-check"></i></button>
 												
 											</form>
 										</td>
@@ -133,7 +133,7 @@ include 'header_admin.php';
                 		</table>
               		</div>
             	</div>
-          		<div class="card-footer small text-muted"><?php echo $hciudades ?></div>
+          		<div class="card-footer small text-muted">Ciudades</div>
     		</div>
 	</div>
 	

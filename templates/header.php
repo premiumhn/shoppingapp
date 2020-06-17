@@ -1,6 +1,6 @@
 <?php
 
-require 'language/requirelanguage.php';
+
 
 $buscar_carrito = $pdo->prepare("SELECT * FROM Carrito c INNER JOIN Clientes cli
                                     ON c.FK_Cliente = cli.PK_CLiente INNER JOIN Usuarios u
@@ -36,21 +36,21 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
     
     <?php if($usuario[0]['FK_TipoUsuario'] == 1 ){ ?> 
         <li class="col-md-2 offset-md-2 nav-item">
-            <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Inicio"><i class="fas fa-home mr-2"></i><?php echo $hinicio ?></a>
+            <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Inicio"><i class="fas fa-home mr-2"></i>Inicio</a>
           </li>
         <li   class="col-md-2 nav-item">
-          <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Tiendas"><i class="fas fa-store"></i> <?php echo $htienda ?></a>
+          <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Tiendas"><i class="fas fa-store"></i>Tienda</a>
         </li>
         <li   class="col-md-2  nav-item">
-          <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Pedidos"><i class="fas fa-box mr-2"></i><?php echo $hpedido ?> </a>
+          <a class="nav-link border-right" href="<?php echo URL_SITIO ?>Pedidos"><i class="fas fa-box mr-2"></i>Pedido</a>
         </li>
     <?php } ?>
       <?php if(!isset($_SESSION['login_user'])){ ?>
         <li   class="col-md-2 nav-item">
-          <a class="nav-link border-right" href="Login"><i class="fas fa-sign-in-alt mr-2"></i><?php echo $hlogin ?></a>
+          <a class="nav-link border-right" href="Login"><i class="fas fa-sign-in-alt mr-2"></i>Iniciar Sesión</a>
         </li>
         <li   class="col-md-2 nav-item">
-          <a class="nav-link border-right" href="Registro-Usuario"><i class="fas fa-sign-out-alt mr-2"></i><?php echo $hregistrarse ?></a>
+          <a class="nav-link border-right" href="Registro-Usuario"><i class="fas fa-sign-out-alt mr-2"></i>Registrarse</a>
 			</li>
       <?php }?>
       <?php if($usuario[0]['FK_TipoUsuario'] == 1 || $usuario[0]['FK_TipoUsuario'] == 3 ){ ?>
@@ -111,12 +111,12 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
           <?php if($usuario[0]['FK_TipoUsuario'] == 1 || $usuario[0]['FK_TipoUsuario'] == 3 ){ ?>
             <form action="Login" method="get">
               <input type="hidden" name="sesion" value="cerrar" />
-              <a class="dropdown-item salir" href="#" value="salir" name="menu" onclick="this.parentNode.submit()" ><?php echo $hsalir ?></a>
+              <a class="dropdown-item salir" href="#" value="salir" name="menu" onclick="this.parentNode.submit()" >Cerrar Sesión</a>
             </form>
           <?php }else if($usuario[0]['FK_TipoUsuario'] == 2 ){ ?>
             <form action="Login-Tienda" method="get">
               <input type="hidden" name="sesion" value="cerrar" />
-              <a class="dropdown-item salir" href="#" value="salir" name="menu" onclick="this.parentNode.submit()" ><?php echo $hsalir ?></a>
+              <a class="dropdown-item salir" href="#" value="salir" name="menu" onclick="this.parentNode.submit()" >Cerrar Sesión</a>
             </form>
             <?php } ?>
         </div>
@@ -144,7 +144,7 @@ $usuario = $buscar_usuario->fetchAll(PDO::FETCH_ASSOC);
 	</div>
 	<div class="col-md-2">
     <div style="display:block;margin-top:30px">
-      <a id="lbl-carrito" href="Carrito"> <i class="fas fa-shopping-cart"></i> <?php echo $hcarrito ?> (<?php echo count($carrito) ?>)</a>
+      <a id="lbl-carrito" href="Carrito"> <i class="fas fa-shopping-cart"></i>Carrito (<?php echo count($carrito) ?>)</a>
 		</div>
 		
 	</div>

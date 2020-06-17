@@ -138,6 +138,7 @@ $listaTa=$sql8->fetchAll(PDO::FETCH_ASSOC);
 <?php include 'header.php' ?>
 <div class="container">
 	<br>
+	<a href="<?php $URL_SITIO ?>Lista_Productos">Ir al listado</a>
 		<div class="col-md-12">
 			<div class="card">
 			  <div class="card-header">

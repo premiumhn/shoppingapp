@@ -6,7 +6,6 @@ include '../global/conexion.php';
 include '../global/const.php';
 
 session_start();
-  require 'language/requirelanguage.php';
 
 
 $sql_pais=$pdo->prepare("SELECT * from Paises");
@@ -161,10 +160,10 @@ $listPais=$sql_pais->fetchAll(PDO::FETCH_ASSOC);
 
 			  	</div>
 				<div class="card-footer text-muted text-center">
-				  	<button class="btn btn-primary" value="agregar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnGuardar ?>">
+				  	<button class="btn btn-primary" value="agregar" type="submit" name="accion" data-toggle="tooltip" title="Guardar">
 				  		<i class="fas fa-save fas-faw"></i>
 				  	</button>
-					<button class="btn btn-warning" value="cancelar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnCancelar ?>">
+					<button class="btn btn-warning" value="cancelar" type="submit" name="accion" data-toggle="tooltip" title="Cancelar">
 						<i class="fas fa-ban fas-faw"></i>
 					</button>
 				</div>

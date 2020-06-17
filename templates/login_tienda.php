@@ -135,7 +135,7 @@ $datos_config = $select_id->fetchAll(PDO::FETCH_ASSOC);
 </div>
 <div class="row col-md-12">
     <div class="col-md-8 offset-md-2 text-center">
-        <span style="color:white;">Envíanos tu información a <strong>shoppingappworld@gmail.com</strong> y solicita crear una cuenta para tu tienda.</span>
+        <span style="color:white;">Envíanos tu información a <strong><a href="mailto:shopping.app.service@gmail.com">shopping.app.service@gmail.com</a></strong> y solicita crear una cuenta para tu tienda.</span>
         <!-- <a href="Registro-Tienda" class="btn btn-primary btn_registrarse">Registrar tienda</a> -->
     </div>
 </div>

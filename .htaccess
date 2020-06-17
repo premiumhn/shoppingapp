@@ -52,4 +52,5 @@ RewriteRule ^Estadisticas-Categorias/?$ templates/estadisticas_categorias.php
 RewriteRule ^Estadisticas-Productos/?$ templates/estadisticas_productos.php
 RewriteRule ^Estadisticas-Ventas/?$ templates/estadisticas_ventas.php
 RewriteRule ^Productos-Tienda/?$ templates/productos_tienda.php
+RewriteRule ^Lista_Productos/?$ templates/listado_productos.php
 RewriteRule ^Pedidos-Admin/?$ templates/pedidos_admin.php

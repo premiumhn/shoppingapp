@@ -8,7 +8,7 @@ if(!isset($pdo)){
   include '../global/const.php';
   
   session_start();
-  require 'language/requirelanguage.php';
+
 }
 
 $buscar_usuario = $pdo->prepare("SELECT * FROM Usuarios
@@ -60,7 +60,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
     
       <a  class="navbar-brand" href="#">
         <img class="logo" style="width:180px;" src="<?php echo URL_SITIO ?>static/img/Logo_shoppingapp_v2_trazado.png" alt="">
-        <span class="text-modulo"><?php echo $tmodulo ?></span> 
+        <span class="text-modulo">ADM</span> 
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -68,36 +68,41 @@ if($usuario[0]['FK_TipoUsuario']!=3){
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item " id="paises">
-            <a class="nav-link " href="<?php echo URL_SITIO?>Admin" ><?php echo $hinicio ?>
+            <a class="nav-link " href="<?php echo URL_SITIO?>Admin" >Inicio
             </a>
           </li>
-          <li class="nav-item " id="paises">
-            <a class="nav-link " href="<?php echo URL_SITIO?>Paises" ><?php echo $hpaises ?>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Catálogos
             </a>
-          </li>
-          <li class="nav-item" id="ciudades">
-            <a class="nav-link" href="<?php echo URL_SITIO ?>Ciudades" ><?php echo $hciudades ?></a>
-          </li>
-          <li class="nav-item" id="Usuarios">
-            <a class="nav-link" href="<?php echo URL_SITIO ?>Usuarios-Admin" ><?php echo $husuarios ?></a>
-          </li>
+            <div class="dropdown-menu dropdown-menu-right bg-warning" aria-labelledby="navbarDropdown">
+              <a class="nav-link " href="<?php echo URL_SITIO?>Paises" >Paises
+              <div class="dropdown-divider"></div>
+              <a class="nav-link" href="<?php echo URL_SITIO ?>Ciudades" >Ciudades</a>
+              <div class="dropdown-divider"></div>
+               <a class="nav-link" href="<?php echo URL_SITIO ?>Usuarios-Admin" >Usuarios</a>
+            </div>
+        </li>
           <li class="nav-item" id="Tiendas">
-            <a class="nav-link" href="<?php echo URL_SITIO ?>Tiendas-Admin" ><?php echo $htienda ?></a>
+            <a class="nav-link" href="<?php echo URL_SITIO ?>Tiendas-Admin" >Tiendas</a>
+          </li> 
+          <li class="nav-item" id="Tiendas">
+            <a class="nav-link" href="<?php echo URL_SITIO ?>Lista_Productos" >Produc</a>
           </li>
           <li class="nav-item" id="ciudades">
             <form action="Registro-Datos" method="get">
               <input type="hidden" name="menu" value="ver_categorias" />
-              <a class="nav-link" href="Registro-Datos?menu=ver_categorias" value="category" name="menu"  ><?php echo $tcategorias ?></a>
+              <a class="nav-link" href="Registro-Datos?menu=ver_categorias" value="category" name="menu"  >Categorias</a>
             </form>
           </li>
           <li class="nav-item" id="pedidosAdmin">
             <a class="nav-link" href="<?php echo URL_SITIO ?>Pedidos-Admin" >Pedidos</a>
           </li>
-          <div id="menu_movil">
+          
             <li class="nav-item">
             <form class="" action="Editar-Usuario-Admin" method="get">
                 <input type="hidden" name="PK_Usuario" value="<?php echo $usuario[0]['PK_Usuario']?>" />
-                <a class="nav-link" href="#" value="category" name="menu" onclick="this.parentNode.submit()" ><?php echo $heditperfil ?></a>
+                <a class="nav-link" href="#" value="category" name="menu" onclick="this.parentNode.submit()" >Editar Perfil</a>
               </form>
             </li>
             <li class="nav-item">
@@ -111,20 +116,10 @@ if($usuario[0]['FK_TipoUsuario']!=3){
                 <a class="nav-link" href="#" value="category" name="menu" onclick="this.parentNode.submit()" >Cerrar sesión</a>
               </form>
             </li>
-          </div>
+      
           <li>
           <div id="google_translate_element" class="google"></div>
           </li>
-          <!-- <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <?php echo $fidioma ?>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right bg-warning" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="templates/language/changelanguage.php?language=es"><?php echo $spanish ?></a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="templates/language/changelanguage.php?language=en"><?php echo $english ?></a>
-          </div>
-        </li> -->
       </ul>
       </div>
     
@@ -145,7 +140,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
             <br>
             <form class="col-md-12" action="Editar-Usuario-Admin" method="get">
               <input type="hidden" name="PK_Usuario" value="<?php echo $usuario[0]['PK_Usuario']?>" />
-              <a style="color:white;font-size:13px;" class="btn-menu col-md-12" href="#" value="category" name="menu" onclick="this.parentNode.submit()" ><?php echo $heditperfil ?></a>
+              <a style="color:white;font-size:13px;" class="btn-menu col-md-12" href="#" value="category" name="menu" onclick="this.parentNode.submit()" >Editar Perfil</a>
             </form>
             <br>
             <form action="Configuracion-Sitio" method="get">
@@ -153,7 +148,7 @@ if($usuario[0]['FK_TipoUsuario']!=3){
               <a style="color:white;font-size:13px;" class="btn-menu" href="#" value="category" name="menu" onclick="this.parentNode.submit()" >Configuración del sitio</a>
             </form>
             <br>
-            <a class="btn-menu" style="color:white;font-size:13px;" href="<?php echo URL_SITIO ?>Login"><?php echo $hsalir ?></a>
+            <a class="btn-menu" style="color:white;font-size:13px;" href="<?php echo URL_SITIO ?>Login">Cerrar Sesión</a>
             <br>
             <br>
           </li>

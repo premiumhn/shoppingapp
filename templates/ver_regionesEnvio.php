@@ -61,7 +61,7 @@ $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
     <div class="card mb-3 ">
         <div class="card-header">
             <i class="fas fa-table"></i>
-                <?php echo $lregiones_envio ?>
+               Regiones de Envío
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -69,8 +69,8 @@ $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
                     <thead class="text-center">
                         <tr>
                             <!-- <th hidden>ID</th> -->
-                            <th scope="col"><?php echo $re_pais ?></th>
-                            <th scope="col"><?php echo $re_ciudad ?></th>
+                            <th scope="col">Pais</th>
+                            <th scope="col">Ciudad</th>
                             <th scope="col">Costo adicional de envío</th>
                             <th scope="col" style="color:white;" class="no_border-r"></th>
                             <th scope="col" style="color:white;" class="no_border-l"></th>
@@ -90,7 +90,7 @@ $tienda = $buscar_tienda->fetchAll(PDO::FETCH_ASSOC);
                 </table>
             </div>
         </div>
-        <div class="card-footer small text-muted"><?php echo $lregiones_envio ?></div>
+        <div class="card-footer small text-muted">Listado de Regiones de Envío</div>
     </div>
 </div> 
 <div class="col-md-2 ">

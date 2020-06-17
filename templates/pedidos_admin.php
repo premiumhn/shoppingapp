@@ -7,7 +7,6 @@ include '../global/const.php';
 
 session_start();
 
-require './language/requirelanguage.php';
 
 $actualizar_vistos = $pdo->prepare("UPDATE Pedidos
                                     SET VistoAdmin = 1

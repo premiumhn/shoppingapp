@@ -31,10 +31,10 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                            <a href="Nuevo-Usuario-Admin" style="border:1px solid #F8F8F8" type="submit" class="col-md-12 btn btn-primary"><?php echo $ubtn_nuevo ?></a>
+                            <a href="Nuevo-Usuario-Admin" style="border:1px solid #F8F8F8" type="submit" class="col-md-12 btn btn-primary">Nuevo</a>
                     </li>
                     <li class="list-group-item">
-                            <a href="Usuarios-Admin" style="border:1px solid #F8F8F8" type="submit" class="col-md-12 btn btn-primary"><?php echo $ubtn_ver_todas ?></a>
+                            <a href="Usuarios-Admin" style="border:1px solid #F8F8F8" type="submit" class="col-md-12 btn btn-primary">Ver Todos</a>
                     </li>
                 </ul>
             </div>
@@ -45,33 +45,33 @@ $listaCategorias = $select_categorias->fetchAll(PDO::FETCH_ASSOC);
         <div class="card-body">
         <form autocomplete="off" lang="en" action="<?php echo URL_SITIO ?>scripts/usuarios_admin.php" method="post" id="form_register" enctype="multipart/form-data">
             <div class="form-group">
-                    <label for="inputUsername"><?php echo $unombre_usuario ?> <span class="text_required">*</span> </label>
+                    <label for="inputUsername">Usuario <span class="text_required">*</span> </label>
                     <input type="text" class="form-control" name="input_nombreUsuario" id="inputUsername" placeholder="">
                 </div>
                 <div class="form-group">
-                    <label for="inputEmail"><?php echo $ucorreo ?> <span class="text_required">*</span> </label>
+                    <label for="inputEmail">Correo <span class="text_required">*</span> </label>
                     <input  type="text" class="form-control" name="input_correo" id="inputEmail" placeholder="">
                 </div>
                 <div class="form-group">
-                    <label for="inputPassword4"><?php echo $ucontrasena ?> <span class="text_required">*</span> </label>
+                    <label for="inputPassword4">Contraseña <span class="text_required">*</span> </label>
                     <input  autocomplete="new-password" type="password" class="form-control" name="input_contrasena" id="inputPassword" placeholder="">
                 </div>
                 <div class="form-group">
-                    <label for="inputSamePassword"> <?php echo $umisma_contrasena ?> <span class="text_required">*</span> </label>
+                    <label for="inputSamePassword">Misma Contraseña <span class="text_required">*</span> </label>
                     <input  autocomplete="new-password" type="password" class="form-control" name="input_samePassword" id="inputSamePassword" placeholder="">
                 </div>
                 <div class="col-md-12" id="mostrar_pass">
                     <input  id="show-pass" type="checkbox" onclick="showpass()">
-                    <label style="font-size:15px;color:gray;" for="show-pass"><?php echo $umostrar_contrasena ?></label>
+                    <label style="font-size:15px;color:gray;" for="show-pass">Mostrar Contraseña</label>
                 </div>
-                <label for="inputAddress2"><?php echo $ufoto_perfil ?></label>
+                <label for="inputAddress2">Foto de Perfil</label>
                 <div class="custom-file">
                     <input type="file" accept="image/*" class="custom-file-input" id="inputImagen" name="input_imagen">
-                    <label class="custom-file-label" data-browse="Elegir" for="customFile"><?php echo $useleccionar_archivo ?></label>
+                    <label class="custom-file-label" data-browse="Elegir" for="customFile">Seleccionar Archivo</label>
                 </div>
             <input type="text" hidden name="action" value="register">
             <br>
-            <button type="submit" class="btn-primary btn_registrar_usuario col-md-4 offset-md-4"><?php echo $ubtn_registrar_usuario ?></button>
+            <button type="submit" class="btn-primary btn_registrar_usuario col-md-4 offset-md-4">Registrar Usuario</button>
         </form>
         </div>
     </div>

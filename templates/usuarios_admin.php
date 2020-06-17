@@ -34,10 +34,10 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
             <div class="card card-left">
                 <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                            <a style="border:1px solid #F8F8F8" href="Nuevo-Usuario-Admin" type="submit" class="col-md-12 btn btn-primary"><?php echo $ubtn_nuevo ?></a>
+                            <a style="border:1px solid #F8F8F8" href="Nuevo-Usuario-Admin" type="submit" class="col-md-12 btn btn-primary">Nuevo</a>
                     </li>
                     <li class="list-group-item">
-                            <a style="border:1px solid #F8F8F8" href="Usuarios-Admin" type="submit" class="col-md-12 btn btn-primary"><?php echo $ubtn_ver_todas ?></a>
+                            <a style="border:1px solid #F8F8F8" href="Usuarios-Admin" type="submit" class="col-md-12 btn btn-primary">Ver Todos</a>
                     </li>
                     
                 </ul>
@@ -48,7 +48,7 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
 			<div class="card mb-3 ">
 	          	<div class="card-header">
 	             	<i class="fas fa-table"></i>
-					 <?php echo $lusuarios_admin ?>
+					 Lista de Usuarios Administradores
 	          	</div>
             	<div class="card-body">
               		<div class="table-responsive">
@@ -56,10 +56,10 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
                   			<thead class="text-center">
 			                    <tr>
 									<!-- <th hidden>ID</th> -->
-                                    <th scope="col"><?php echo $ufoto ?></th>
-                                    <th scope="col"><?php echo $uusuario ?></th>
-                                    <th scope="col"><?php echo $ucorreo ?></th>
-                                    <th scope="col"><?php echo $uestado ?></th>
+                                    <th scope="col">Foto</th>
+                                    <th scope="col">Usuario</th>
+                                    <th scope="col">Correo</th>
+                                    <th scope="col">Estado</th>
                                     <th scope="col" style="color:white;" class="no_border-r"></th>
                                     <th scope="col" style="color:white;" class="no_border-l"></th>
 								</tr>
@@ -88,7 +88,7 @@ $lista_usuarios_admin = $select_usuarios_admin->fetchAll(PDO::FETCH_ASSOC);
                 		</table>
               		</div>
             	</div>
-          		<div class="card-footer small text-muted"><?php echo $fusuarios_admin ?></div>
+          		<div class="card-footer small text-muted">Usuarios Administradores</div>
     		</div>
 		</div>
 </div>

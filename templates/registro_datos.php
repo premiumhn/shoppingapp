@@ -6,7 +6,7 @@ include '../global/conexion.php';
 include '../global/const.php';
 
 session_start();
-require 'language/requirelanguage.php';
+
 
 require ('../scripts/comprobaciones.php');
 // tipo de registro

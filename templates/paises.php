@@ -129,7 +129,7 @@ ini_set('display_errors', '1');
 		<div class="col-md-4">
 			<div class="card">
 			  <div class="card-header">
-			  <?php echo $rpaises ?>
+			  Registro de Paises
 			  </div>
 			 	<form class="form-line" id="frmRegistro" method="post" enctype="multipart/form-data">
 			  <div class="card-body">
@@ -137,26 +137,26 @@ ini_set('display_errors', '1');
 					
 					<input class="form-control"  hidden  type="text" name="PK_Pais" value="<?php echo $txtID ?>"  placeholder="Primary Key" id="inputPK_Pais" readonly >
 					
-					<label class="" for=""><?php echo $npais ?>:</label>
+					<label class="" for="">País:</label>
 					<input class="form-control" type="text" maxlength="50" name="NombrePais" id="inputNombrePais" required value="<?php echo $txtNombre ?>">
 					<br>
 
 					<div class="custom-file">
                         <input type="file" accept="image/*" class="custom-file-input" required id="inputImagen" name="logo">
-                        <label class="custom-file-label" for="logo"><?php echo $nbandera ?></label>
+                        <label class="custom-file-label" for="logo">Bandera:</label>
                     </div>
 			  	</div>
 				<div class="card-footer text-muted text-center">
-				  	<button class="btn btn-primary" value="agregar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnGuardar ?>">
+				  	<button class="btn btn-primary" value="agregar" type="submit" name="accion" data-toggle="tooltip" title="Guardar">
 				  		<i class="fas fa-save fas-faw"></i>
 				  	</button>
-					<button class="btn btn-success" value="editar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnEditar ?>">
+					<button class="btn btn-success" value="editar" type="submit" name="accion" data-toggle="tooltip" title="Editar">
 						<i class="fas fa-edit fas-faw"></i>
 					</button>
-					<button class="btn btn-danger" value="eliminar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnEliminar ?>">
+					<button class="btn btn-danger" value="eliminar" type="submit" name="accion" data-toggle="tooltip" title="Eliminar">
 						<i class="fas fa-trash-alt fas-faw"></i>
 					</button>
-					<button class="btn btn-warning" value="cancelar" type="submit" name="accion" data-toggle="tooltip" title="<?php echo $btnCancelar ?>">
+					<button class="btn btn-warning" value="cancelar" type="submit" name="accion" data-toggle="tooltip" title="Cancelar">
 						<i class="fas fa-ban fas-faw"></i>
 					</button>
 				</div>
@@ -168,7 +168,7 @@ ini_set('display_errors', '1');
 			<div class="card mb-3 ">
 	          	<div class="card-header">
 	             	<i class="fas fa-table"></i>
-					 <?php echo $lpais ?>
+					Listado de Paises
 	          	</div>
             	<div class="card-body">
               		<div class="table-responsive">
@@ -176,9 +176,9 @@ ini_set('display_errors', '1');
                   			<thead class="text-center">
 			                    <tr>
 									<th hidden>ID</th>
-									<th><?php echo $npais ?></th>
-									<th><?php echo $ipais ?></th>
-									<th><?php echo $naccion ?></th>
+									<th>Pais</th>
+									<th>Bandera</th>
+									<th>Acción</th>
 								</tr>
 			                </thead>
                 			<tbody> 
@@ -201,7 +201,7 @@ ini_set('display_errors', '1');
 												<input hidden type="text" name="PK_Pais" value="<?php echo $pais["PK_Pais"]; ?>">
 												<input hidden type="text" name="NombrePais" value="<?php echo $pais["NombrePais"]; ?>">
 												<input hidden type="text" name="logo" value="<?php echo $pais["logo"]; ?>">
-												<button type="submit" class="btn btn-primary" data-toggle="tooltip" title="<?php echo $btnSeleccionar ?>"><i class="fas fa-check"></i></button>
+												<button type="submit" class="btn btn-primary" data-toggle="tooltip" title="Seleccionar"><i class="fas fa-check"></i></button>
 											</form>
 										</td>
 									</tr>
@@ -210,7 +210,7 @@ ini_set('display_errors', '1');
                 		</table>
               		</div>
             	</div>
-          		<div class="card-footer small text-muted"><?php echo $fpaises ?></div>
+          		<div class="card-footer small text-muted">Paises</div>
     		</div>
 		</div>
 	</div>
